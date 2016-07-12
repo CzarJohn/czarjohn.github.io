@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Demo</title>
+  <link href="ui/css/icons/icons.css" rel="stylesheet">
+  <link href="ui/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="ui/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <style>
+    nav{
+      height: 100px;
+    }
+    nav>.nav-wrapper{
+      height: 70px;
+    }
+    .span-heading{
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .row>.card.custom-card{
+      padding: 40px;
+    }
+    .row.col.div-tab{
+      padding-top: 40px;
+    }
+
+  </style>
+</head>
+<body class="row" style="height:100vh;max-height:100vh;overflow:hidden;">
+  
+
+  <div style="position:absolute;width:100vw;margin-top:50px;height:600px;">
+
+    <div class="row col m4 offset-m4 card-panel white" style="height:100%;">
+      <div class="col m12 center-align">
+        <h5 style="font-size:15px;">This is a <br/>
+            <span style="font-size:30px;line-height:30px;font-style:bold;">
+              Demo App<br/> 
+            </span>
+        </h5>
+      </div>
+      <div class="col s12">
+        <ul class="tabs">
+          <li class="tab col s4"><a class="active" href="#search">Search</a></li>
+          <li class="tab col s4"><a href="#add">Add</a></li>
+          <li class="tab col s4"><a href="#edit">Edit</a></li>
+        </ul>
+      </div>
+      <div id="search" class="col s12 row div-tab">
+
+        <div class="input-field col s12">
+          <input id="input-search" type="text" class="validate" autofocus/>
+          <label class="label" for="input-search">Search Employee Name</label>
+        </div>
+
+        <div class="search-results">
+          <>
+        </div>
+
+      </div>
+      <div id="add" class="col s12">Test 2</div>
+      <div id="edit" class="col s12">Test 3</div>
+
+      
+
+    </div>
+
+  </div>
+
+
+  <script src="ui/js/jquery.min.js"></script>
+  <script src="ui/js/materialize.js"></script>
+  <script src="ui/js/init.js"></script>
+</body>
+</html>
