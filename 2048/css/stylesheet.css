@@ -1,0 +1,79 @@
+#table {
+	width: 525px;
+	height: 525px;
+	background-color: rgb(187, 173, 160);
+	margin: 0 auto;
+}
+
+#abs-cont{
+	position: absolute;
+	width: 100vw;	
+}
+
+#start {
+	font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+	width: 525px;
+	height: 525px;
+	background-color: rgb(187, 173, 160);
+	margin: 0 auto;
+	text-align: center;
+	color:#faf8ef;
+}
+
+#start>a{
+	text-decoration: none;
+	color:green;
+}
+#start>h1{
+	font-size: 50px;
+}
+
+#start>a:hover{
+	cursor: pointer;
+}
+
+
+
+#wrapper{
+	padding-top:50px;
+	width:100vw;
+	height:90vh;
+}
+
+body,#wrapper{
+	overflow: hidden;
+}
+
+.tile {
+	width: 100px;
+	height: 100px;
+	margin-left: 25px;
+	margin-top: 25px;
+	background-color: rgb(205,193,180);
+	float: left;
+	font-size: 100px;
+	text-align: center;
+	background-size: contain;
+}
+
+#itable {
+	position: absolute;
+	width: 525px;
+	height: 525px;
+	margin: 0 auto;
+
+}
+
+.itile {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	margin-left: 25px;
+	margin-top: 25px;
+	float: left;
+	font-size: 100px;
+	text-align: center;
+	color: black;
+	background-color: rgba(0,0,0,0);
+	background-size: contain;
+}
