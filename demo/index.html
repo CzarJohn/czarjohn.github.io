@@ -24,13 +24,16 @@
     .row.col.div-tab{
       padding-top: 40px;
     }
+    .strong{
+      font-weight: bold;
+    }
 
   </style>
 </head>
 <body class="row" style="height:100vh;max-height:100vh;overflow:hidden;">
   
 
-  <div style="position:absolute;width:100vw;margin-top:50px;height:600px;">
+  <div style="position:absolute;width:100vw;margin-top:20px;height:600px;">
 
     <div class="row col m4 offset-m4 card-panel white" style="height:100%;">
       <div class="col m12 center-align">
@@ -47,20 +50,71 @@
           <li class="tab col s4"><a href="#edit">Edit</a></li>
         </ul>
       </div>
-      <div id="search" class="col s12 row div-tab">
+      <div id="search" class="row col s12 row div-tab">
 
         <div class="input-field col s12">
           <input id="input-search" type="text" class="validate" autofocus/>
           <label class="label" for="input-search">Search Employee Name</label>
+          <a id="submit-search" class="waves-effect waves-light btn"><i class="material-icons left">search</i>Search Employee</a>
         </div>
+        
 
-        <div class="search-results">
-          <>
+
+        <div class="col s12 search-results card" style="display:none">
+          Search results
+          <table class="highlight">
+            <tbody>
+              <tr>
+                <td class="strong">Name</td>
+                <td>Czar John F. Demafeliz</td>
+              </tr>
+              <tr>
+                <td class="strong">Nickname</td>
+                <td>Cj</td>
+              </tr>
+              <tr>
+                <td class="strong">Address</td>
+                <td>Sa puso ni mo <3</td>
+              </tr>
+              <tr>
+                <td class="strong">Position</td>
+                <td>Software Developer</td>
+              </tr>
+              <tr>
+                <td class="strong">Office</td>
+                <td>UPLB OSA</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
       </div>
-      <div id="add" class="col s12">Test 2</div>
-      <div id="edit" class="col s12">Test 3</div>
+      <div id="add" class="row col s12 row div-tab">
+        <div class="row">
+          <form class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <input id="first_name" type="text" class="validate">
+                <label class="vali" for="first_name">Name</label>
+              </div>
+              <div class="input-field col s12">
+                <input id="pos" type="text" class="validate">
+                <label class="vali" for="pos">Position</label>
+              </div>
+              <div class="input-field col s12">
+                <input id="email" type="email" class="validate">
+                <label class="vali" for="email">Email</label>
+              </div>
+            </div>
+          <a id="submit-add" class="waves-effect waves-light btn"><i class="material-icons left">add</i>Add Employee</a>
+            
+          </form>
+        </div>
+      </div>
+      <div id="edit" class="col s12">
+        <br/>
+        meep meep meep
+      </div>
 
       
 
