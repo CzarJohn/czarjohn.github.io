@@ -3,6 +3,95 @@ var tableArray = [];
 var gameOver = false;
 
 $(document).ready(function(){
+
+	
+	$(document).on("swipeleft", function(){
+		if(!gameOver){
+			moved = moveLeft();	
+			setTimeout(function(){
+				if(moved){
+			    	randomTile();	
+					updateTable();
+				   	if(status() == true){
+				   		$('#start').delay(500).fadeIn(300);
+						$('#table').delay(500).fadeOut(300);
+						$('#itable').delay(500).fadeOut(300);
+				   	}
+			    }
+		    }, 300);
+		}
+	});
+
+	$(document).on("swipeleft", function(){
+		if(!gameOver){
+			moved = moveLeft();	
+			setTimeout(function(){
+				if(moved){
+			    	randomTile();	
+					updateTable();
+				   	if(status() == true){
+				   		$('#start').delay(500).fadeIn(300);
+						$('#table').delay(500).fadeOut(300);
+						$('#itable').delay(500).fadeOut(300);
+				   	}
+			    }
+		    }, 300);
+		}
+	});
+
+	$(document).on("swipeup", function(){
+		if(!gameOver){
+			moved = moveUp();	
+			setTimeout(function(){
+				if(moved){
+			    	randomTile();	
+					updateTable();
+				   	if(status() == true){
+				   		$('#start').delay(500).fadeIn(300);
+						$('#table').delay(500).fadeOut(300);
+						$('#itable').delay(500).fadeOut(300);
+				   	}
+			    }
+		    }, 300);
+		}
+	});
+
+	$(document).on("swipedown", function(){
+		if(!gameOver){
+			moved = moveDown();	
+			setTimeout(function(){
+				if(moved){
+			    	randomTile();	
+					updateTable();
+				   	if(status() == true){
+				   		$('#start').delay(500).fadeIn(300);
+						$('#table').delay(500).fadeOut(300);
+						$('#itable').delay(500).fadeOut(300);
+				   	}
+			    }
+		    }, 300);
+		}
+	});
+
+	$(document).on("swiperight", function(){
+		if(!gameOver){
+			moved = moveRight();	
+			setTimeout(function(){
+				if(moved){
+			    	randomTile();	
+					updateTable();
+				   	if(status() == true){
+				   		$('#start').delay(500).fadeIn(300);
+						$('#table').delay(500).fadeOut(300);
+						$('#itable').delay(500).fadeOut(300);
+				   	}
+			    }
+		    }, 300);
+		}
+	});
+
+
+
 	$('#table').hide();
 	$('#itable').hide();
 });
