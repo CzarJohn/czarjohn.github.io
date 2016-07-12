@@ -5,7 +5,6 @@ var gameOver = false;
 
 $(document).ready(function(){
 
-
 	$(document).on("swipeleft", function(){
 		if(!gameOver){
 			moved = moveLeft();	
