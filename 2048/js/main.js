@@ -40,7 +40,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$(document).on("swipeup", function(){
+	$(document).on("swipeup", '#wrapper', function(){
 		if(!gameOver){
 			moved = moveUp();	
 			setTimeout(function(){
@@ -57,7 +57,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$(document).on("swipedown", function(){
+	$(document).on("swipedown", '#wrapper', function(){
 		if(!gameOver){
 			moved = moveDown();	
 			setTimeout(function(){
@@ -148,12 +148,20 @@ function status(){
 	gameOver = true;
 	for(var i=0; i<4; i++){
 		for(var j=0; j<4; j++){
-			if(tableArray[i][j] == 0){
+			if(tableArray[i][j] == 0 || canMove(i, j)){
 				gameOver = false;
 			}
 		}
 	}
 	return gameOver;
+}
+
+function canMove(i, j){
+	if(i-1>0 && j-1>0 && tableArray[i-1][j-1]==tableArray[i][j]) return true;
+	if(i+1<3 && j-1>0 && tableArray[i+1][j-1]==tableArray[i][j]) return true;
+	if(i-1>0 && j+1<3 && tableArray[i-1][j+1]==tableArray[i][j]) return true;
+	if(i-1<3 && j-1<3 && tableArray[i+1][j+1]==tableArray[i][j]) return true;
+	return false;
 }
 
 function init(){
