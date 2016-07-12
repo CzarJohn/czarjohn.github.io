@@ -160,10 +160,10 @@ function status(){
 }
 
 function canMove(i, j){
-	if(i-1>0 && j-1>0 && tableArray[i-1][j-1]==tableArray[i][j]) return true;
-	if(i+1<3 && j-1>0 && tableArray[i+1][j-1]==tableArray[i][j]) return true;
-	if(i-1>0 && j+1<3 && tableArray[i-1][j+1]==tableArray[i][j]) return true;
-	if(i-1<3 && j-1<3 && tableArray[i+1][j+1]==tableArray[i][j]) return true;
+	if(j-1>0 && tableArray[i][j-1]==tableArray[i][j]) return true;
+	if(i+1<3 && tableArray[i+1][j]==tableArray[i][j]) return true;
+	if(i-1>0 && tableArray[i-1][j]==tableArray[i][j]) return true;
+	if(j+1<3 && tableArray[i][j+1]==tableArray[i][j]) return true;
 	return false;
 }
 
