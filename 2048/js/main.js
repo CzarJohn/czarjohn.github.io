@@ -151,6 +151,10 @@ function status(){
 			if(tableArray[i][j] == 0 || canMove(i, j)){
 				gameOver = false;
 			}
+			else if(tableArray[i][j] == 2048){
+				gameOver = true;
+				alert('You win');
+			}
 		}
 	}
 	return gameOver;
