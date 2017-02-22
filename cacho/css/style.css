@@ -15,3 +15,6 @@
 .add-item, .delete-item {
 	position: absolute;
 }
+.tab-div{
+	margin-top: 50px;
+}

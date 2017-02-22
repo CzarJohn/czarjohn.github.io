@@ -12,66 +12,82 @@
 </head>
 <body>
   
-  <div class="main row">
+  <div class="main">
+    <div class="row col s12">
+      <div class="col s12 teal">
+        <ul class="tabs teal">
+          <li class="tab col s3"><a class="active white-text" href="#test1">Generate Purchase Order</a></li>
+          <li class="tab col s3"><a class="white-text" href="#test2">Generate Change Order</a></li>
+          <li class="tab col s3"><a class="white-text" href="#test3">View Records</a></li>
+        </ul>
+      </div>
+      <div id="test1" class="col s12 tab-div">
+        <div class="row col s6 offset-s1">
+          <div class="input-field col s6">
+            <label for="input-date">Date</label>
+            <input type="date" id="input-date" name="input-date" class="datepicker" required />
+          </div>
 
-      <div class="row col s6 offset-s1">
-        <div class="input-field col s6">
-          <label for="input-date">Date</label>
-          <input type="date" id="input-date" name="input-date" class="datepicker" required />
+          <div class="input-field col s6">
+            <input type="text" id="po-number" name="po-number" class="validate" autofocus required />
+            <label for="po-number">PO #</label>
+          </div>
+
+          <div class="input-field col s6">
+            <input type="text" id="requested-by" name="requested-by" class="validate" required />
+            <label for="requested-by">Requested By</label>
+          </div>
+
+          <div class="input-field col s6">
+            <input type="text" id="ordered-by" name="ordered-by" class="validate" required />
+            <label for="ordered-by">Ordered By</label>
+          </div>
+
+          <div class="input-field col s12">
+            <label for="input-completion-date">Date of Delivery Completion</label>
+            <input type="date" id="input-completion-date" name="input-completion-date" class="datepicker" required />
+          </div>
+
+          <div class="input-field col s6">
+            <textarea id="input-to" name="input-to" class="materialize-textarea"></textarea>
+            <label for="input-to">To</label>
+          </div>
+
+          <div class="input-field col s6">
+            <textarea id="input-deliver-to" name="input-deliver-to" class="materialize-textarea"></textarea>
+            <label for="input-deliver-to">Deliver To</label>
+          </div>
+
+          <div class="input-field col s12">
+            <label for="input-cost-ref">Cost Ref</label>
+            <input type="text" id="input-cost-ref" name="input-cost-ref" class="validate" />
+          </div>
+
+          <div class="col s12 row items"></div>
+
+          <div class="input-field col s12">
+            <label for="input-to-be-used-for">To Be Used For</label>
+            <input type="text" id="input-to-be-used-for" name="input-to-be-used-for" class="validate" required />
+          </div>
+
+          <div class="input-field col s12">
+            <label for="input-conforme">Conforme</label>
+            <input type="text" id="input-conforme" name="input-conforme" class="validate" required />
+          </div>
+
+          <div class="input-field col s12">
+            <a class="waves-effect waves-light btn"><i class="material-icons left">print</i>Generate</a>
+          </div>
+
+          <a class="btn-floating btn-large waves-effect waves-light tooltipped add-item" data-position="top" data-delay="50" data-tooltip="Add Item"><i class="material-icons">add</i></a>
+          <a class="btn-floating btn-large waves-effect waves-light tooltipped delete-item red" data-position="top" data-delay="50" data-tooltip="Delete This Item"><i class="material-icons">delete</i></a>
+
         </div>
-
-        <div class="input-field col s6">
-          <input type="text" id="po-number" name="po-number" class="validate" autofocus required />
-          <label for="po-number">PO #</label>
-        </div>
-
-        <div class="input-field col s6">
-          <input type="text" id="requested-by" name="requested-by" class="validate" required />
-          <label for="requested-by">Requested By</label>
-        </div>
-
-        <div class="input-field col s6">
-          <input type="text" id="ordered-by" name="ordered-by" class="validate" required />
-          <label for="ordered-by">Ordered By</label>
-        </div>
-
-        <div class="input-field col s12">
-          <label for="input-completion-date">Date of Delivery Completion</label>
-          <input type="date" id="input-completion-date" name="input-completion-date" class="datepicker" required />
-        </div>
-
-        <div class="input-field col s6">
-          <textarea id="input-to" name="input-to" class="materialize-textarea"></textarea>
-          <label for="input-to">To</label>
-        </div>
-
-        <div class="input-field col s6">
-          <textarea id="input-deliver-to" name="input-deliver-to" class="materialize-textarea"></textarea>
-          <label for="input-deliver-to">Deliver To</label>
-        </div>
-
-        <div class="input-field col s12">
-          <label for="input-cost-ref">Cost Ref</label>
-          <input type="text" id="input-cost-ref" name="input-cost-ref" class="validate" />
-        </div>
-
-        <div class="col s12 row items"></div>
-
-        <div class="input-field col s12">
-          <label for="input-to-be-used-for">To Be Used For</label>
-          <input type="text" id="input-to-be-used-for" name="input-to-be-used-for" class="validate" required />
-        </div>
-
-        <div class="input-field col s12">
-          <label for="input-conforme">Conforme</label>
-          <input type="text" id="input-conforme" name="input-conforme" class="validate" required />
-        </div>
-
-        <a class="btn-floating btn-large waves-effect waves-light tooltipped add-item" data-position="top" data-delay="50" data-tooltip="Add Item"><i class="material-icons">add</i></a>
-        <a class="btn-floating btn-large waves-effect waves-light tooltipped delete-item red" data-position="top" data-delay="50" data-tooltip="Delete This Item"><i class="material-icons">delete</i></a>
 
       </div>
-
+      <div id="test2" class="col s12 tab-div">This function is still under development.</div>
+      <div id="test3" class="col s12 tab-div">This function is still under development.</div>
+    </div>
   </div>
 
   <!--  Scripts-->
