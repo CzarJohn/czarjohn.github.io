@@ -6,6 +6,8 @@ var item_count = 0;
   		'swipeable': true
   	});
 
+    $('.modal-trigger').leanModal();
+
     $('.button-collapse').sideNav();
 
     $('.tooltipped').tooltip({delay: 50});
@@ -23,6 +25,10 @@ var item_count = 0;
 	$(window).resize(function() {
 	    repositionButton();
 	});
+
+  $('.item-details').scroll(function(){
+      repositionButton();
+  });
 
 	$('.add-item').click(function(){
 		addItem(++item_count);
