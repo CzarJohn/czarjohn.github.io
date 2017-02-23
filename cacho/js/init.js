@@ -2,6 +2,9 @@ var item_count = 0;
 
 (function($){
   $(function(){
+  	$('ul.tabs').tabs({
+  		'swipeable': true
+  	});
 
     $('.button-collapse').sideNav();
 
