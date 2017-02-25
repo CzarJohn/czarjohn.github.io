@@ -1,3 +1,6 @@
+pendingClicks = 0;
+latLngArr = [];
+
 (function(window, google, mapster){
 
 	var options = mapster.MAP_OPTIONS;
@@ -7,7 +10,10 @@
 	var geocoder = new google.maps.Geocoder();
 	map = new Mapster.create(element, options);
 
-
+	$('.add').click(function(){
+		Materialize.toast('Please plot four points by clicking on the map.', 3000);
+		pendingClicks = 4;
+	});
 
 	map.addPolygon({
 		paths: [
@@ -30,7 +36,32 @@
 		],
 		available: false,
 	});
-	 
+	map._on({
+		obj : map.gMap,
+		event :  'click',
+		callback : function(e){
+			console.log(pendingClicks);
+			if(pendingClicks > 0){
+				//console.log(e.latLng.lng());
+				latLngArr.push(e.latLng);
+				pendingClicks--;
+				if(pendingClicks == 0){
+					map.addPolygon({
+						paths: [
+						    latLngArr[0],
+						    latLngArr[1],
+						    latLngArr[2],
+						    latLngArr[3],
+						    latLngArr[0]
+						],
+						available: true,
+					});
+					latLngArr = [];
+				}
+			}
+		}
+	});
+
 	 /* // Construct the polygon.
 	  bermudaTriangle = new google.maps.Polygon({
 	    paths: triangleCoords,
@@ -107,10 +138,6 @@
 
 
 
-	/*map._on('click', function(e){
-		console.log(e);
-		console.log(this);
-	});*/
 
 	/*var marker = new google.maps.Marker({
 		position: {

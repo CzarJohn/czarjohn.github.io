@@ -2,16 +2,24 @@
 <html lang="en">
 
 <head>
+  <link href="css/materialize.css" type="text/css" rel="stylesheet"/>
   <link href="css/style.css" type="text/css" rel="stylesheet"/>
 </head>
 
-<body>
+<body style="height:100vh;overflow:hidden;">
+  <div id="controls" class="grey lighten-2 row">
+  	<br><br><br>
+  	<a class="waves-effect waves-light btn add">add polygon</a>
+  </div>
+
   <div id="map-container">
   	<div id="map-canvas"></div>
   </div>
 
 
   <!--script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjcVoiwU44Pj1fdY8JyxjORa8RElQQlGY&callback&callback=initMap"></script-->
+  <script src="js/jquery.js"></script>
+  <script src="js/materialize.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjcVoiwU44Pj1fdY8JyxjORa8RElQQlGY"></script>
   <script src="js/Mapster.js"></script>
   <script src="js/map-options.js"></script>
