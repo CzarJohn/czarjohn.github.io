@@ -58,7 +58,7 @@
         <div class="col s5 offset-s2 row card-panel">
           <strong class="col s6">Suppliers</strong> 
           <span class="col s6 right-align teal-text clickable add-supplier">ADD NEW SUPPLIER</span>
-          <ul class="col s12 collection main-menu-collection">
+          <ul class="col s12 collection main-menu-collection supplier-list">
             <!--li class="collection-item">test</li-->
           </ul>
         </div>
@@ -133,6 +133,75 @@
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-project-modal-btn-close">Close</a>
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-project-modal-btn-save">Save</a>
+    </div>
+  </div>
+
+  <div class="add-supplier-modal modal modal-fixed-footer" style="overflow:hidden;">
+    <div class="modal-header">
+      <h5>&nbsp;&nbsp;&nbsp;Add New Supplier</h5>
+    </div>
+    <div class="modal-content row">
+      <div class="input-field col s12">
+        <label for="add-supplier-input-name">Name</label>
+        <input type="text" id="add-supplier-input-name" name="add-supplier-input-name" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-supplier-input-work-type">VAT Registration</label>
+        <input type="text" id="add-supplier-input-vat-reg" name="add-supplier-input-vat-reg" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-supplier-input-address">Address</label>
+        <input type="text" id="add-supplier-input-address" name="add-supplier-input-address" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-supplier-input-mobile-number">Mobile Number</label>
+        <input type="text" id="add-supplier-input-mobile-number" name="add-supplier-input-mobile-number" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-supplier-input-contact-person">Contact Person</label>
+        <input type="text" id="add-supplier-input-contact-person" name="add-supplier-input-contact-person" class="validate" required />
+      </div>
+      <div class="input-field col s12" style="display:none;">
+        <label for="add-supplier-input-supplier-code">Project Code</label>
+        <input type="text" id="add-supplier-input-supplier-code" name="add-supplier-input-supplier-code" class="validate" required />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-supplier-modal-btn-cancel">Cancel</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-supplier-modal-btn-add">Add</a>
+      <a href="#!" class=" waves-effect waves-green btn-flat generate-supplier tooltipped" data-position="top" data-delay="50" data-tooltip="This is just a temporary function for quick generation of random supplier data.">Generate</a>
+    </div>
+  </div>
+
+  <div class="view-supplier-modal modal modal-fixed-footer" style="overflow:hidden;">
+    <div class="modal-header">
+      <h5>&nbsp;&nbsp;&nbsp;&nbsp;<span style="display:none;" class="supplier-supplier-code"></span><span class="supplier-name"></span></h5>
+    </div>
+    <div class="modal-content row">
+      <table>
+        <tbody>
+          <tr>
+            <td>Work Type</td>
+            <td contenteditable class="supplier-vat-reg"></td>
+          </tr>
+          <tr>
+            <td>Address</td>
+            <td contenteditable class="supplier-address"></td>
+          </tr>
+          <tr>
+            <td>Mobile Number</td>
+            <td contenteditable class="supplier-mobile-number"></td>
+          </tr>
+          <tr>
+            <td>Contact Person</td>
+            <td contenteditable class="supplier-contact-person"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-supplier-modal-btn-close">Close</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-supplier-modal-btn-save">Save</a>
     </div>
   </div>
 
