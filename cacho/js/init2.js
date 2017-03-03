@@ -2,6 +2,8 @@ var item_count = 0;
 var projects = [];
 var suppliers = [];
 
+
+
 (function($){
   $(function(){
     $('.datepicker').pickadate({
@@ -132,6 +134,7 @@ var suppliers = [];
 
     $('.generate-project').click(generate_project);
     $('.generate-supplier').click(generate_supplier);
+    $('.generate-po').click(generate_po);
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
@@ -358,6 +361,23 @@ function generate_supplier(){
   $(p+'supplier-code').val(sc);
 }
 
+function generate_po(){
+  var p = '#add-po-input-';
+  $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
+  $(p+'completion-date').val(generate_date());
+  $(p+'requested-by').val(generate_name());
+  $(p+'ordered-by').val(generate_name());
+  $(p+'cost-ref').val('This is not a random data string.');
+  $(p+'to-be-used-for').val('So is this. Haha.');
+  $(p+'conforme').val(generate_name());
+  //ensure that there are no duplicate project codes
+  /*pn = generate_ponum();
+  while(pn_is_existing(pn)){ 
+    sc = generate_suppliercode();
+  }
+  $(p+'supplier-code').val(sc);*/
+}
+
 function set_view_project(project){
   var p = '.project-';
   keys = ['name','work-type', 'address', 'mobile-number', 'contact-person', 'project-code'];
@@ -447,4 +467,25 @@ function clear_add_po(){
     ','+p+'contact-person'+
     ','+p+'project-code';
   $(selector).val('');*/
+  create_project_options();
+  create_supplier_options();
+}
+
+function create_project_options(){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var i=0;i<projects.length; i++){
+    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
+  }
+  $('#add-po-input-deliver-to').html(sb);
+  $('#add-po-input-deliver-to').material_select();
+}
+
+
+function create_supplier_options(){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var i=0;i<suppliers.length; i++){
+    sb += '<option value="'+suppliers[i]['supplier-code']+'">'+suppliers[i]['name']+'</option>'; 
+  }
+  $('#add-po-input-to').html(sb);
+  $('#add-po-input-to').material_select();
 }
