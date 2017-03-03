@@ -109,7 +109,7 @@
       <h5>&nbsp;&nbsp;&nbsp;&nbsp;<span class="project-project-code"></span>: <span class="project-name"></span></h5>
     </div>
     <div class="modal-content row">
-      <table>
+      <table class="col s12">
         <tbody>
           <tr>
             <td>Work Type</td>
@@ -129,6 +129,35 @@
           </tr>
         </tbody>
       </table>
+      <div class="col s12 row card-panel">
+        <strong class="col s6">Purchase Orders</strong> 
+        <span class="col s6 right-align teal-text clickable add-po">ADD PURCHASE ORDER</span>
+        <ul class="col s12 collection main-menu-collection">
+          <table>
+            <thead>
+              <tr>
+                <th data-field="po-number">PO #</th>
+                <th data-field="amount">Amount</th>
+                <th data-field="date">Date</th>
+                <th data-field="actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>14-234001</td>
+                <td>12,000</td>
+                <td>January 12, 1212</td>
+                <td>
+                  <i id="open" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Amend">insert_link</i>&nbsp;&nbsp;&nbsp;
+                  <i id="open" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Edit">mode_edit</i>&nbsp;&nbsp;&nbsp;
+                  <i id="delete" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ul>
+      </div>
+
     </div>
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-project-modal-btn-close">Close</a>
@@ -202,6 +231,70 @@
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-supplier-modal-btn-close">Close</a>
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-supplier-modal-btn-save">Save</a>
+    </div>
+  </div>
+
+  <div class="add-po-modal modal modal-fixed-footer" style="overflow:hidden;">
+    <div class="modal-header">
+      <h5>&nbsp;&nbsp;&nbsp;Add New Purchase Order (not yet working)</h5>
+    </div>
+    <div class="modal-content row">
+
+      <div class="input-field col s4">
+        <label for="add-po-input-completion-date active">Delivery Date</label>
+        <input type="date" id="add-po-input-completion-date" name="add-po-input-completion-date" class="datepicker" required />
+      </div>
+
+      <div class="input-field col s4">
+        <label for="add-po-input-requested-by">Requested By</label>
+        <input type="text" id="add-po-input-requested-by" name="add-po-input-requested-by" class="validate" required />
+      </div>
+
+      <div class="input-field col s4">
+        <label for="add-po-input-ordered-by">Ordered By</label>
+        <input type="text" id="add-po-input-ordered-by" name="add-po-input-ordered-by" class="validate" required />
+      </div>
+
+      <div class="input-field col s6">
+        <select id="add-po-input-to" name="add-po-input-to">
+          <option value="" disabled selected>Choose your option</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </select>
+        <label for="add-po-input-to">To</label>
+      </div>
+
+      <div class="input-field col s6">
+        <select id="add-po-input-deliver-to" name="add-po-input-deliver-to">
+          <option value="" disabled selected>Choose your option</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </select>
+        <label for="add-po-input-deliver-to">Deliver To</label>
+      </div>
+
+      <div class="input-field col s12">
+        <label for="add-po-input-cost-ref">Cost Ref</label>
+        <input type="text" id="add-po-input-cost-ref" name="add-po-input-cost-ref" class="validate" />
+      </div>
+
+      <div class="input-field col s12">
+        <label for="add-po-input-to-be-used-for">To Be Used For</label>
+        <input type="text" id="add-po-input-to-be-used-for" name="add-po-input-to-be-used-for" class="validate" required />
+      </div>
+
+      <div class="input-field col s12">
+        <label for="add-po-input-conforme">Conforme</label>
+        <input type="text" id="add-po-input-conforme" name="add-po-input-conforme" class="validate" required />
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-cancel">Cancel</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-add">Add</a>
+      <a href="#!" class=" waves-effect waves-green btn-flat generate-po tooltipped" data-position="top" data-delay="50" data-tooltip="This is just a temporary function for quick generation of random PO data.">Generate</a>
     </div>
   </div>
 

@@ -4,8 +4,20 @@ var suppliers = [];
 
 (function($){
   $(function(){
+    $('.datepicker').pickadate({
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15, // Creates a dropdown of 15 years to control year
+      format: 'mmmm dd, yyyy'
+    });
+
+    $('select').material_select();
+
     load_projects();
     load_suppliers();
+
+    var project = find_project_code('17-411');
+    set_view_project(project);
+    $('.view-project-modal').openModal();
     
     $('.add-project').click(function(){
       clear_add_project();
@@ -15,6 +27,11 @@ var suppliers = [];
     $('.add-supplier').click(function(){
       clear_add_supplier();
       $('.add-supplier-modal').openModal();
+    });
+
+    $('.add-po').click(function(){
+      clear_add_po();
+      $('.add-po-modal').openModal();
     });
 
     $('.add-project-modal-btn-add').click(function(){
@@ -409,7 +426,6 @@ function clear_add_project(){
   $(selector).val('');
 }
 
-
 function clear_add_supplier(){
   var p = '#add-supplier-input-';
   var selector = ''+
@@ -419,4 +435,16 @@ function clear_add_supplier(){
     ','+p+'mobile-number'+
     ','+p+'contact-person';
   $(selector).val('');
+}
+
+function clear_add_po(){
+  /*var p = '#add-po-input-';
+  var selector = ''+
+    p+'name'+
+    ','+p+'work-type'+
+    ','+p+'address'+
+    ','+p+'mobile-number'+
+    ','+p+'contact-person'+
+    ','+p+'project-code';
+  $(selector).val('');*/
 }

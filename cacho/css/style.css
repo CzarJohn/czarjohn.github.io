@@ -18,3 +18,6 @@
 .tab-div{
 	margin-top: 50px;
 }
+.select-dropdown {
+	overflow-y: scroll !important; 
+}
