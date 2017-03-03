@@ -9,90 +9,140 @@
   <link href="css/icons/icons.css" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <style>
+
+    div{
+      cursor: default;
+      user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -o-user-select: none;
+    }
+    td[contenteditable]{
+      cursor: pointer;
+    }
+    .main-menu-collection{
+      height:40vh;
+      overflow-y: scroll;
+    }
+    .clickable{
+      cursor: pointer;
+    }
+    .modal-content.row{
+      padding-top:0px;
+    }
+
+  </style>
 </head>
-<body>
-  
+<body class="grey lighten-2" style="height:100vh;max-height:100vh;overflow-y:hidden;">
   <div class="main row">
-
-      <div class="card card-panel row col s6 offset-s3">
-        <div class="input-field col s12">
-          <label for="input-date">Date</label>
-          <input type="date" id="input-date" name="input-date" class="datepicker" required />
-        </div>
-
-        <div class="input-field col s12">
-          <input type="text" id="po-number" name="po-number" class="validate" autofocus required />
-          <label for="po-number">PO #</label>
-        </div>
-
-        <div class="input-field col s12">
-          <input type="text" id="requested-by" name="requested-by" class="validate" required />
-          <label for="requested-by">Requested By</label>
-        </div>
-
-        <div class="input-field col s12">
-          <input type="text" id="ordered-by" name="ordered-by" class="validate" required />
-          <label for="ordered-by">Ordered By</label>
-        </div>
-
-        <div class="input-field col s12">
-          <label for="input-completion-date">Date of Delivery Completion</label>
-          <input type="date" id="input-completion-date" name="input-completion-date" class="datepicker" required />
-        </div>
-
-        <div class="input-field col s12">
-          <label for="input-to">To</label>
-          <input type="text" id="input-to" name="input-to" class="validate" required />
-        </div>
-
-        <div class="input-field col s12">
-          <label for="input-deliver-to">Deliver To</label>
-          <input type="text" id="input-deliver-to" name="input-deliver-to" class="validate" required />
-        </div>
-
-        <div class="input-field col s12">
-          <label for="input-cost-ref">Cost Ref</label>
-          <input type="text" id="input-cost-ref" name="input-cost-ref" class="validate" />
-        </div>
-
-        <div class="col s12">
-          <br/>
-          <a class="waves-effect waves-light btn"><i class="material-icons left">add</i>Add An Item</a>
-        </div>
-
-        <div class="col s12 item">
-          <div class="input-field col s2">
-            <label for="input-quantity">Qty</label>
-            <input type="text" id="input-quantity" name="input-quantity" class="validate" required />
-          </div>
-
-          <div class="input-field col s2">
-            <label for="input-unit">Unit</label>
-            <input type="text" id="input-unit" name="input-unit" class="validate" required />
-          </div>
-
-          <div class="input-field col s5">
-            <label for="input-description">Description</label>
-            <input type="text" id="input-description" name="input-description" class="validate" required />
-          </div>
-
-          <div class="input-field col s3">
-            <label for="input-unit-cost">Unit Cost</label>
-            <input type="text" id="input-unit-cost" name="input-unit-cost" class="validate" required />
-          </div>
-        </div>
-
-
+    <div class="row col s12 center-align">
+      <br><br><br>
+      <h4>CCI Purchase Order Generator</h4>
+    </div>
+    <div class="main-menu col s8 offset-s2 row">
+      <div class="col s12 row">
+        <a class="btn btn-large waves-effect waves-light col s5">PO Generator</a>
+        <a class="btn btn-large waves-effect waves-light col s5 offset-s2">PO Monitoring</a>
       </div>
-
+      <div class="col s12"><br></div>
+      <div class="col s12 row">
+        <div class="col s5 row card-panel">
+          <strong class="col s6">Projects</strong> 
+          <span class="col s6 right-align teal-text clickable add-project">ADD NEW PROJECT</span>
+          <ul class="col s12 collection main-menu-collection project-list">
+            <!--li class="collection-item">test</li-->
+          </ul>
+        </div>
+        <div class="col s5 offset-s2 row card-panel">
+          <strong class="col s6">Suppliers</strong> 
+          <span class="col s6 right-align teal-text clickable add-supplier">ADD NEW SUPPLIER</span>
+          <ul class="col s12 collection main-menu-collection">
+            <!--li class="collection-item">test</li-->
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <div class="add-project-modal modal modal-fixed-footer" style="overflow:hidden;">
+    <div class="modal-header">
+      <h5>&nbsp;&nbsp;&nbsp;Add New Project</h5>
+    </div>
+    <div class="modal-content row">
+      <div class="input-field col s12">
+        <label for="add-project-input-name">Name</label>
+        <input type="text" id="add-project-input-name" name="add-project-input-name" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-project-input-work-type">Type of Works</label>
+        <input type="text" id="add-project-input-work-type" name="add-project-input-work-type" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-project-input-address">Address</label>
+        <input type="text" id="add-project-input-address" name="add-project-input-address" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-project-input-mobile-number">Mobile Number</label>
+        <input type="text" id="add-project-input-mobile-number" name="add-project-input-mobile-number" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-project-input-contact-person">Contact Person</label>
+        <input type="text" id="add-project-input-contact-person" name="add-project-input-contact-person" class="validate" required />
+      </div>
+      <div class="input-field col s12">
+        <label for="add-project-input-project-code">Project Code</label>
+        <input type="text" id="add-project-input-project-code" name="add-project-input-project-code" class="validate" required />
+      </div>
+      
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-project-modal-btn-cancel">Cancel</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-project-modal-btn-add">Add</a>
+      <a href="#!" class=" waves-effect waves-green btn-flat generate-project tooltipped" data-position="top" data-delay="50" data-tooltip="This is just a temporary function for quick generation of random project data.">Generate</a>
+    </div>
+  </div>
 
+  <div class="view-project-modal modal modal-fixed-footer" style="overflow:hidden;">
+    <div class="modal-header">
+      <h5>&nbsp;&nbsp;&nbsp;&nbsp;<span class="project-project-code"></span>: <span class="project-name"></span></h5>
+    </div>
+    <div class="modal-content row">
+      <table>
+        <tbody>
+          <tr>
+            <td>Work Type</td>
+            <td contenteditable class="project-work-type"></td>
+          </tr>
+          <tr>
+            <td>Address</td>
+            <td contenteditable class="project-address"></td>
+          </tr>
+          <tr>
+            <td>Mobile Number</td>
+            <td contenteditable class="project-mobile-number"></td>
+          </tr>
+          <tr>
+            <td>Contact Person</td>
+            <td contenteditable class="project-contact-person"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-project-modal-btn-close">Close</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat view-project-modal-btn-save">Save</a>
+    </div>
+  </div>
 
   <!--  Scripts-->
   <script src="js/jquery.min.js"></script>
   <script src="js/materialize.js"></script>
-  <script src="js/init.js"></script>
+  <script src="js/generator.js"></script>
+  <script src="js/init2.js"></script>
+
+
 
   </body>
 </html>
