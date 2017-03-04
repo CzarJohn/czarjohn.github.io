@@ -143,7 +143,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <!--tr>
                 <td>14-234001</td>
                 <td>12,000</td>
                 <td>January 12, 1212</td>
@@ -152,7 +152,7 @@
                   <i id="open" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Edit">mode_edit</i>&nbsp;&nbsp;&nbsp;
                   <i id="delete" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>
                 </td>
-              </tr>
+              </tr-->
             </tbody>
           </table>
         </ul>
@@ -289,6 +289,59 @@
         <label for="add-po-input-conforme">Conforme</label>
         <input type="text" id="add-po-input-conforme" name="add-po-input-conforme" class="validate" required />
       </div>
+
+      <div class="col s12 row card-panel">
+        <strong class="col s6">Items</strong> 
+        <span class="col s6 right-align clickable add-po">TOTAL AMOUNT: <span class="add-po-input-total-amount">0</span></span>
+
+        <ul class="col s12 collection main-menu-collection">
+          <table>
+            <thead>
+              <tr>
+                <th data-field="po-number">Qty</th>
+                <th data-field="amount">Unit</th>
+                <th data-field="date">Description</th>
+                <th data-field="actions">Unit Cost</th>
+                <th data-field="actions">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="add-item">
+                <td>
+                  <div class="input-field">
+                    <label for="add-item-input-quantity">Qty</label> 
+                    <input type="text" id="add-item-input-quantity" name="add-item-input-quantity" class="validate" required />
+                  </div>
+                </td>
+                <td>
+                  <div class="input-field">
+                    <label for="add-item-input-unit">Unit</label>
+                    <input type="text" id="add-item-input-unit" name="add-item-input-unit" class="validate" required />
+                  </div>
+                </td>
+                <td>
+                  <div class="input-field">
+                    <label for="add-item-input-description">Description</label>
+                    <input type="text" id="add-item-input-description" name="add-item-input-description" class="validate" required />
+                  </div>
+                </td>
+                <td>
+                  <div class="input-field">
+                    <label for="add-item-input-unit-cost">Unit Cost</label>
+                    <input type="text" id="add-item-input-unit-cost" name="add-item-input-unit-cost" class="validate" required />
+                  </div>
+                </td>
+                <td>
+                  <i id="open" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Add">add</i>&nbsp;&nbsp;&nbsp;
+                  <i id="open" class="material-icons clickable tooltipped generate-item" data-position="top" data-delay="20" data-tooltip="Generate">fingerprint</i>&nbsp;&nbsp;&nbsp;
+                </td>
+              </tr-->
+            </tbody>
+          </table>
+        </ul>
+      </div>
+
+      
 
     </div>
     <div class="modal-footer">

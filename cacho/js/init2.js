@@ -17,10 +17,10 @@ var suppliers = [];
     load_projects();
     load_suppliers();
 
-    var project = find_project_code('17-252');
+    var project = find_project_code('17-227');
     set_view_project(project);
     $('.view-project-modal').openModal();
-    //setTimeout(function(){$('.add-po').click();}, 300);
+    setTimeout(function(){$('.add-po').click();}, 300);
     
     $('.add-project').click(function(){
       clear_add_project();
@@ -139,6 +139,7 @@ var suppliers = [];
     $('.generate-project').click(generate_project);
     $('.generate-supplier').click(generate_supplier);
     $('.generate-po').click(generate_po);
+    $('.generate-item').click(generate_item);
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
@@ -377,8 +378,6 @@ function generate_po(){
   $(p+'to-be-used-for').val('So is this. Haha.');
   $(p+'conforme').val(generate_name());
 
-  $('#add-po-input-deliver-to')
-
   tos = [];
   deliver_tos = [];
   $("#add-po-input-to option").each(function(){
@@ -395,6 +394,14 @@ function generate_po(){
     $('#add-po-input-deliver-to').val(deliver_tos[Math.floor(Math.random()*deliver_tos.length)]);
     $('#add-po-input-deliver-to').material_select();
   }
+}
+
+function generate_item(){
+  $('.add-item>td>div>label').addClass('active');
+  $('#add-item-input-quantity').val(generate_number(1,100));
+  $('#add-item-input-unit').val(generate_unit());
+  $('#add-item-input-description').val(generate_item2());
+  $('#add-item-input-unit-cost').val(generate_number(100,3000));
 }
 
 function set_view_project(project){
