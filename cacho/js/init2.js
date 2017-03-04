@@ -17,9 +17,10 @@ var suppliers = [];
     load_projects();
     load_suppliers();
 
-    var project = find_project_code('17-411');
+    var project = find_project_code('17-252');
     set_view_project(project);
     $('.view-project-modal').openModal();
+    //setTimeout(function(){$('.add-po').click();}, 300);
     
     $('.add-project').click(function(){
       clear_add_project();
@@ -33,6 +34,9 @@ var suppliers = [];
 
     $('.add-po').click(function(){
       clear_add_po();
+      var pid = this.id.split(/-(.+)/)[1];
+      var project = find_project_code(pid);
+      set_add_po(project);
       $('.add-po-modal').openModal();
     });
 
@@ -363,6 +367,8 @@ function generate_supplier(){
 
 function generate_po(){
   var p = '#add-po-input-';
+
+  //todo don't place active on select's label
   $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
   $(p+'completion-date').val(generate_date());
   $(p+'requested-by').val(generate_name());
@@ -370,12 +376,25 @@ function generate_po(){
   $(p+'cost-ref').val('This is not a random data string.');
   $(p+'to-be-used-for').val('So is this. Haha.');
   $(p+'conforme').val(generate_name());
-  //ensure that there are no duplicate project codes
-  /*pn = generate_ponum();
-  while(pn_is_existing(pn)){ 
-    sc = generate_suppliercode();
+
+  $('#add-po-input-deliver-to')
+
+  tos = [];
+  deliver_tos = [];
+  $("#add-po-input-to option").each(function(){
+    tos.push($(this).val());
+  });
+  $("#add-po-input-deliver-to option").each(function(){
+    deliver_tos.push($(this).val());
+  });
+  if($("#add-po-input-to").val()==""){
+    $('#add-po-input-to').val(tos[Math.floor(Math.random()*tos.length)]);
+    $('#add-po-input-to').material_select();
   }
-  $(p+'supplier-code').val(sc);*/
+  if($("#add-po-input-deliver-to").val()==""){
+    $('#add-po-input-deliver-to').val(deliver_tos[Math.floor(Math.random()*deliver_tos.length)]);
+    $('#add-po-input-deliver-to').material_select();
+  }
 }
 
 function set_view_project(project){
@@ -384,6 +403,7 @@ function set_view_project(project){
   for(var i=0; i<keys.length; i+=1){
     $(p+keys[i]).html(project[keys[i]]);
   } 
+  $('.add-po').attr('id', 'project-'+project['project-code']);
 }
 
 function set_view_supplier(supplier){
@@ -392,6 +412,12 @@ function set_view_supplier(supplier){
   for(var i=0; i<keys.length; i+=1){
     $(p+keys[i]).html(supplier[keys[i]]);
   } 
+}
+
+function set_add_po(project){
+  $('#add-po-input-deliver-to').val(project['project-code']);
+  $('#add-po-input-deliver-to').material_select();
+  //todo lock select if possible
 }
 
 function get_add_project_input(){
