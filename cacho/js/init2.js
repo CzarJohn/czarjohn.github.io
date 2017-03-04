@@ -40,9 +40,10 @@ var suppliers = [];
       $('.add-po-modal').openModal();
     });
 
+
     $('.add-project-modal-btn-add').click(function(){
       if(!check_project_input()){
-        Materialize.toast('Some fields are blank.',5000);
+        Materialize.toast('Some fields are blank1.',5000);
         setTimeout(function(){$('.add-project-modal').openModal();},300);
       }
       else{
@@ -54,13 +55,24 @@ var suppliers = [];
 
     $('.add-supplier-modal-btn-add').click(function(){
       if(!check_supplier_input()){
-        Materialize.toast('Some fields are blank.',5000);
+        Materialize.toast('Some fields are blank2.',5000);
         setTimeout(function(){$('.add-supplier-modal').openModal();},300);
       }
       else{
         supplier = get_add_supplier_input(); 
         add_supplier(supplier);
         clear_add_supplier();
+      }
+    });
+
+    $('.add-item').click(function(){
+      if(!check_project_input()){
+        Materialize.toast('Some fields are blank3.',5000);
+      }
+      else{
+        /*supplier = get_add_supplier_input(); 
+        add_supplier(supplier);
+        clear_add_supplier();*/
       }
     });
 
@@ -260,6 +272,18 @@ function check_supplier_input(){
   return true;
 }
 
+function check_item_input(){
+  var p = '#add-item-input-';
+  keys = ['quantity','unit', 'description', 'unit-price'];
+  for(var i=0; i<keys.length; i+=1){
+    var input = $(p+keys[i]).val();
+    if(input.trim() == ''){
+      return false;
+    }
+  } 
+  return true;
+}
+
 function check_project_edit(){
   var p = '.project-';
   keys = ['name','work-type', 'address', 'mobile-number', 'contact-person', 'project-code'];
@@ -390,7 +414,7 @@ function generate_po(){
     $('#add-po-input-to').val(tos[Math.floor(Math.random()*tos.length)]);
     $('#add-po-input-to').material_select();
   }
-  if($("#add-po-input-deliver-to").val()==""){
+  if($("#adddpo-input-deliver-to").val()==""){
     $('#add-po-input-deliver-to').val(deliver_tos[Math.floor(Math.random()*deliver_tos.length)]);
     $('#add-po-input-deliver-to').material_select();
   }
