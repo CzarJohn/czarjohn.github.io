@@ -328,8 +328,8 @@
                 </td>
                 <td>
                   <div class="input-field">
-                    <label for="add-item-input-unit-cost">Unit Cost</label>
-                    <input type="text" id="add-item-input-unit-cost" name="add-item-input-unit-cost" class="validate" required />
+                    <label for="add-item-input-unit-price">Unit Price</label>
+                    <input type="text" id="add-item-input-unit-price" name="add-item-input-unit-price" class="validate" required />
                   </div>
                 </td>
                 <td></td>
@@ -343,7 +343,7 @@
         </ul>
       </div>
 
-      
+      <input class="text" id="hidden-po-number" style="display:none;">
 
     </div>
     <div class="modal-footer">
@@ -353,6 +353,9 @@
       <a href="#!" class=" waves-effect waves-green btn-flat generate-po tooltipped" data-position="top" data-delay="50" data-tooltip="This is just a temporary function for quick generation of random PO data.">Generate</a>
     </div>
   </div>
+
+  <iframe id="hif" style="display:none">
+  </iframe>
 
   <!--  Scripts-->
   <script src="js/jquery.min.js"></script>

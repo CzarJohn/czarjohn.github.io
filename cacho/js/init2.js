@@ -10,6 +10,8 @@ var suppliers = [];
 //todne change view po icon
 
 
+//$('#hif').attr('src', 'print.html?number=43434');
+
 //todo add monitoring
 //todo add print po links
 //todo print po on add
@@ -32,6 +34,9 @@ var suppliers = [];
 
     load_projects();
     load_suppliers();
+
+
+    //print_po('17-536000');
 
     /*var project = find_project_code('17-855');
     set_view_project(project);
@@ -112,6 +117,11 @@ var suppliers = [];
         add_po(po);
         clear_add_po();
       }
+    });
+
+    $('.add-po-modal-btn-print').click(function(){
+      console.log($('.hidden-po-number').val());
+      print_po($('#hidden-po-number').val());
     });
 
     $('.add-item').click(function(){
@@ -251,6 +261,15 @@ var suppliers = [];
   }); // end of document ready
 })(jQuery); // end of jQuery name space
 
+function print_po(code){
+  po = find_po_code(code);
+  po['to'] = find_supplier_code(po['to']);
+  po['deliver-to'] = find_project_code(po['deliver-to']);
+  po['deliver-to']['pos'] = null;
+  $('#hif').attr('src', 'print.html?po='+JSON.stringify(po));
+  load_projects();
+}
+
 function add_project(project){
   projects.push(project);
   localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
@@ -281,14 +300,14 @@ function add_item(item){
       '<td>'+item['quantity']+'</td>'+
       '<td>'+item['unit']+'</td>'+
       '<td>'+item['description']+'</td>'+
-      '<td>'+item['unit-cost']+'</td>'+
-      '<td>'+parseInt(item['unit-cost'])*parseInt(item['quantity'])+'</td>'+
+      '<td>'+item['unit-price']+'</td>'+
+      '<td>'+parseInt(item['unit-price'])*parseInt(item['quantity'])+'</td>'+
       '<td><i class="material-icons clickable delete-item">close</i></td>'+
     '</tr>'
   );
 
   var total = parseInt($('.add-po-input-total-amount').html());
-  total += parseInt(item['unit-cost'])*parseInt(item['quantity']);
+  total += parseInt(item['unit-price'])*parseInt(item['quantity']);
   $('.add-po-input-total-amount').html(total);
 
   Materialize.toast('Successfully added item',3000);
@@ -315,6 +334,7 @@ function add_po(po){
         '</td>'+
       '</tr>'
     );
+    print_po(po['po-number']);
   }
   else Materialize.toast('Project code '+po['deliver-to']+' cannot be found.',5000); 
 }
@@ -373,6 +393,8 @@ function delete_po(code){
 }
 
 function load_projects(){
+  $('.project-list').html('');
+  projects = [];
   if(localStorage.getItem('projects') != null){
     projects = obj_to_arr(JSON.parse(localStorage.getItem('projects')));
     $.each(projects, function(index, project){
@@ -426,7 +448,7 @@ function check_supplier_input(){
 
 function check_item_input(){
   var p = '#add-item-input-';
-  keys = ['quantity','unit', 'description', 'unit-cost'];
+  keys = ['quantity','unit', 'description', 'unit-price'];
   for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
     if(input.trim() == ''){
@@ -601,7 +623,7 @@ function generate_item(){
   $('#add-item-input-quantity').val(generate_number(1,20));
   $('#add-item-input-unit').val(generate_unit());
   $('#add-item-input-description').val(generate_item2());
-  $('#add-item-input-unit-cost').val(generate_number(100,2500));
+  $('#add-item-input-unit-price').val(generate_number(100,2500));
 }
 
 function set_view_project(project){
@@ -627,6 +649,7 @@ function set_view_po(po){
 
   $('.add-po-header').html('&nbsp;&nbsp;&nbsp;View Purchase Order ('+po['po-number']+')');
   $('.add-po-modal-btn-print').show();
+  $('#hidden-po-number').val(po['po-number']);
 
   $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
   var p = '#add-po-input-';
@@ -704,7 +727,7 @@ function get_add_supplier_input(){
 
 function get_add_item_input(){
   var p = '#add-item-input-';
-  keys = ['quantity','unit', 'description', 'unit-cost'];
+  keys = ['quantity','unit', 'description', 'unit-price'];
   item = {};
   for(var i=0; i<keys.length; i+=1){
     item[keys[i]] = $(p+keys[i]).val();
@@ -812,7 +835,7 @@ function clear_add_item(){
     p+'quantity'+
     ','+p+'unit'+
     ','+p+'description'+
-    ','+p+'unit-cost';
+    ','+p+'unit-price';
   $(selector).val('');
 }
 

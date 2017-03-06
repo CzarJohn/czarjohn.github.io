@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Cacho</title>
+
+  <!-- CSS  -->
+  <link href="css/icons/icons.css" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <style>
+    td{
+      text-align: right;
+    }
+  </style>
+
+</head>
+<body style="height:2200px;max-height:1700px;overflow-y:hidden;">
+
+<div class="main">
+  PO #: <span class="po-po-number"></span><br>
+  <br>
+  Date: <span class="po-date"></span><br>
+  Requested by: <span class="po-requested-by"></span><br>
+  Ordered by: <span class="po-ordered-by"></span><br>
+  Date of Delivery: <span class="po-completion-date"></span><br>
+  <br>
+  To: <span class="po-to"></span><br>
+  <br>
+  Deliver to: <span class="po-deliver-to"></span><br>
+  <br>
+  Cost Ref: <span class="po-cost-ref"></span><br>
+  <br>
+  <table>
+    <thead>
+      <tr>
+        <th>Qty</th>
+        <th>Unit</th>
+        <th>Description</th>
+        <th>Unit Cost</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody class="item-list">
+      
+    </tbody>
+  </table><br>
+  <br>
+  To be used for: <span class="po-to-be-used-for"></span><br>
+  Conforme: <span class="po-conforme"></span><br>
+</div>
+
+<!--div id="write">
+</div-->
+
+  <!--  Scripts-->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script>
+
+      
+
+    function searchToObject() {
+      var pairs = window.location.search.substring(1).split("&"),
+        obj = {},
+        pair,
+        i;
+      for ( i in pairs ) {
+        if ( pairs[i] === "" ) continue;
+
+        pair = pairs[i].split("=");
+        obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] );
+      }
+      po = JSON.parse(obj.po);
+      var p = '.po-';
+      console.log(po);
+
+      keys = ['date', 'po-number', 'completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme'];
+      for(var i=0; i<keys.length; i+=1){
+        $(p+keys[i]).html(po[keys[i]]);
+      }
+
+      keys = ['name','vat-reg', 'address', 'mobile-number', 'contact-person'];
+      for(var i=0; i<keys.length; i+=1){
+        $(p+'to').append('<br>'+po['to'][keys[i]]);
+      }
+
+      keys = ['name', 'project-code', 'address', 'mobile-number', 'contact-person'];
+      for(var i=0; i<keys.length; i+=1){
+        $(p+'deliver-to').append('<br>'+po['deliver-to'][keys[i]]);
+      }
+
+      for(var i in po['items']){
+        $('.item-list').append(
+          '<tr>'+
+            '<td>'+po['items'][i]['quantity']+'</td>'+
+            '<td>'+po['items'][i]['unit']+'</td>'+
+            '<td>'+po['items'][i]['description']+'</td>'+
+            '<td>'+po['items'][i]['unit-price']+'</td>'+
+            '<td>'+parseInt(po['items'][i]['unit-price'])*parseInt(po['items'][i]['quantity'])+'</td>'+
+          '</tr>'
+        );
+      }
+       $('.item-list').append(
+          '<tr style="border-top:1px solid black;">'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td><strong>GRAND TOTAL</strong></td>'+
+            '<td><strong>'+parseInt(po['total-amount'])+'</strong></td>'+
+          '</tr>'
+        );
+    }
+
+    searchToObject();
+
+
+    setTimeout(function(){
+      window.print();
+    },100);
+  </script>
+
+
+
+
+  </body>
+</html>
