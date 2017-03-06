@@ -16,7 +16,7 @@
   </style>
 
 </head>
-<body style="height:2200px;max-height:1700px;overflow-y:hidden;">
+<body style="overflow-y:hidden;">
 
 <div class="main">
   PO #: <span class="po-po-number"></span><br>
@@ -74,7 +74,6 @@
       }
       po = JSON.parse(obj.po);
       var p = '.po-';
-      console.log(po);
 
       keys = ['date', 'po-number', 'completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme'];
       for(var i=0; i<keys.length; i+=1){

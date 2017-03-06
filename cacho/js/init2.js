@@ -8,17 +8,15 @@ var suppliers = [];
 //todne add delete po with confirmation
 //todne change po view
 //todne change view po icon
+//todne add print po links
+//todne print po on add
 
-
-//$('#hif').attr('src', 'print.html?number=43434');
-
+//todo disable select
+//todo don't place active on select's label
 //todo add monitoring
-//todo add print po links
-//todo print po on add
 //todo add list of items from supplier
 //todo add amend po
 
-//todo on po to change, change..., hmm, wait, this needs to be pondered upon further
 
 (function($){
   $(function(){
@@ -35,22 +33,6 @@ var suppliers = [];
     load_projects();
     load_suppliers();
 
-
-    //print_po('17-536000');
-
-    /*var project = find_project_code('17-855');
-    set_view_project(project);
-    set_add_po(project);
-    $('.view-project-modal').openModal();*/
-    /*setTimeout(function(){
-      $('.add-po').click();
-      generate_item();
-      $('.add-item').click();
-      generate_item();
-      $('.add-item').click();
-      $('.generate-po').click();
-    }, 300);*/
-    
     $('.add-project').click(function(){
       clear_add_project();
       $('.add-project-modal').openModal();
@@ -120,7 +102,6 @@ var suppliers = [];
     });
 
     $('.add-po-modal-btn-print').click(function(){
-      console.log($('.hidden-po-number').val());
       print_po($('#hidden-po-number').val());
     });
 
@@ -163,7 +144,6 @@ var suppliers = [];
       var po = find_po_code(pid);
       if(po != null) {
         po['po-number'] = pid;
-        //todo view po 
         clear_add_po();
         set_view_po(po);
         $('.add-po-modal').openModal();
@@ -591,7 +571,6 @@ function generate_supplier(){
 function generate_po(){
   var p = '#add-po-input-';
 
-  //todo don't place active on select's label
   $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
   $(p+'completion-date').val(generate_date());
   $(p+'requested-by').val(generate_name());
@@ -683,8 +662,6 @@ function set_view_po(po){
 function set_add_po(project){
   $('#add-po-input-deliver-to').val(project['project-code']);
   $('#add-po-input-deliver-to').material_select();
-  //todo lock select if possible
-  //todo change pos on select to change
   $('.po-list').html('');
   var pos = project['pos'];
   for(var key in pos){
@@ -821,6 +798,7 @@ function clear_add_po(){
   $('.add-item-row').show();
   $('.add-po-modal-btn-add').show();
   $('.generate-po').show();
+  $('.add-po-input-total-amount').html('0');
   var item_rows = $('.item-list>tr');
   for(var i=item_rows.length-1; i>=1; i--){
     $('.item-list>tr')[1].remove();
