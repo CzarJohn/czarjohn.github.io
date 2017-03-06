@@ -325,7 +325,11 @@ function add_po(po){
 function edit_project(project){
   $.each(projects, function(index, p){
       if(p['project-code'] == project['project-code']){
-        projects[index] = project;
+        keys = ['name','work-type', 'address', 'mobile-number', 'contact-person', 'project-code'];
+        for(var i=0; i<keys.length; i+=1){
+          projects[index][keys[i]] = project[keys[i]];
+        }
+        //projects[index] = project;
         localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
         Materialize.toast('Successfully edited project',3000);
         return;
