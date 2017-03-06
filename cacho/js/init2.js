@@ -2,7 +2,21 @@ var item_count = 0;
 var projects = [];
 var suppliers = [];
 
+//todne scrolltop whenever opening a new modal
+//todne lock select on readonly, fixed with not showing add button on view po
+//todne clear items on po
+//todne add delete po with confirmation
+//todne change po view
+//todne change view po icon
 
+
+//todo add monitoring
+//todo add print po links
+//todo print po on add
+//todo add list of items from supplier
+//todo add amend po
+
+//todo on po to change, change..., hmm, wait, this needs to be pondered upon further
 
 (function($){
   $(function(){
@@ -14,22 +28,34 @@ var suppliers = [];
 
     $('select').material_select();
 
+    $('.tooltipped').tooltip({delay: 50});
+
     load_projects();
     load_suppliers();
 
-    var project = find_project_code('17-227');
+    /*var project = find_project_code('17-855');
     set_view_project(project);
-    $('.view-project-modal').openModal();
-    setTimeout(function(){$('.add-po').click();}, 300);
+    set_add_po(project);
+    $('.view-project-modal').openModal();*/
+    /*setTimeout(function(){
+      $('.add-po').click();
+      generate_item();
+      $('.add-item').click();
+      generate_item();
+      $('.add-item').click();
+      $('.generate-po').click();
+    }, 300);*/
     
     $('.add-project').click(function(){
       clear_add_project();
       $('.add-project-modal').openModal();
+      $('.add-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
 
     $('.add-supplier').click(function(){
       clear_add_supplier();
       $('.add-supplier-modal').openModal();
+      $('.add-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
 
     $('.add-po').click(function(){
@@ -38,13 +64,18 @@ var suppliers = [];
       var project = find_project_code(pid);
       set_add_po(project);
       $('.add-po-modal').openModal();
+      $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
 
 
     $('.add-project-modal-btn-add').click(function(){
       if(!check_project_input()){
-        Materialize.toast('Some fields are blank1.',5000);
-        setTimeout(function(){$('.add-project-modal').openModal();},300);
+        Materialize.toast('Some fields are blank.',5000);
+        setTimeout(function(){
+          $('.add-project-modal').openModal();
+          $('.add-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+
+        },300);
       }
       else{
         project = get_add_project_input(); 
@@ -55,8 +86,11 @@ var suppliers = [];
 
     $('.add-supplier-modal-btn-add').click(function(){
       if(!check_supplier_input()){
-        Materialize.toast('Some fields are blank2.',5000);
-        setTimeout(function(){$('.add-supplier-modal').openModal();},300);
+        Materialize.toast('Some fields are blank.',5000);
+        setTimeout(function(){
+          $('.add-supplier-modal').openModal();
+          $('.add-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        },300);
       }
       else{
         supplier = get_add_supplier_input(); 
@@ -65,14 +99,29 @@ var suppliers = [];
       }
     });
 
-    $('.add-item').click(function(){
-      if(!check_project_input()){
-        Materialize.toast('Some fields are blank3.',5000);
+    $('.add-po-modal-btn-add').click(function(){
+      if(!check_po_input()){
+        Materialize.toast('Some fields are blank.',5000);
+        setTimeout(function(){
+          $('.add-po-modal').openModal();
+          $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        },300);
       }
       else{
-        /*supplier = get_add_supplier_input(); 
-        add_supplier(supplier);
-        clear_add_supplier();*/
+        po = get_add_po_input(); 
+        add_po(po);
+        clear_add_po();
+      }
+    });
+
+    $('.add-item').click(function(){
+      if(!check_item_input()){
+        Materialize.toast('Some fields are blank.',5000);
+      }
+      else{
+        item = get_add_item_input();
+        add_item(item);
+        clear_add_item();
       }
     });
 
@@ -81,7 +130,9 @@ var suppliers = [];
       var project = find_project_code(pid);
       if(project != null) {
         set_view_project(project);
+        set_add_po(project);
         $('.view-project-modal').openModal();
+        $('.view-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
       }
       else Materialize.toast('Project code '+pid+' cannot be found.',5000);
     });
@@ -92,8 +143,24 @@ var suppliers = [];
       if(supplier != null) {
         set_view_supplier(supplier);
         $('.view-supplier-modal').openModal();
+        $('.view-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
       }
       else Materialize.toast('Supplier id '+pid+' cannot be found.',5000);
+    });
+
+    $('.po-list').on('click', '.open-po', function(){
+      var pid = this.id.split(/-(.+)/)[1];
+      var po = find_po_code(pid);
+      if(po != null) {
+        po['po-number'] = pid;
+        //todo view po 
+        clear_add_po();
+        set_view_po(po);
+        $('.add-po-modal').openModal();
+        $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+
+      }
+      else Materialize.toast('PO code '+pid+' cannot be found.',5000);
     });
 
     $('.project-list').on('click', '.delete-project', function(){
@@ -108,6 +175,18 @@ var suppliers = [];
       else Materialize.toast('Project code '+pid+' cannot be found.',5000);
     });
 
+    $('.po-list').on('click', '.delete-po', function(){
+      var pid = this.id.split(/-(.+)/)[1]
+      var po = find_po_code(pid);
+      if(po != null) {
+        con = confirm('Are you sure you want to delete PO# '+pid+'?\nThis cannot be undone.');
+        if(con){
+          delete_po(pid);
+        }
+      }
+      else Materialize.toast('PO number '+pid+' cannot be found.',5000);
+    });
+
     $('.supplier-list').on('click', '.delete-supplier', function(){
       var pid = this.id.split(/-(.+)/)[1]
       var supplier = find_supplier_code(pid);
@@ -120,10 +199,17 @@ var suppliers = [];
       else Materialize.toast('Supplier id '+pid+' cannot be found.',5000);
     });
 
+    $('.item-list').on('click', '.delete-item', function(){
+      $(this).parent().parent().remove();
+    });
+
     $('.view-project-modal-btn-save').click(function(){
       if(!check_project_edit()){
         Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){$('.view-project-modal').openModal();},300);
+        setTimeout(function(){
+          $('.view-project-modal').openModal();
+          $('.view-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        },300);
       }
       else{
         project = get_edited_project();
@@ -137,7 +223,10 @@ var suppliers = [];
     $('.view-supplier-modal-btn-save').click(function(){
       if(!check_supplier_edit()){
         Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){$('.view-supplier-modal').openModal();},300);
+        setTimeout(function(){
+          $('.view-supplier-modal').openModal();
+          $('.view-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        },300);
       }
       else{
         supplier = get_edited_supplier();
@@ -152,6 +241,12 @@ var suppliers = [];
     $('.generate-supplier').click(generate_supplier);
     $('.generate-po').click(generate_po);
     $('.generate-item').click(generate_item);
+
+    $('.po-generator').click(function(){
+      clear_add_po();
+      $('.add-po-modal').openModal();
+      $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+    });
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
@@ -178,6 +273,50 @@ function add_supplier(supplier){
     '</span></li>'
   );
   Materialize.toast('Successfully added supplier',3000);
+}
+
+function add_item(item){
+  $('.item-list').append(
+    '<tr>'+
+      '<td>'+item['quantity']+'</td>'+
+      '<td>'+item['unit']+'</td>'+
+      '<td>'+item['description']+'</td>'+
+      '<td>'+item['unit-cost']+'</td>'+
+      '<td>'+parseInt(item['unit-cost'])*parseInt(item['quantity'])+'</td>'+
+      '<td><i class="material-icons clickable delete-item">close</i></td>'+
+    '</tr>'
+  );
+
+  var total = parseInt($('.add-po-input-total-amount').html());
+  total += parseInt(item['unit-cost'])*parseInt(item['quantity']);
+  $('.add-po-input-total-amount').html(total);
+
+  Materialize.toast('Successfully added item',3000);
+}
+
+function add_po(po){
+  var project = find_project_code(po['deliver-to']);
+  if(project != null){
+    var i = 0;
+    while(project['pos'][po['deliver-to']+three_digits(i)] != undefined){
+      i++;
+    }
+    po['po-number'] = po['deliver-to']+three_digits(i);
+    project['pos'][po['po-number']] = po;
+    localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+    $('.po-list').append(
+      '<tr id="'+po['po-number']+'">'+
+        '<td>'+po['po-number']+'</td>'+ 
+        '<td>'+po['total-amount']+'</td>'+
+        '<td>'+po['date']+'</td>'+
+        '<td>'+
+          '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+          '<i id="delete-'+po['po-number']+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>'+
+        '</td>'+
+      '</tr>'
+    );
+  }
+  else Materialize.toast('Project code '+po['deliver-to']+' cannot be found.',5000); 
 }
 
 function edit_project(project){
@@ -218,6 +357,19 @@ function delete_supplier(supplier){
   localStorage.setItem('suppliers', JSON.stringify(arr_to_obj(suppliers)));
   $('.supplier-list>#'+supplier['supplier-code']).remove();
   Materialize.toast('Successfully deleted supplier',3000);
+}
+
+function delete_po(code){
+  var project_code = code.substring(0,6);
+  for(var i=0; i<projects.length; i++){
+    if(projects[i]['project-code'] == project_code){
+      delete projects[i]['pos'][code];
+      break;
+    }
+  }
+  localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+  $('.po-list>#'+code).remove();
+  Materialize.toast('Successfully deleted PO',3000);
 }
 
 function load_projects(){
@@ -274,13 +426,26 @@ function check_supplier_input(){
 
 function check_item_input(){
   var p = '#add-item-input-';
-  keys = ['quantity','unit', 'description', 'unit-price'];
+  keys = ['quantity','unit', 'description', 'unit-cost'];
   for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
     if(input.trim() == ''){
       return false;
     }
   } 
+  return true;
+}
+
+function check_po_input(){
+  var p = '#add-po-input-';
+  keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
+    for(var i=0; i<keys.length; i+=1){
+    var input = $(p+keys[i]).val();
+    if(input.trim() == ''){
+      return false;
+    }
+  } 
+  if($('.item-list>tr').length <= 1) return false;
   return true;
 }
 
@@ -321,6 +486,17 @@ function find_supplier_code(code){
   for(var i=0; i<suppliers.length; i++){
     if(suppliers[i]['supplier-code'] == code){
       return suppliers[i];
+    }
+  }
+  return null;
+}
+
+function find_po_code(code){
+  var project_code = code.substring(0,6);
+  for(var i=0; i<projects.length; i++){
+    if(projects[i]['project-code'] == project_code){
+      if(projects[i]['pos'][code] != undefined) return projects[i]['pos'][code];
+      return null;
     }
   }
   return null;
@@ -421,11 +597,11 @@ function generate_po(){
 }
 
 function generate_item(){
-  $('.add-item>td>div>label').addClass('active');
-  $('#add-item-input-quantity').val(generate_number(1,100));
+  $('.add-item-row>td>div>label').addClass('active');
+  $('#add-item-input-quantity').val(generate_number(1,20));
   $('#add-item-input-unit').val(generate_unit());
   $('#add-item-input-description').val(generate_item2());
-  $('#add-item-input-unit-cost').val(generate_number(100,3000));
+  $('#add-item-input-unit-cost').val(generate_number(100,2500));
 }
 
 function set_view_project(project){
@@ -445,10 +621,64 @@ function set_view_supplier(supplier){
   } 
 }
 
+function set_view_po(po){
+  create_project_options();
+  create_supplier_options();
+
+  $('.add-po-header').html('&nbsp;&nbsp;&nbsp;View Purchase Order ('+po['po-number']+')');
+  $('.add-po-modal-btn-print').show();
+
+  $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
+  var p = '#add-po-input-';
+  keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
+  for(var i=0; i<keys.length; i+=1){
+    $(p+keys[i]).val(po[keys[i]]);
+    $(p+keys[i]).attr('readonly', '');
+  }
+  $(p+'to,'+p+'deliver-to').material_select();
+  $('.add-item-row').hide();
+  $('.add-po-modal-btn-add').hide();
+  $('.generate-po').hide();
+  var items = po['items'];
+  for(var key in items){
+    if(items.hasOwnProperty(key)){
+      $('.item-list').append(
+        '<tr>'+
+          '<td>'+items[key]['quantity']+'</td>'+
+          '<td>'+items[key]['unit']+'</td>'+
+          '<td>'+items[key]['description']+'</td>'+
+          '<td>'+items[key]['unit-price']+'</td>'+
+          '<td>'+items[key]['subtotal']+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+  $('.add-po-input-total-amount').html(po['total-amount']);
+}
+
 function set_add_po(project){
   $('#add-po-input-deliver-to').val(project['project-code']);
   $('#add-po-input-deliver-to').material_select();
   //todo lock select if possible
+  //todo change pos on select to change
+  $('.po-list').html('');
+  var pos = project['pos'];
+  for(var key in pos){
+    if(pos.hasOwnProperty(key)){
+      $('.po-list').append(
+        '<tr id="'+key+'">'+
+          '<td>'+key+'</td>'+
+          '<td>'+pos[key]['total-amount']+'</td>'+
+          '<td>'+pos[key]['date']+'</td>'+
+          '<td><i id="open-'+key+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+          '<i id="delete-'+key+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i></td>'+
+        '</tr>'
+      );
+    }
+    
+  }
+
 }
 
 function get_add_project_input(){
@@ -458,6 +688,7 @@ function get_add_project_input(){
   for(var i=0; i<keys.length; i+=1){
     project[keys[i]] = $(p+keys[i]).val();
   }
+  project['pos'] = {};
   return project;
 }
 
@@ -469,6 +700,44 @@ function get_add_supplier_input(){
     supplier[keys[i]] = $(p+keys[i]).val();
   }
   return supplier;
+}
+
+function get_add_item_input(){
+  var p = '#add-item-input-';
+  keys = ['quantity','unit', 'description', 'unit-cost'];
+  item = {};
+  for(var i=0; i<keys.length; i+=1){
+    item[keys[i]] = $(p+keys[i]).val();
+  }
+  return item;
+}
+
+function get_add_po_input(){
+  var p = '#add-po-input-';
+  keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
+  po = {};
+  for(var i=0; i<keys.length; i+=1){
+    po[keys[i]] = $(p+keys[i]).val();
+  }
+  var item_rows = $('.item-list>tr');
+  var items = {};
+  for(var i=1; i<item_rows.length; i++){
+      items[i-1] = get_item_from_row(item_rows[i]);
+  }
+  po['items'] = items;
+  po['total-amount'] = parseInt($('.add-po-input-total-amount').html());
+  po['date'] = 'March 05, 2017';
+  return po;
+}
+
+function get_item_from_row(row){
+  var item = {};
+  item['quantity'] = row.children[0].innerHTML;
+  item['unit'] = row.children[1].innerHTML;
+  item['description'] = row.children[2].innerHTML;
+  item['unit-price'] = row.children[3].innerHTML;
+  item['subtotal'] = row.children[4].innerHTML;
+  return item;
 }
 
 function get_edited_project(){
@@ -515,17 +784,36 @@ function clear_add_supplier(){
 }
 
 function clear_add_po(){
-  /*var p = '#add-po-input-';
+  var p = '#add-po-input-';
   var selector = ''+
-    p+'name'+
-    ','+p+'work-type'+
-    ','+p+'address'+
-    ','+p+'mobile-number'+
-    ','+p+'contact-person'+
-    ','+p+'project-code';
-  $(selector).val('');*/
+    p+'completion-date'+
+    ','+p+'requested-by'+
+    ','+p+'ordered-by'+
+    ','+p+'cost-ref'+
+    ','+p+'to-be-used-for'+
+    ','+p+'conforme';
+  $(selector).val('').removeAttr('readonly');
+  $('.add-po-header').html('&nbsp;&nbsp;&nbsp;Add New Purchase Order');
+  $('.add-po-modal-btn-print').hide();
+  $('.add-item-row').show();
+  $('.add-po-modal-btn-add').show();
+  $('.generate-po').show();
+  var item_rows = $('.item-list>tr');
+  for(var i=item_rows.length-1; i>=1; i--){
+    $('.item-list>tr')[1].remove();
+  }
   create_project_options();
   create_supplier_options();
+}
+
+function clear_add_item(){
+  var p = '#add-item-input-';
+  var selector = ''+
+    p+'quantity'+
+    ','+p+'unit'+
+    ','+p+'description'+
+    ','+p+'unit-cost';
+  $(selector).val('');
 }
 
 function create_project_options(){
@@ -545,4 +833,10 @@ function create_supplier_options(){
   }
   $('#add-po-input-to').html(sb);
   $('#add-po-input-to').material_select();
+}
+
+function three_digits(num){
+  if(num < 10) return '00'+num;
+  if(num < 100) return '0'+num;
+  return num;
 }

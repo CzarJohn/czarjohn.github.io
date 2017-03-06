@@ -43,7 +43,7 @@
     </div>
     <div class="main-menu col s8 offset-s2 row">
       <div class="col s12 row">
-        <a class="btn btn-large waves-effect waves-light col s5">PO Generator</a>
+        <a class="btn btn-large waves-effect waves-light col s5 po-generator">PO Generator</a>
         <a class="btn btn-large waves-effect waves-light col s5 offset-s2">PO Monitoring</a>
       </div>
       <div class="col s12"><br></div>
@@ -142,7 +142,7 @@
                 <th data-field="actions">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="po-list">
               <!--tr>
                 <td>14-234001</td>
                 <td>12,000</td>
@@ -236,7 +236,7 @@
 
   <div class="add-po-modal modal modal-fixed-footer" style="overflow:hidden;">
     <div class="modal-header">
-      <h5>&nbsp;&nbsp;&nbsp;Add New Purchase Order (not yet working)</h5>
+      <h5 class="add-po-header">&nbsp;&nbsp;&nbsp;Add New Purchase Order</h5>
     </div>
     <div class="modal-content row">
  
@@ -302,11 +302,12 @@
                 <th data-field="amount">Unit</th>
                 <th data-field="date">Description</th>
                 <th data-field="actions">Unit Cost</th>
+                <th data-field="actions">Subtotal</th>
                 <th data-field="actions">Action</th>
               </tr>
             </thead>
-            <tbody>
-              <tr class="add-item">
+            <tbody class="item-list">
+              <tr class="add-item-row">
                 <td>
                   <div class="input-field">
                     <label for="add-item-input-quantity">Qty</label> 
@@ -331,9 +332,10 @@
                     <input type="text" id="add-item-input-unit-cost" name="add-item-input-unit-cost" class="validate" required />
                   </div>
                 </td>
+                <td></td>
                 <td>
-                  <i class="material-icons clickable tooltipped add-item" data-position="top" data-delay="20" data-tooltip="Add">add</i>&nbsp;&nbsp;&nbsp;
-                  <i class="material-icons clickable tooltipped generate-item" data-position="top" data-delay="20" data-tooltip="Generate">fingerprint</i>&nbsp;&nbsp;&nbsp;
+                  <i class="material-icons clickable tooltipped add-item" data-position="top" data-delay="20" data-tooltip="Add">add</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <i class="material-icons clickable tooltipped generate-item" data-position="top" data-delay="20" data-tooltip="Generate">fingerprint</i>
                 </td>
               </tr-->
             </tbody>
@@ -347,6 +349,7 @@
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-cancel">Cancel</a>
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-add">Add</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-print" style="display:none;">Print</a>
       <a href="#!" class=" waves-effect waves-green btn-flat generate-po tooltipped" data-position="top" data-delay="50" data-tooltip="This is just a temporary function for quick generation of random PO data.">Generate</a>
     </div>
   </div>
