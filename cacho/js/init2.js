@@ -190,6 +190,9 @@ var suppliers = [];
     });
 
     $('.item-list').on('click', '.delete-item', function(){
+      var total = parseInt($('.add-po-input-total-amount').html());
+      total -= parseInt(this.id);
+      $('.add-po-input-total-amount').html(total);
       $(this).parent().parent().remove();
     });
 
@@ -282,7 +285,7 @@ function add_item(item){
       '<td>'+item['description']+'</td>'+
       '<td>'+item['unit-price']+'</td>'+
       '<td>'+parseInt(item['unit-price'])*parseInt(item['quantity'])+'</td>'+
-      '<td><i class="material-icons clickable delete-item">close</i></td>'+
+      '<td><i id="'+parseInt(item['unit-price'])*parseInt(item['quantity'])+'" class="material-icons clickable delete-item">close</i></td>'+
     '</tr>'
   );
 
