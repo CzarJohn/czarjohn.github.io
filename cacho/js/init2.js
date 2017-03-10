@@ -4,12 +4,13 @@ var suppliers = [];
 
 //done add .00 on prices
 //done support floats
+//done date generator
+//done align po printing using css
 
 //UI RELATED
 //todo disable select
 //todo don't place active on select's label
 //todo add po interface
-//todo align po printing using css
 //todo less spacing on PO details
 
 //FUNCTIONALITIES
@@ -247,7 +248,7 @@ var suppliers = [];
     });
 
     //tester
-    //print_po('17-441000');
+    print_po('17-755000');
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
@@ -744,7 +745,8 @@ function get_add_po_input(){
   }
   po['items'] = items;
   po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
-  po['date'] = 'March 05, 2017';
+  res = new Date();
+  po['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
   return po;
 }
 

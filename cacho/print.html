@@ -6,12 +6,23 @@
   <title>Cacho</title>
 
   <!-- CSS  -->
-  <link href="css/icons/icons.css" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <!--link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/-->
+  <!--link href="css/icons/icons.css" rel="stylesheet">
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/-->
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="print"/>
   <style>
-    td{
+    .price{
       text-align: right;
+    }
+    .test{
+      border: 1px solid black;
+    }
+    .main{
+      padding:10px;
+    }
+    .col{
+      white-space: nowrap;
+      overflow: visible;
+      font-size: 12px;
     }
   </style>
 
@@ -19,36 +30,119 @@
 <body style="overflow-y:hidden;">
 
 <div class="main">
-  PO #: <span class="po-po-number"></span><br>
-  <br>
-  Date: <span class="po-date"></span><br>
-  Requested by: <span class="po-requested-by"></span><br>
-  Ordered by: <span class="po-ordered-by"></span><br>
-  Date of Delivery: <span class="po-completion-date"></span><br>
-  <br>
-  To: <span class="po-to"></span><br>
-  <br>
-  Deliver to: <span class="po-deliver-to"></span><br>
-  <br>
-  Cost Ref: <span class="po-cost-ref"></span><br>
-  <br>
-  <table>
-    <thead>
-      <tr>
-        <th>Qty</th>
-        <th>Unit</th>
-        <th>Description</th>
-        <th>Unit Cost</th>
-        <th>Price</th>
+
+<!-- <div class="row">
+  <div class="test col s1">1</div>
+  <div class="test col s1">2</div>
+  <div class="test col s1">3</div>
+  <div class="test col s1">4</div>
+  <div class="test col s1">5</div>
+  <div class="test col s1">6</div>
+  <div class="test col s1">7</div>
+  <div class="test col s1">8</div>
+  <div class="test col s1">9</div>
+  <div class="test col s1">10</div>
+  <div class="test col s1">11</div>
+  <div class="test col s1">12</div>
+</div> -->
+
+<div class="row" style="height:53px;">
+  &nbsp;
+</div>
+
+<div class="row">
+  <div class="col s2 offset-s10">
+    <h6><span class="po-po-number"></span></h6>
+  </div>
+</div>
+
+<div class="row" style="height:25px;">
+  &nbsp;
+</div>
+
+<div class="row">
+  <div class="col s1">
+    <span class="po-date" style="margin-left:20px;"></span>
+  </div>
+  <div class="col s2">
+    <span class="po-requested-by" style="margin-left:37px;"></span>
+  </div>
+  <div class="col s2">
+    <span class="po-ordered-by" style="margin-left:30px;"></span>
+  </div>
+  <div class="col s3">
+    <span class="po-completion-date"  style="margin-left:40px;"></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s4 offset-s1">
+    <span class="po-to"></span>
+  </div>
+  <div class="col s4 offset-s2">
+    <span class="po-deliver-to"></span>
+  </div>
+</div>
+
+<div class="row" style="height:45px;">
+  &nbsp;
+</div>
+
+<div class="row">
+  <div class="col s8 offset-s2">
+    COST REF: <span class="po-cost-ref"></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="qty-list col s1" style="margin-left:15px;"></div>
+  <div class="unit-list col s1"></div>
+  <div class="description-list col s5"></div>
+  <div class="unit-cost-list col s2 price"></div>
+  <div class="price-list col s2 price"></div>
+</div>
+
+<!--div class="">
+  <table class="">
+    <thead class="">
+      <tr class="">
+        <th class="">Qty</th>
+        <th class="">Unit</th>
+        <th class="">Description</th>
+        <th class="price">Unit Cost</th>
+        <th class="price">Price</th>
       </tr>
     </thead>
     <tbody class="item-list">
-      
     </tbody>
-  </table><br>
-  <br>
-  To be used for: <span class="po-to-be-used-for"></span><br>
-  Conforme: <span class="po-conforme"></span><br>
+  </table>
+</div-->
+
+<div class="row" style="height:350px;">
+  &nbsp;
+</div>
+
+
+<div class="row" >
+  <div class="col s8 offset-s2">
+    <span class="po-to-be-used-for"></span>
+  </div>
+  <div class="col s2">
+    <span class="total-amount"></span>
+  </div>
+</div>
+
+<div class="row" style="height:10px;">
+  &nbsp;
+</div>
+
+<div class="row" >
+  <div class="col s2" style="margin-left:40px;">
+    <span class="po-conforme"></span>
+  </div>
+</div>
+
+
 </div>
 
 <!--div id="write">
@@ -56,6 +150,7 @@
 
   <!--  Scripts-->
   <script src="js/jquery.min.js"></script>
+  <script src="js/moment.js"></script>
   <script src="js/materialize.js"></script>
   <script>
 
@@ -91,25 +186,34 @@
       }
 
       for(var i in po['items']){
-        $('.item-list').append(
+        $('.qty-list').append(po['items'][i]['quantity']+'<br>');
+        $('.unit-list').append(po['items'][i]['unit']+'<br>');
+        $('.description-list').append(po['items'][i]['description']+'<br>');
+        $('.unit-cost-list').append(po['items'][i]['unit-price']+'<br>');
+        $('.price-list').append(parseFloat(parseFloat(po['items'][i]['unit-price'])*parseInt(po['items'][i]['quantity'])).toFixed(2)+'<br>');
+
+        /*$('.item-list').append(
           '<tr>'+
             '<td>'+po['items'][i]['quantity']+'</td>'+
             '<td>'+po['items'][i]['unit']+'</td>'+
             '<td>'+po['items'][i]['description']+'</td>'+
-            '<td>'+po['items'][i]['unit-price']+'</td>'+
-            '<td>'+parseInt(po['items'][i]['unit-price'])*parseInt(po['items'][i]['quantity'])+'</td>'+
+            '<td class="price">'+po['items'][i]['unit-price']+'</td>'+
+            '<td class="price">'+parseFloat(parseFloat(po['items'][i]['unit-price'])*parseInt(po['items'][i]['quantity'])).toFixed(2)+'</td>'+
           '</tr>'
-        );
+        );*/
       }
-       $('.item-list').append(
+
+      $('.total-amount').html(parseFloat(po['total-amount']).toFixed(2));
+
+       /*$('.item-list').append(
           '<tr style="border-top:1px solid black;">'+
             '<td></td>'+
             '<td></td>'+
             '<td></td>'+
             '<td><strong>GRAND TOTAL</strong></td>'+
-            '<td><strong>'+parseInt(po['total-amount'])+'</strong></td>'+
+            '<td class="price"><strong>'+parseFloat(po['total-amount']).toFixed(2)+'</strong></td>'+
           '</tr>'
-        );
+        );*/
     }
 
     searchToObject();
