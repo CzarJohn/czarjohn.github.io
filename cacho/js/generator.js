@@ -76,16 +76,16 @@ function generate_suppliercode(){
 	return generate_digits(4);
 }
 
-function generate_date(){
-	/*Date.prototype.addDays = function(days) {
+/*function generate_date(){
+	Date.prototype.addDays = function(days) {
 	  var dat = new Date(this.valueOf());
 	  dat.setDate(dat.getDate() + days);
 	  return dat;
-	}*/
+	}
 
 	var date1 = new Date();
 	return date1.getDate() + generate_number(1,365);
-}
+}*/
 
 function generate_item2(){
 	return items[Math.floor(Math.random()*items.length)];
@@ -98,4 +98,17 @@ function generate_unit(){
 function generate_price(min, max){
     var num = Math.random() * (max - min) + min;
     return parseFloat(Math.round(num * 100) / 100).toFixed(2);
+}
+
+function generate_date() {
+	var start = new Date();
+	var end = new Date('2020-12-31');
+    var res = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    return res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+}
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
