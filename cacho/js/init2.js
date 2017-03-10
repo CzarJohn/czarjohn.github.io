@@ -6,6 +6,7 @@ var suppliers = [];
 //done support floats
 //done date generator
 //done align po printing using css
+//focus on pos
 
 //UI RELATED
 //todo disable select
