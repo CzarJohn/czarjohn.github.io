@@ -2,20 +2,23 @@ var item_count = 0;
 var projects = [];
 var suppliers = [];
 
-//todne scrolltop whenever opening a new modal
-//todne lock select on readonly, fixed with not showing add button on view po
-//todne clear items on po
-//todne add delete po with confirmation
-//todne change po view
-//todne change view po icon
-//todne add print po links
-//todne print po on add
+//done add .00 on prices
+//done support floats
 
+//UI RELATED
 //todo disable select
 //todo don't place active on select's label
-//todo add monitoring
+//todo add po interface
+//todo align po printing using css
+//todo less spacing on PO details
+
+//FUNCTIONALITIES
+//todo add summary
 //todo add list of items from supplier
 //todo add amend po
+
+//PENDING RUPERT
+//todo add subcon list
 
 
 (function($){
@@ -32,6 +35,8 @@ var suppliers = [];
 
     load_projects();
     load_suppliers();
+
+
 
     $('.add-project').click(function(){
       clear_add_project();
@@ -190,9 +195,9 @@ var suppliers = [];
     });
 
     $('.item-list').on('click', '.delete-item', function(){
-      var total = parseInt($('.add-po-input-total-amount').html());
-      total -= parseInt(this.id);
-      $('.add-po-input-total-amount').html(total);
+      var total = parseFloat($('.add-po-input-total-amount').html());
+      total -= parseFloat(this.id);
+      $('.add-po-input-total-amount').html(parseFloat(total).toFixed(2));
       $(this).parent().parent().remove();
     });
 
@@ -241,6 +246,9 @@ var suppliers = [];
       $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
 
+    //tester
+    //print_po('17-441000');
+
   }); // end of document ready
 })(jQuery); // end of jQuery name space
 
@@ -278,19 +286,22 @@ function add_supplier(supplier){
 }
 
 function add_item(item){
+
+  var subtotal = parseFloat(parseFloat(item['unit-price'])*parseInt(item['quantity'])).toFixed(2);
+
   $('.item-list').append(
     '<tr>'+
       '<td>'+item['quantity']+'</td>'+
       '<td>'+item['unit']+'</td>'+
       '<td>'+item['description']+'</td>'+
       '<td>'+item['unit-price']+'</td>'+
-      '<td>'+parseInt(item['unit-price'])*parseInt(item['quantity'])+'</td>'+
-      '<td><i id="'+parseInt(item['unit-price'])*parseInt(item['quantity'])+'" class="material-icons clickable delete-item">close</i></td>'+
+      '<td>'+subtotal+'</td>'+
+      '<td><i id="'+subtotal+'" class="material-icons clickable delete-item">close</i></td>'+
     '</tr>'
   );
 
-  var total = parseInt($('.add-po-input-total-amount').html());
-  total += parseInt(item['unit-price'])*parseInt(item['quantity']);
+  var total = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
+  total = parseFloat(parseFloat(total) + parseFloat(subtotal)).toFixed(2);
   $('.add-po-input-total-amount').html(total);
 
   Materialize.toast('Successfully added item',3000);
@@ -609,7 +620,7 @@ function generate_item(){
   $('#add-item-input-quantity').val(generate_number(1,20));
   $('#add-item-input-unit').val(generate_unit());
   $('#add-item-input-description').val(generate_item2());
-  $('#add-item-input-unit-price').val(generate_number(100,2500));
+  $('#add-item-input-unit-price').val(generate_price(100,2500));
 }
 
 function set_view_project(project){
@@ -732,7 +743,7 @@ function get_add_po_input(){
       items[i-1] = get_item_from_row(item_rows[i]);
   }
   po['items'] = items;
-  po['total-amount'] = parseInt($('.add-po-input-total-amount').html());
+  po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
   po['date'] = 'March 05, 2017';
   return po;
 }

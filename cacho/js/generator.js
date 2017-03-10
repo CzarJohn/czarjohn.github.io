@@ -94,3 +94,8 @@ function generate_item2(){
 function generate_unit(){
 	return units[Math.floor(Math.random()*units.length)];
 }
+
+function generate_price(min, max){
+    var num = Math.random() * (max - min) + min;
+    return parseFloat(Math.round(num * 100) / 100).toFixed(2);
+}
