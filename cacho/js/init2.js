@@ -5,7 +5,8 @@
 //todo add po interface
 
 //FUNCTIONALITIES
-//todo add summary
+//todo add clear summary modal
+//date and subcon subtotaling and grand total
 //todo choose printing format
 //todo add option on items for mats, labor, subcon
 
@@ -26,7 +27,7 @@ var suppliers = [];
     $('.datepicker').pickadate({
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 15, // Creates a dropdown of 15 years to control year
-      format: 'mmmm dd, yyyy'
+      format: 'yyyy-mm-dd'
     });
 
     $('select').material_select();
@@ -271,6 +272,33 @@ var suppliers = [];
       $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
 
+    $('.po-summary').click(function(){
+      create_project_options2();
+      $('.po-summary-modal').openModal();
+    });
+
+    $('input[type=radio][name=po-summary-input-type]').change(function() {
+      if (this.value == 'billing') {
+        $('.input-date-div').show(0);
+      }
+      else if (this.value == 'supplier') {
+        $('.input-date-div').hide(0);
+      }
+    });
+
+    $('.po-summary-input').change(function() {
+      if(check_po_summary_input()){
+        if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
+          get_billing_summary(find_project_code($('#po-summary-input-project').val()));
+        }
+        else{
+          get_supplier_summary(find_project_code($('#po-summary-input-project').val()));
+        }
+      }
+    });
+
+    $('.po-summary').click();
+
     //tester
     //print_po('17-755000');
     //var project = find_project_code('17-441');
@@ -280,6 +308,63 @@ var suppliers = [];
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
+
+function get_billing_summary(project){
+  $('.po-summary-table').show();
+  $('.po-summary-list').html('');
+  $('.po-summary-varying-th').html('Date');
+  for(var key in project['pos']){
+    if(project['pos'].hasOwnProperty(key)){
+      $('.po-summary-list').append(
+        '<tr>'+
+          '<td>'+project['pos'][key]['date']+'</td>'+
+          '<td>'+key+'</td>'+
+          '<td>'+parseFloat(project['pos'][key]['total-amount']).toFixed(2)+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+}
+
+function get_supplier_summary(project){
+  $('.po-summary-table').show();
+  $('.po-summary-list').html('');
+  $('.po-summary-varying-th').html('Supplier');
+  for(var key in project['pos']){
+    if(project['pos'].hasOwnProperty(key)){
+      var supplier = find_supplier_code(project['pos'][key]['to']);
+      $('.po-summary-list').append(
+        '<tr>'+
+          '<td>'+supplier.name+'</td>'+
+          '<td>'+key+'</td>'+
+          '<td>'+parseFloat(project['pos'][key]['total-amount']).toFixed(2)+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+}
+
+function check_po_summary_input(){
+  var input = $('#po-summary-input-project').val();
+  if(input.trim() == ''){
+    return false;
+  }
+
+  if (!$("input[name='po-summary-input-type']:checked").val()) {
+    return false;
+  }
+  else {
+    if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
+      var input = $('#po-summary-input-date').val();
+      if(input.trim() == ''){
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 function print_po(code){
   po = find_po_code(code);
@@ -973,6 +1058,15 @@ function create_project_options(){
   }
   $('#add-po-input-deliver-to').html(sb);
   $('#add-po-input-deliver-to').material_select();
+}
+
+function create_project_options2(){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var i=0;i<projects.length; i++){
+    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
+  }
+  $('#po-summary-input-project').html(sb);
+  $('#po-summary-input-project').material_select();
 }
 
 
