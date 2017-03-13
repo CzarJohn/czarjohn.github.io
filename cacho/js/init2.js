@@ -1,34 +1,33 @@
-var item_count = 0;
-var projects = [];
-var suppliers = [];
-
-//done add .00 on prices
-//done support floats
-//done date generator
-//done align po printing using css
-//focus on pos
-
 //UI RELATED
+//todo add commas on thousands prices
 //todo disable select
 //todo don't place active on select's label
 //todo add po interface
-//todo less spacing on PO details
 
 //FUNCTIONALITIES
-//todo add summary
-//todo add list of items from supplier
-//todo add amend po
+//todo add clear summary modal
+//date and subcon subtotaling and grand total
+//todo choose printing format
+//todo add option on items for mats, labor, subcon
 
 //PENDING RUPERT
 //todo add subcon list
 
+//FOR CLARIFICATION
+//How will the project, supplier, PO list be sorted?
+//Should we allow function for archiving projects?
+//Project length and average number of POs and suppliers per project
+
+var item_count = 0;
+var projects = [];
+var suppliers = [];
 
 (function($){
   $(function(){
     $('.datepicker').pickadate({
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 15, // Creates a dropdown of 15 years to control year
-      format: 'mmmm dd, yyyy'
+      format: 'yyyy-mm-dd'
     });
 
     $('select').material_select();
@@ -37,8 +36,6 @@ var suppliers = [];
 
     load_projects();
     load_suppliers();
-
-
 
     $('.add-project').click(function(){
       clear_add_project();
@@ -60,7 +57,6 @@ var suppliers = [];
       $('.add-po-modal').openModal();
       $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
-
 
     $('.add-project-modal-btn-add').click(function(){
       if(!check_project_input()){
@@ -104,6 +100,21 @@ var suppliers = [];
       else{
         po = get_add_po_input(); 
         add_po(po);
+        clear_add_po();
+      }
+    });
+
+    $('.add-po-modal-btn-amend').click(function(){
+      if(!check_po_input()){
+        Materialize.toast('Some fields are blank.',5000);
+        setTimeout(function(){
+          $('.add-po-modal').openModal();
+          $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        },300);
+      }
+      else{
+        po = get_amend_po_input(); 
+        amend_po(po); 
         clear_add_po();
       }
     });
@@ -156,6 +167,19 @@ var suppliers = [];
         $('.add-po-modal').openModal();
         $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
 
+      }
+      else Materialize.toast('PO code '+pid+' cannot be found.',5000);
+    });
+
+    $('.po-list').on('click', '.amend-po', function(){
+      var pid = this.id.split(/-(.+)/)[1];
+      var po = find_po_code(pid);
+      if(po != null) {
+        po['po-number'] = pid;
+        clear_add_po();
+        set_amend_po(po);
+        $('.add-po-modal').openModal();
+        $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
       }
       else Materialize.toast('PO code '+pid+' cannot be found.',5000);
     });
@@ -248,11 +272,102 @@ var suppliers = [];
       $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
 
+    $('.po-summary').click(function(){
+      create_project_options2();
+      $('.po-summary-modal').openModal();
+    });
+
+    $('input[type=radio][name=po-summary-input-type]').change(function() {
+      if (this.value == 'billing') {
+        $('.input-date-div').show(0);
+      }
+      else if (this.value == 'supplier') {
+        $('.input-date-div').hide(0);
+      }
+    });
+
+    $('.po-summary-input').change(function() {
+      if(check_po_summary_input()){
+        if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
+          get_billing_summary(find_project_code($('#po-summary-input-project').val()));
+        }
+        else{
+          get_supplier_summary(find_project_code($('#po-summary-input-project').val()));
+        }
+      }
+    });
+
+    $('.po-summary').click();
+
     //tester
     //print_po('17-755000');
+<<<<<<< HEAD
+=======
+    //var project = find_project_code('17-441');
+    //set_view_project(project);
+    //set_add_po(project);
+    //$('.view-project-modal').openModal();
+>>>>>>> a04a13e7de22b81bfe7db404c0e914229ad1ec02
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
+
+function get_billing_summary(project){
+  $('.po-summary-table').show();
+  $('.po-summary-list').html('');
+  $('.po-summary-varying-th').html('Date');
+  for(var key in project['pos']){
+    if(project['pos'].hasOwnProperty(key)){
+      $('.po-summary-list').append(
+        '<tr>'+
+          '<td>'+project['pos'][key]['date']+'</td>'+
+          '<td>'+key+'</td>'+
+          '<td>'+parseFloat(project['pos'][key]['total-amount']).toFixed(2)+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+}
+
+function get_supplier_summary(project){
+  $('.po-summary-table').show();
+  $('.po-summary-list').html('');
+  $('.po-summary-varying-th').html('Supplier');
+  for(var key in project['pos']){
+    if(project['pos'].hasOwnProperty(key)){
+      var supplier = find_supplier_code(project['pos'][key]['to']);
+      $('.po-summary-list').append(
+        '<tr>'+
+          '<td>'+supplier.name+'</td>'+
+          '<td>'+key+'</td>'+
+          '<td>'+parseFloat(project['pos'][key]['total-amount']).toFixed(2)+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+}
+
+function check_po_summary_input(){
+  var input = $('#po-summary-input-project').val();
+  if(input.trim() == ''){
+    return false;
+  }
+
+  if (!$("input[name='po-summary-input-type']:checked").val()) {
+    return false;
+  }
+  else {
+    if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
+      var input = $('#po-summary-input-date').val();
+      if(input.trim() == ''){
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 function print_po(code){
   po = find_po_code(code);
@@ -317,6 +432,7 @@ function add_po(po){
       i++;
     }
     po['po-number'] = po['deliver-to']+three_digits(i);
+    po['status'] = '1';
     project['pos'][po['po-number']] = po;
     localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
     $('.po-list').append(
@@ -327,6 +443,44 @@ function add_po(po){
         '<td>'+
           '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
           '<i id="amend-'+po['po-number']+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
+<<<<<<< HEAD
+=======
+          '<i id="delete-'+po['po-number']+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>'+
+        '</td>'+
+      '</tr>'
+    );
+    print_po(po['po-number']);
+  }
+  else Materialize.toast('Project code '+po['deliver-to']+' cannot be found.',5000); 
+}
+
+function amend_po(po){
+  var project = find_project_code(po['deliver-to']);
+  var parent = po['po-number'].substring(0,9); 
+  if(project != null){
+    $('tr#'+po['po-number']+'>td')[1].innerHTML = '-----';
+    $('tr#'+parent+'>td')[1].innerHTML = '-----';
+
+    var i = 0;
+    var alpha = ['A', 'B', 'C', 'D', 'E'];//todo improve
+    while(project['pos'][parent+alpha[i]] != undefined){
+      i++;
+    }
+    po['po-number'] = parent+alpha[i];
+    po['status'] = 1;
+    project['pos'][po['po-number']] = po;
+    project['pos'][parent]['status'] = 0;
+
+    localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+    $('tr#'+parent).after(
+      '<tr id="'+po['po-number']+'">'+
+        '<td>'+po['po-number']+'</td>'+ 
+        '<td>'+po['total-amount']+'</td>'+
+        '<td>'+po['date']+'</td>'+
+        '<td>'+
+          '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
+          '<i id="amend-'+po['po-number']+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
+>>>>>>> a04a13e7de22b81bfe7db404c0e914229ad1ec02
           '<i id="delete-'+po['po-number']+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>'+
         '</td>'+
       '</tr>'
@@ -648,6 +802,9 @@ function set_view_po(po){
   create_supplier_options();
 
   $('.add-po-header').html('&nbsp;&nbsp;&nbsp;View Purchase Order ('+po['po-number']+')');
+  $('.add-po-modal-btn-generate').hide();
+  $('.add-po-modal-btn-add').hide();
+  $('.add-po-modal-btn-amend').hide();
   $('.add-po-modal-btn-print').show();
   $('#hidden-po-number').val(po['po-number']);
 
@@ -660,8 +817,44 @@ function set_view_po(po){
   }
   $(p+'to,'+p+'deliver-to').material_select();
   $('.add-item-row').hide();
-  $('.add-po-modal-btn-add').hide();
   $('.generate-po').hide();
+  var items = po['items'];
+  for(var key in items){
+    if(items.hasOwnProperty(key)){
+      $('.item-list').append(
+        '<tr>'+
+          '<td>'+items[key]['quantity']+'</td>'+
+          '<td>'+items[key]['unit']+'</td>'+
+          '<td>'+items[key]['description']+'</td>'+
+          '<td>'+parseFloat(items[key]['unit-price']).toFixed(2)+'</td>'+
+          '<td>'+parseFloat(items[key]['subtotal']).toFixed(2)+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+  $('.add-po-input-total-amount').html(po['total-amount']);
+}
+
+function set_amend_po(po){
+  create_project_options();
+  create_supplier_options();
+  $('.add-po-header').html('&nbsp;&nbsp;&nbsp;Amend Purchase Order ('+po['po-number']+')');
+  $('.add-po-modal-btn-generate').show();
+  $('.add-po-modal-btn-add').hide();
+  $('.add-po-modal-btn-amend').show();
+  $('.add-po-modal-btn-amend').attr('id', po['po-number']);
+  $('.add-po-modal-btn-print').hide();
+
+  $('#hidden-po-number').val(po['po-number']);
+
+  $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
+  var p = '#add-po-input-';
+  keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
+  for(var i=0; i<keys.length; i+=1){
+    $(p+keys[i]).val(po[keys[i]]);
+  }
+  $(p+'to,'+p+'deliver-to').material_select();
   var items = po['items'];
   for(var key in items){
     if(items.hasOwnProperty(key)){
@@ -672,17 +865,21 @@ function set_view_po(po){
           '<td>'+items[key]['description']+'</td>'+
           '<td>'+items[key]['unit-price']+'</td>'+
           '<td>'+items[key]['subtotal']+'</td>'+
-          '<td></td>'+
+          '<td><i id="'+items[key]['subtotal']+'" class="material-icons clickable delete-item">close</i></td>'+
         '</tr>'
       );
     }
   }
-  $('.add-po-input-total-amount').html(po['total-amount']);
+  $('.add-po-input-total-amount').html(po['total-amount']);  
 }
 
 function set_add_po(project){
   $('#add-po-input-deliver-to').val(project['project-code']);
   $('#add-po-input-deliver-to').material_select();
+  $('.add-po-modal-btn-generate').show();
+  $('.add-po-modal-btn-add').show();
+  $('.add-po-modal-btn-amend').hide();
+  $('.add-po-modal-btn-print').hide();
   $('.po-list').html('');
   var pos = project['pos'];
   for(var key in pos){
@@ -690,7 +887,7 @@ function set_add_po(project){
       $('.po-list').append(
         '<tr id="'+key+'">'+
           '<td>'+key+'</td>'+
-          '<td>'+pos[key]['total-amount']+'</td>'+
+          '<td>'+((pos[key]['status'] == 1)?parseFloat(pos[key]['total-amount']).toFixed(2):'-----')+'</td>'+
           '<td>'+pos[key]['date']+'</td>'+
           '<td><i id="open-'+key+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
           '<i id="amend-'+key+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
@@ -750,6 +947,26 @@ function get_add_po_input(){
   po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
   res = new Date();
   po['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+  return po;
+}
+
+function get_amend_po_input(){
+  var p = '#add-po-input-';
+  keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
+  po = {};
+  for(var i=0; i<keys.length; i+=1){
+    po[keys[i]] = $(p+keys[i]).val();
+  }
+  var item_rows = $('.item-list>tr');
+  var items = {};
+  for(var i=1; i<item_rows.length; i++){
+      items[i-1] = get_item_from_row(item_rows[i]);
+  }
+  po['items'] = items;
+  po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
+  res = new Date();
+  po['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+  po['po-number'] = $('.add-po-modal-btn-amend').attr('id');
   return po;
 }
 
@@ -847,6 +1064,15 @@ function create_project_options(){
   }
   $('#add-po-input-deliver-to').html(sb);
   $('#add-po-input-deliver-to').material_select();
+}
+
+function create_project_options2(){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var i=0;i<projects.length; i++){
+    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
+  }
+  $('#po-summary-input-project').html(sb);
+  $('#po-summary-input-project').material_select();
 }
 
 

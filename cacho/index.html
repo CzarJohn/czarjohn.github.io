@@ -48,7 +48,7 @@
     <div class="main-menu col s8 offset-s2 row">
       <div class="col s12 row">
         <a class="btn btn-large waves-effect waves-light col s5 po-generator">PO Generator</a>
-        <a class="btn btn-large waves-effect waves-light col s5 offset-s2">Create PO Summary</a>
+        <a class="btn btn-large waves-effect waves-light col s5 offset-s2 po-summary">Create PO Summary</a>
       </div>
       <div class="col s12"><br></div>
       <div class="col s12 row">
@@ -353,8 +353,62 @@
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-cancel">Cancel</a>
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-add">Add</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-amend">Amend</a>
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat add-po-modal-btn-print" style="display:none;">Print</a>
       <a href="#!" class=" waves-effect waves-green btn-flat generate-po tooltipped" data-position="top" data-delay="50" data-tooltip="This is just a temporary function for quick generation of random PO data.">Generate</a>
+    </div>
+  </div>
+
+  <div class="po-summary-modal modal modal-fixed-footer" style="overflow:hidden;width:70vw;height:80vh;">
+    <div class="modal-header">
+      <h5>&nbsp;&nbsp;&nbsp;PO Summary</h5>
+    </div>
+    <div class="modal-content row">
+      <div class="col s4 card-panel" style="height:85%">
+        <div class="input-field col s12">
+          <select class="po-summary-input" id="po-summary-input-project" name="po-summary-input-project">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label for="po-summary-input-project">Project</label>
+        </div>
+        <div class="input-field col s12">
+          <p>
+            <input class="po-summary-input" name="po-summary-input-type" value="billing" type="radio" id="po-summary-input-billing" />
+            <label for="po-summary-input-billing">Billing Period Monitoring</label>
+          </p>
+          <p>
+            <input class="po-summary-input" name="po-summary-input-type" value="supplier" type="radio" id="po-summary-input-supplier" />
+            <label for="po-summary-input-supplier">Supplier Monitoring</label>
+          </p>
+        </div>
+        <div class="input-field col s12 input-date-div" style="display:none;height:100px;padding-top:30px;">
+          <label for="po-summary-input-date active">Cut-off Date</label>
+          <input class="po-summary-input" name="po-summary-input-date" id="po-summary-input-date" type="date" class="datepicker">
+        </div>
+      </div>
+      <div class="col s8">
+        <table class="po-summary-table" style="display:none">
+          <thead>
+            <tr>
+              <th class="po-summary-varying-th">Date</th>
+              <th data-field="">PO Number</th>
+              <th data-field="">Amount</th>
+              <th data-field="">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody class="po-summary-list">
+            
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat po-summary-modal-btn-close">Close</a>
     </div>
   </div>
 
