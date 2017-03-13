@@ -249,7 +249,7 @@ var suppliers = [];
     });
 
     //tester
-    print_po('17-755000');
+    //print_po('17-755000');
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
@@ -325,7 +325,8 @@ function add_po(po){
         '<td>'+po['total-amount']+'</td>'+
         '<td>'+po['date']+'</td>'+
         '<td>'+
-          '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+          '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
+          '<i id="amend-'+po['po-number']+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
           '<i id="delete-'+po['po-number']+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>'+
         '</td>'+
       '</tr>'
@@ -691,7 +692,8 @@ function set_add_po(project){
           '<td>'+key+'</td>'+
           '<td>'+pos[key]['total-amount']+'</td>'+
           '<td>'+pos[key]['date']+'</td>'+
-          '<td><i id="open-'+key+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+          '<td><i id="open-'+key+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
+          '<i id="amend-'+key+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
           '<i id="delete-'+key+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i></td>'+
         '</tr>'
       );
