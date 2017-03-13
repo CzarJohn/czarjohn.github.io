@@ -297,17 +297,15 @@ var suppliers = [];
       }
     });
 
-    $('.po-summary').click();
 
     //tester
+    //$('.po-summary').click();
     //print_po('17-755000');
-<<<<<<< HEAD
-=======
     //var project = find_project_code('17-441');
     //set_view_project(project);
     //set_add_po(project);
     //$('.view-project-modal').openModal();
->>>>>>> a04a13e7de22b81bfe7db404c0e914229ad1ec02
+
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
@@ -443,8 +441,6 @@ function add_po(po){
         '<td>'+
           '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
           '<i id="amend-'+po['po-number']+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
-<<<<<<< HEAD
-=======
           '<i id="delete-'+po['po-number']+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>'+
         '</td>'+
       '</tr>'
@@ -480,7 +476,6 @@ function amend_po(po){
         '<td>'+
           '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
           '<i id="amend-'+po['po-number']+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
->>>>>>> a04a13e7de22b81bfe7db404c0e914229ad1ec02
           '<i id="delete-'+po['po-number']+'" class="material-icons clickable tooltipped delete-po" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>'+
         '</td>'+
       '</tr>'
