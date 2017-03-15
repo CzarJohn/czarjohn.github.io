@@ -9,6 +9,14 @@
 //todo choose printing format
 //todo add option on items for mats, labor, subcon
 
+//PENDING RUPERT
+//todo add subcon list
+
+//FOR CLARIFICATION
+//How will the project, supplier, PO list be sorted?
+//Should we allow function for archiving projects?
+//Project length and average number of POs and suppliers per project
+
 var item_count = 0;
 var projects = [];
 var suppliers = [];
@@ -18,7 +26,7 @@ var suppliers = [];
     $('.datepicker').pickadate({
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 15, // Creates a dropdown of 15 years to control year
-      format: 'mmmm dd, yyyy'
+      format: 'yyyy-mm-dd'
     });
 
     $('select').material_select();
