@@ -9,14 +9,6 @@
 //todo choose printing format
 //todo add option on items for mats, labor, subcon
 
-//PENDING RUPERT
-//todo add subcon list
-
-//FOR CLARIFICATION
-//How will the project, supplier, PO list be sorted?
-//Should we allow function for archiving projects?
-//Project length and average number of POs and suppliers per project
-
 var item_count = 0;
 var projects = [];
 var suppliers = [];
@@ -271,15 +263,96 @@ var suppliers = [];
       $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
     });
 
-    //tester
-    //print_po('17-755000');
-    //var project = find_project_code('17-441');
-    //set_view_project(project);
-    //set_add_po(project);
-    //$('.view-project-modal').openModal();
+    $('.po-summary').click(function(){
+      console.log('232');
+      create_project_options2();
+      $('.po-summary-modal').openModal();
+    });
+
+    $('input[type=radio][name=po-summary-input-type]').change(function() {
+      if (this.value == 'billing') {
+        $('.input-date-div').show(0);
+      }
+      else if (this.value == 'supplier') {
+        $('.input-date-div').hide(0);
+      }
+    });
+
+    $('.po-summary-input').change(function() {
+      if(check_po_summary_input()){
+        if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
+          get_billing_summary(find_project_code($('#po-summary-input-project').val()));
+        }
+        else{
+          get_supplier_summary(find_project_code($('#po-summary-input-project').val()));
+        }
+      }
+    });
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
+
+function get_billing_summary(project){
+  $('.po-summary-table').show();
+  $('.po-summary-list').html('');
+  $('.po-summary-varying-th').html('Date');
+  for(var key in project['pos']){
+    if(project['pos'].hasOwnProperty(key)){
+      var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+
+      $('.po-summary-list').append(
+        '<tr>'+
+          '<td>'+project['pos'][key]['date']+'</td>'+
+          '<td>'+key+'</td>'+
+          '<td>'+amount+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+}
+
+function get_supplier_summary(project){
+  $('.po-summary-table').show();
+  $('.po-summary-list').html('');
+  $('.po-summary-varying-th').html('Supplier');
+  for(var key in project['pos']){
+    if(project['pos'].hasOwnProperty(key)){
+      var supplier = find_supplier_code(project['pos'][key]['to']);
+
+      var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+
+      $('.po-summary-list').append(
+        '<tr>'+
+          '<td>'+supplier.name+'</td>'+
+          '<td>'+key+'</td>'+
+          '<td>'+amount+'</td>'+
+          '<td></td>'+
+        '</tr>'
+      );
+    }
+  }
+}
+
+function check_po_summary_input(){
+  var input = $('#po-summary-input-project').val();
+  if(input.trim() == ''){
+    return false;
+  }
+
+  if (!$("input[name='po-summary-input-type']:checked").val()) {
+    return false;
+  }
+  else {
+    if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
+      var input = $('#po-summary-input-date').val();
+      if(input.trim() == ''){
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 function print_po(code){
   po = find_po_code(code);
@@ -372,8 +445,11 @@ function amend_po(po){
     $('tr#'+parent+'>td')[1].innerHTML = '-----';
 
     var i = 0;
-    var alpha = ['A', 'B', 'C', 'D', 'E'];//todo improve
+    var alpha = ['A', 'B', 'C', 'D', 'E','F','G','H','I'];//todo improve
     while(project['pos'][parent+alpha[i]] != undefined){
+      $('tr#'+parent+alpha[i]+'>td')[1].innerHTML = '-----';
+      $('tr#'+parent+alpha[i]+'>td')[1].innerHTML = '-----';
+      project['pos'][parent+alpha[i]]['status'] = 0;
       i++;
     }
     po['po-number'] = parent+alpha[i];
@@ -382,7 +458,7 @@ function amend_po(po){
     project['pos'][parent]['status'] = 0;
 
     localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
-    $('tr#'+parent).after(
+    $('.po-list').after(
       '<tr id="'+po['po-number']+'">'+
         '<td>'+po['po-number']+'</td>'+ 
         '<td>'+po['total-amount']+'</td>'+
@@ -973,6 +1049,15 @@ function create_project_options(){
   }
   $('#add-po-input-deliver-to').html(sb);
   $('#add-po-input-deliver-to').material_select();
+}
+
+function create_project_options2(){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var i=0;i<projects.length; i++){
+    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
+  }
+  $('#po-summary-input-project').html(sb);
+  $('#po-summary-input-project').material_select();
 }
 
 
