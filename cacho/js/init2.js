@@ -466,7 +466,7 @@ function amend_po(po){
     project['pos'][parent]['status'] = 0;
 
     localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
-    $('.po-list').after(
+    $('.po-list').append(
       '<tr id="'+po['po-number']+'">'+
         '<td>'+po['po-number']+'</td>'+ 
         '<td>'+po['total-amount']+'</td>'+
