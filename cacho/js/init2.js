@@ -324,11 +324,34 @@ function get_supplier_summary(project){
   $('.po-summary-table').show();
   $('.po-summary-list').html('');
   $('.po-summary-varying-th').html('Supplier');
+
+  var curr = null;
+  var subtotal = 0;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var supplier = find_supplier_code(project['pos'][key]['to']);
-
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+
+      if(curr == null){
+        curr = supplier;
+        subtotal += parseFloat(amount);
+      }
+      else if(supplier != curr){
+        $('.po-summary-list').append(
+          '<tr>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td>'+subtotal.toFixed(2)+'</td>'+
+          '</tr>'
+        );
+        subtotal = 0;
+        curr = supplier;
+        subtotal += parseFloat(amount);
+      }
+      else if(amount != '-----'){
+        subtotal += parseFloat(amount);
+      }
 
       $('.po-summary-list').append(
         '<tr>'+
@@ -340,6 +363,14 @@ function get_supplier_summary(project){
       );
     }
   }
+  $('.po-summary-list').append(
+    '<tr>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td>'+subtotal.toFixed(2)+'</td>'+
+    '</tr>'
+  );
 }
 
 function check_po_summary_input(){
