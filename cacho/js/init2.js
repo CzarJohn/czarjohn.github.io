@@ -304,9 +304,41 @@ function get_billing_summary(project){
   $('.po-summary-table').show();
   $('.po-summary-list').html('');
   $('.po-summary-varying-th').html('Date');
+
+  var curr = null;
+  var subtotal = 0;
+  var total = 0;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+      var d = project['pos'][key]['date'];
+
+
+      if(curr == null){
+        curr = d;
+        if(amount != '-----'){
+          subtotal += parseFloat(amount);
+        }
+      }
+      else if(d != curr){
+        total += parseFloat(subtotal);
+        $('.po-summary-list').append(
+          '<tr>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td>'+subtotal.toFixed(2)+'</td>'+
+          '</tr>'
+        );
+        subtotal = 0;
+        curr = d;
+        if(amount != '-----'){
+          subtotal += parseFloat(amount);
+        }
+      }
+      else if(amount != '-----'){
+        subtotal += parseFloat(amount);
+      }
 
       $('.po-summary-list').append(
         '<tr>'+
@@ -318,6 +350,23 @@ function get_billing_summary(project){
       );
     }
   }
+  total += parseFloat(subtotal);
+  $('.po-summary-list').append(
+    '<tr style="border-bottom:1px solid black;">'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td>'+subtotal.toFixed(2)+'</td>'+
+    '</tr>'
+  );
+  $('.po-summary-list').append(
+    '<tr style="border-bottom:1px solid black;">'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td><strong>GRAND TOTAL</strong></td>'+
+      '<td>'+total.toFixed(2)+'</td>'+
+    '</tr>'
+  );
 }
 
 function get_supplier_summary(project){
@@ -327,6 +376,7 @@ function get_supplier_summary(project){
 
   var curr = null;
   var subtotal = 0;
+  var total = 0;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var supplier = find_supplier_code(project['pos'][key]['to']);
@@ -337,6 +387,7 @@ function get_supplier_summary(project){
         subtotal += parseFloat(amount);
       }
       else if(supplier != curr){
+        total += parseFloat(subtotal);
         $('.po-summary-list').append(
           '<tr>'+
             '<td></td>'+
@@ -363,12 +414,21 @@ function get_supplier_summary(project){
       );
     }
   }
+  total += parseFloat(subtotal);
   $('.po-summary-list').append(
-    '<tr>'+
+    '<tr style="border-bottom:1px solid black;">'+
       '<td></td>'+
       '<td></td>'+
       '<td></td>'+
       '<td>'+subtotal.toFixed(2)+'</td>'+
+    '</tr>'
+  );
+  $('.po-summary-list').append(
+    '<tr style="border-bottom:1px solid black;">'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td><strong>GRAND TOTAL</strong></td>'+
+      '<td>'+total.toFixed(2)+'</td>'+
     '</tr>'
   );
 }
