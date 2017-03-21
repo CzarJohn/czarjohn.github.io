@@ -305,46 +305,55 @@ function get_billing_summary(project){
   $('.po-summary-list').html('');
   $('.po-summary-varying-th').html('Date');
 
-  var curr = null;
+  var inputdate = $('#po-summary-input-date').val();
+
+  var curr = new Date(inputdate);
   var subtotal = 0;
   var total = 0;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
-      var d = project['pos'][key]['date'];
+      var d = new Date(project['pos'][key]['date']);
 
 
-      if(curr == null){
-        curr = d;
+      console.log('key: '+key+'\n curr: '+curr+'\n d:'+d);
+
+      if(curr == new Date(inputdate) || subtotal <= 0){
+        console.log('AAA');
+        //curr = d;
         if(amount != '-----'){
           subtotal += parseFloat(amount);
         }
       }
-      else if(d != curr){
+      else if(d > curr){
+        console.log('BBB');
         total += parseFloat(subtotal);
         $('.po-summary-list').append(
           '<tr>'+
             '<td></td>'+
             '<td></td>'+
             '<td></td>'+
-            '<td>'+subtotal.toFixed(2)+'</td>'+
+            '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
           '</tr>'
         );
         subtotal = 0;
-        curr = d;
+        //curr = d;
         if(amount != '-----'){
           subtotal += parseFloat(amount);
         }
       }
       else if(amount != '-----'){
+        console.log('CCC');
         subtotal += parseFloat(amount);
       }
+
+      console.log('\n');
 
       $('.po-summary-list').append(
         '<tr>'+
           '<td>'+project['pos'][key]['date']+'</td>'+
           '<td>'+key+'</td>'+
-          '<td>'+amount+'</td>'+
+          '<td class="right-align">'+amount+'</td>'+
           '<td></td>'+
         '</tr>'
       );
@@ -356,7 +365,7 @@ function get_billing_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td></td>'+
-      '<td>'+subtotal.toFixed(2)+'</td>'+
+      '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
     '</tr>'
   );
   $('.po-summary-list').append(
@@ -364,7 +373,7 @@ function get_billing_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td><strong>GRAND TOTAL</strong></td>'+
-      '<td>'+total.toFixed(2)+'</td>'+
+      '<td class="right-align">'+total.toFixed(2)+'</td>'+
     '</tr>'
   );
 }
@@ -393,7 +402,7 @@ function get_supplier_summary(project){
             '<td></td>'+
             '<td></td>'+
             '<td></td>'+
-            '<td>'+subtotal.toFixed(2)+'</td>'+
+            '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
           '</tr>'
         );
         subtotal = 0;
@@ -408,7 +417,7 @@ function get_supplier_summary(project){
         '<tr>'+
           '<td>'+supplier.name+'</td>'+
           '<td>'+key+'</td>'+
-          '<td>'+amount+'</td>'+
+          '<td class="right-align">'+amount+'</td>'+
           '<td></td>'+
         '</tr>'
       );
@@ -420,7 +429,7 @@ function get_supplier_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td></td>'+
-      '<td>'+subtotal.toFixed(2)+'</td>'+
+      '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
     '</tr>'
   );
   $('.po-summary-list').append(
@@ -428,7 +437,7 @@ function get_supplier_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td><strong>GRAND TOTAL</strong></td>'+
-      '<td>'+total.toFixed(2)+'</td>'+
+      '<td class="right-align">'+total.toFixed(2)+'</td>'+
     '</tr>'
   );
 }
@@ -958,6 +967,11 @@ function set_amend_po(po){
 }
 
 function set_add_po(project){
+
+  $('#po-date-label').addClass('active');
+  res = new Date();
+  $('#add-po-input-date').val(res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2));
+
   $('#add-po-input-deliver-to').val(project['project-code']);
   $('#add-po-input-deliver-to').material_select();
   $('.add-po-modal-btn-generate').show();
@@ -979,6 +993,8 @@ function set_add_po(project){
         '</tr>'
       );
     }
+
+    $('.tooltipped').tooltip({delay: 50});
     
   }
 
@@ -1108,6 +1124,13 @@ function clear_add_supplier(){
 }
 
 function clear_add_po(){
+  $('#po-date-label').addClass('active');
+  res = new Date();
+  $('#add-po-input-date').val(res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2));
+
+  $('.add-po-modal-btn-amend').hide();
+  
+
   var p = '#add-po-input-';
   var selector = ''+
     p+'completion-date'+

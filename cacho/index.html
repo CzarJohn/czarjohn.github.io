@@ -243,55 +243,57 @@
       <h5 class="add-po-header">&nbsp;&nbsp;&nbsp;Add New Purchase Order</h5>
     </div>
     <div class="modal-content row">
- 
-      <div class="input-field col s4">
-        <label for="add-po-input-completion-date active">Delivery Date</label>
-        <input type="date" id="add-po-input-completion-date" name="add-po-input-completion-date" class="datepicker" required />
+
+      <div class="input-field col s3" style="border:1px solid gray;">
+        <label for="add-po-input-date" id="po-date-label">Date</label>
+        <input type="text" id="add-po-input-date" name="add-po-input-date" class="validate" readonly />
       </div>
 
-      <div class="input-field col s4">
+      <div class="input-field col s3" style="border:1px solid gray;">
         <label for="add-po-input-requested-by">Requested By</label>
         <input type="text" id="add-po-input-requested-by" name="add-po-input-requested-by" class="validate" required />
       </div>
 
-      <div class="input-field col s4">
+      <div class="input-field col s3" style="border:1px solid gray;">
         <label for="add-po-input-ordered-by">Ordered By</label>
         <input type="text" id="add-po-input-ordered-by" name="add-po-input-ordered-by" class="validate" required />
       </div>
-
-      <div class="input-field col s6">
-        <select id="add-po-input-to" name="add-po-input-to">
-          <option value="" disabled selected>Choose your option</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-        </select>
-        <label for="add-po-input-to">To</label>
+      <div class="input-field col s3" style="border:1px solid gray;">
+        <label for="add-po-input-completion-date active">Delivery Date</label>
+        <input type="date" id="add-po-input-completion-date" name="add-po-input-completion-date" class="datepicker" required />
       </div>
 
-      <div class="input-field col s6">
-        <select id="add-po-input-deliver-to" name="add-po-input-deliver-to">
-          <option value="" disabled selected>Choose your option</option>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-        </select>
-        <label for="add-po-input-deliver-to">Deliver To</label>
+      <div class="input-field col s6" style="border:1px solid gray">
+        <br><br>
+        <div class="input-field">
+          <select id="add-po-input-to" name="add-po-input-to">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label for="add-po-input-to">To</label>
+        </div>
+        <br><br>
       </div>
 
-      <div class="input-field col s12">
+      <div class="input-field col s6" style="border:1px solid gray">
+        <br><br>
+        <div class="input-field">
+          <select id="add-po-input-deliver-to" name="add-po-input-deliver-to">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+          <label for="add-po-input-deliver-to">Deliver To</label>
+        </div>
+        <br><br>
+      </div>
+
+      <div class="input-field col s12" style="border:1px solid gray">
         <label for="add-po-input-cost-ref">Cost Ref</label>
         <input type="text" id="add-po-input-cost-ref" name="add-po-input-cost-ref" class="validate" />
-      </div>
-
-      <div class="input-field col s12">
-        <label for="add-po-input-to-be-used-for">To Be Used For</label>
-        <input type="text" id="add-po-input-to-be-used-for" name="add-po-input-to-be-used-for" class="validate" required />
-      </div>
-
-      <div class="input-field col s12">
-        <label for="add-po-input-conforme">Conforme</label>
-        <input type="text" id="add-po-input-conforme" name="add-po-input-conforme" class="validate" required />
       </div>
 
       <div class="col s12 row card-panel">
@@ -347,6 +349,20 @@
         </ul>
       </div>
 
+      <div class="input-field col s12" style="border:1px solid gray">
+        <label for="add-po-input-to-be-used-for">To Be Used For</label>
+        <input type="text" id="add-po-input-to-be-used-for" name="add-po-input-to-be-used-for" class="validate" required />
+      </div>
+
+      <div class="input-field col s12" style="border:1px solid gray">
+        <label for="add-po-input-conforme">Conforme</label>
+        <input type="text" id="add-po-input-conforme" name="add-po-input-conforme" class="validate" required />
+      </div>
+
+      <div class="col s12">
+        <br><br><br>
+      </div>
+
       <input class="text" id="hidden-po-number" style="display:none;">
 
     </div>
@@ -395,8 +411,8 @@
             <tr>
               <th class="po-summary-varying-th">Date</th>
               <th data-field="">PO Number</th>
-              <th data-field="">Amount</th>
-              <th data-field="">Subtotal</th>
+              <th data-field="" class="right-align">Amount</th>
+              <th data-field="" class="right-align">Subtotal</th>
             </tr>
           </thead>
           <tbody class="po-summary-list">
