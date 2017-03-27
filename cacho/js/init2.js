@@ -2,18 +2,17 @@
 //todo add commas on thousands prices
 //todo disable select
 //todo don't place active on select's label
-//todo add po interface
 
 //FUNCTIONALITIES
-//todo add summary
+//todo login user type
 //todo choose printing format
-//todo add option on items for mats, labor, subcon
-
-//PENDING RUPERT
-//todo add subcon list
+//todo add item checklist - materials, labor, subcon
+//todo add item inventory
+//todo add legit item and supplier list
+//todo add copy to clipboard
 
 //FOR CLARIFICATION
-//How will the project, supplier, PO list be sorted?
+//How will the project, supplier, PO list be sorted? //dont ask about this rn, hahaha, cuz sorting iz not good
 //Should we allow function for archiving projects?
 //Project length and average number of POs and suppliers per project
 
@@ -327,7 +326,7 @@ function get_billing_summary(project){
       }
       else if(d > curr){
         console.log('BBB');
-        total += parseFloat(subtotal);
+        if(subtotal != '-----') total += parseFloat(subtotal);
         $('.po-summary-list').append(
           '<tr>'+
             '<td></td>'+
@@ -386,17 +385,25 @@ function get_supplier_summary(project){
   var curr = null;
   var subtotal = 0;
   var total = 0;
-  for(var key in project['pos']){
+
+  var list = project['pos'];
+  keysSorted = Object.keys(list).sort(function(a,b){return list[a].to-list[b].to})
+
+  for(var i=0; i<keysSorted.length; i++){
+
+    key = keysSorted[i];
     if(project['pos'].hasOwnProperty(key)){
+
+
       var supplier = find_supplier_code(project['pos'][key]['to']);
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
 
       if(curr == null){
         curr = supplier;
-        subtotal += parseFloat(amount);
+        if(subtotal != '-----') total += parseFloat(subtotal);
       }
       else if(supplier != curr){
-        total += parseFloat(subtotal);
+        if(subtotal != '-----') total += parseFloat(subtotal);
         $('.po-summary-list').append(
           '<tr>'+
             '<td></td>'+
@@ -423,7 +430,7 @@ function get_supplier_summary(project){
       );
     }
   }
-  total += parseFloat(subtotal);
+  if(subtotal != '-----') total += parseFloat(subtotal);
   $('.po-summary-list').append(
     '<tr style="border-bottom:1px solid black;">'+
       '<td></td>'+
@@ -504,6 +511,9 @@ function add_item(item){
       '<td>'+item['quantity']+'</td>'+
       '<td>'+item['unit']+'</td>'+
       '<td>'+item['description']+'</td>'+
+      '<td><input type="checkbox" id="a'+items[key]['subtotal']+'" /><label for="a'+items[key]['subtotal']+'"></label></td>'+
+      '<td><input type="checkbox" id="b'+items[key]['subtotal']+'" /><label for="b'+items[key]['subtotal']+'"></label></td>'+
+      '<td><input type="checkbox" id="c'+items[key]['subtotal']+'" /><label for="c'+items[key]['subtotal']+'"></label></td>'+
       '<td>'+item['unit-price']+'</td>'+
       '<td>'+subtotal+'</td>'+
       '<td><i id="'+subtotal+'" class="material-icons clickable delete-item">close</i></td>'+
@@ -578,6 +588,24 @@ function amend_po(po){
         '</td>'+
       '</tr>'
     );
+
+    //needs improvement
+    var $table=$('.po-list');
+    var rows = $table.find('tr').get();
+    rows.sort(function(a, b) {
+      var keyA = $(a).attr('id');
+      var keyB = $(b).attr('id');
+      if (keyA < keyB) return 1;
+      if (keyA > keyB) return -1;
+      return 0;
+    });
+    $.each(rows, function(index, row) {
+      $table.children('tbody').append(row);
+    });
+
+
+
+    //urgent sort .po-list by po-number
     print_po(po['po-number']);
   }
   else Materialize.toast('Project code '+po['deliver-to']+' cannot be found.',5000); 
@@ -903,11 +931,14 @@ function set_view_po(po){
 
   $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
   var p = '#add-po-input-';
-  keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
+  keys = ['date', 'completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
   for(var i=0; i<keys.length; i+=1){
     $(p+keys[i]).val(po[keys[i]]);
     $(p+keys[i]).attr('readonly', '');
   }
+
+  $(p+'to,'+p+'deliver-to').attr('disabled', '');
+
   $(p+'to,'+p+'deliver-to').material_select();
   $('.add-item-row').hide();
   $('.generate-po').hide();
@@ -919,6 +950,9 @@ function set_view_po(po){
           '<td>'+items[key]['quantity']+'</td>'+
           '<td>'+items[key]['unit']+'</td>'+
           '<td>'+items[key]['description']+'</td>'+
+          '<td><input type="checkbox" id="a'+items[key]['subtotal']+'" /><label for="a'+items[key]['subtotal']+'"></label></td>'+
+      '<td><input type="checkbox" id="b'+items[key]['subtotal']+'" /><label for="b'+items[key]['subtotal']+'"></label></td>'+
+      '<td><input type="checkbox" id="c'+items[key]['subtotal']+'" /><label for="c'+items[key]['subtotal']+'"></label></td>'+
           '<td>'+parseFloat(items[key]['unit-price']).toFixed(2)+'</td>'+
           '<td>'+parseFloat(items[key]['subtotal']).toFixed(2)+'</td>'+
           '<td></td>'+
@@ -956,6 +990,9 @@ function set_amend_po(po){
           '<td>'+items[key]['quantity']+'</td>'+
           '<td>'+items[key]['unit']+'</td>'+
           '<td>'+items[key]['description']+'</td>'+
+          '<td><input type="checkbox" id="a'+items[key]['subtotal']+'" /><label for="a'+items[key]['subtotal']+'"></label></td>'+
+      '<td><input type="checkbox" id="b'+items[key]['subtotal']+'" /><label for="b'+items[key]['subtotal']+'"></label></td>'+
+      '<td><input type="checkbox" id="c'+items[key]['subtotal']+'" /><label for="c'+items[key]['subtotal']+'"></label></td>'+
           '<td>'+items[key]['unit-price']+'</td>'+
           '<td>'+items[key]['subtotal']+'</td>'+
           '<td><i id="'+items[key]['subtotal']+'" class="material-icons clickable delete-item">close</i></td>'+
@@ -980,7 +1017,48 @@ function set_add_po(project){
   $('.add-po-modal-btn-print').hide();
   $('.po-list').html('');
   var pos = project['pos'];
-  for(var key in pos){
+
+  var list = project['pos'];
+  keysSorted = Object.keys(list).sort(function(a,b){return list[a]-list[b]});
+
+  console.log(keysSorted);
+
+  //needs improvement
+  Array.prototype.move = function (old_index, new_index) {
+    if (new_index >= this.length) {
+        var k = new_index - this.length;
+        while ((k--) + 1) {
+            this.push(undefined);
+        }
+    }
+    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+    return this; // for testing purposes
+  };
+
+  for(var i=0; i<keysSorted.length; i++){
+    if(keysSorted[i].length > 9){
+      original = keysSorted[i].substring(0, 9);
+      //break;
+      for(var j=0; j<keysSorted.length; j++){
+      //console.log(original);
+      //console.log(keysSorted[j]);
+        if(keysSorted[j] == original){
+      //console.log('here');
+          j++;
+          while(keysSorted[j].length > 9){
+            j++;
+          }
+          keysSorted = keysSorted.move(i,j);
+          break;
+        }
+      }
+    }
+  }
+
+  //console.log(keysSorted);
+
+  for(var i=0; i<keysSorted.length; i++){
+    key = keysSorted[i];
     if(pos.hasOwnProperty(key)){
       $('.po-list').append(
         '<tr id="'+key+'">'+

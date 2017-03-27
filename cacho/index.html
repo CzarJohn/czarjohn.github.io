@@ -23,7 +23,7 @@
       cursor: pointer;
     }
     .main-menu-collection{
-      height:40vh;
+      height:65vh;
       overflow-y: scroll;
     }
     .clickable{
@@ -41,31 +41,39 @@
 </head>
 <body class="grey lighten-2" style="height:100vh;max-height:100vh;overflow-y:hidden;">
   <div class="main row">
-    <div class="row col s12 center-align">
-      <br><br><br>
-      <h4>CCI Purchase Order Generator</h4>
-    </div>
-    <div class="main-menu col s8 offset-s2 row">
-      <div class="col s12 row">
-        <a class="btn btn-large waves-effect waves-light col s5 po-generator">PO Generator</a>
-        <a class="btn btn-large waves-effect waves-light col s5 offset-s2 po-summary">Create PO Summary</a>
+    <div class="main-menu col s10 offset-s1 row">
+      <div class="row col s12">
+        <h4>CCI Purchase Order Generator</h4>
       </div>
-      <div class="col s12"><br></div>
+
+      <div class="col s3 row" style="height:75vh;">
+        <a class="btn btn-large waves-effect waves-light col s12 po-generator">PO Generator</a>
+        <div class="col s12"><br></div>
+        <a class="btn btn-large waves-effect waves-light col s12 po-summary">PO Summary</a>
+        <div class="col s12"><br></div>
+        <a class="btn btn-large waves-effect waves-light col s12 item-inventory">Item Inventory</a>
+      </div>
+      <div class="col s9 row">
+        <div class="col s6 row">
+          <div class="row col s12 card-panel">
+            <strong class="col s6">Projects</strong> 
+            <span class="col s6 right-align teal-text clickable add-project">ADD NEW PROJECT</span>
+            <ul class="col s12 collection main-menu-collection project-list">
+              <!--li class="collection-item">test</li-->
+            </ul>
+          </div>
+        </div>
+        <div class="col s6 row">
+          <div class="row col s12 card-panel">
+            <strong class="col s6">Suppliers</strong> 
+            <span class="col s6 right-align teal-text clickable add-supplier">ADD NEW SUPPLIER</span>
+            <ul class="col s12 collection main-menu-collection supplier-list">
+              <!--li class="collection-item">test</li-->
+            </ul>
+          </div>
+        </div>
+      </div>
       <div class="col s12 row">
-        <div class="col s5 row card-panel">
-          <strong class="col s6">Projects</strong> 
-          <span class="col s6 right-align teal-text clickable add-project">ADD NEW PROJECT</span>
-          <ul class="col s12 collection main-menu-collection project-list">
-            <!--li class="collection-item">test</li-->
-          </ul>
-        </div>
-        <div class="col s5 offset-s2 row card-panel">
-          <strong class="col s6">Suppliers</strong> 
-          <span class="col s6 right-align teal-text clickable add-supplier">ADD NEW SUPPLIER</span>
-          <ul class="col s12 collection main-menu-collection supplier-list">
-            <!--li class="collection-item">test</li-->
-          </ul>
-        </div>
       </div>
     </div>
   </div>
@@ -214,7 +222,7 @@
       <table>
         <tbody class="slim-table">
           <tr>
-            <td>Work Type</td>
+            <td>VAT Reg</td>
             <td contenteditable class="supplier-vat-reg"></td>
           </tr>
           <tr>
@@ -307,6 +315,9 @@
                 <th data-field="po-number">Qty</th>
                 <th data-field="amount">Unit</th>
                 <th data-field="date">Description</th>
+                <th data-field="date">Material</th>
+                <th data-field="date">Labor</th>
+                <th data-field="date">Subcon</th>
                 <th data-field="actions">Unit Cost</th>
                 <th data-field="actions">Subtotal</th>
                 <th data-field="actions">Action</th>
@@ -428,6 +439,7 @@
     </div>
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat po-summary-modal-btn-close">Close</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat po-summary-modal-btn-copy">Copy To Clipboard</a>
     </div>
   </div>
 
