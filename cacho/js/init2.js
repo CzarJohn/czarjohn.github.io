@@ -673,9 +673,9 @@ function add_item(item){
       '<td>'+item['quantity']+'</td>'+
       '<td>'+item['unit']+'</td>'+
       '<td>'+item['description']+'</td>'+
-      '<td><input type="checkbox" id="a'+items[key]['subtotal']+'" /><label for="a'+items[key]['subtotal']+'"></label></td>'+
-      '<td><input type="checkbox" id="b'+items[key]['subtotal']+'" /><label for="b'+items[key]['subtotal']+'"></label></td>'+
-      '<td><input type="checkbox" id="c'+items[key]['subtotal']+'" /><label for="c'+items[key]['subtotal']+'"></label></td>'+
+      '<td><input type="checkbox" id="a'+subtotal+'" /><label for="a'+subtotal+'"></label></td>'+
+      '<td><input type="checkbox" id="b'+subtotal+'" /><label for="b'+subtotal+'"></label></td>'+
+      '<td><input type="checkbox" id="c'+subtotal+'" /><label for="c'+subtotal+'"></label></td>'+
       '<td>'+item['unit-price']+'</td>'+
       '<td>'+subtotal+'</td>'+
       '<td><i id="'+subtotal+'" class="material-icons clickable delete-item">close</i></td>'+
