@@ -1250,6 +1250,9 @@ function clear_add_po(){
     ','+p+'to-be-used-for'+
     ','+p+'conforme';
   $(selector).val('').removeAttr('readonly');
+
+  $(p+'to,'+p+'deliver-to').removeAttr('disabled');
+
   $('.add-po-header').html('&nbsp;&nbsp;&nbsp;Add New Purchase Order');
   $('.add-po-modal-btn-print').hide();
   $('.add-item-row').show();
