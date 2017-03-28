@@ -272,9 +272,13 @@ var suppliers = [];
     });
 
     $('.po-summary').click(function(){
-      console.log('232');
       create_project_options2();
       $('.po-summary-modal').openModal();
+    });
+
+    $('.item-inventory').click(function(){
+      create_project_options3();
+      $('.item-inventory-modal').openModal();
     });
 
     $('input[type=radio][name=po-summary-input-type]').change(function() {
@@ -297,8 +301,31 @@ var suppliers = [];
       }
     });
 
+    $('#item-inventory-input-project').change(function() {
+      //todo clear table on right
+      var code = $('#item-inventory-input-project').val();
+      var project = find_project_code(code);
+      create_po_options(project.pos);
+    });
+
+    $('#item-inventory-input-po').change(function() {
+      //todo clear table on right
+      var code = $('#item-inventory-input-po').val();
+      var po = find_po_code(code);
+      create_po_item_status(po.items);
+    });
+
+
   }); // end of document ready
 })(jQuery); // end of jQuery name space
+
+function create_po_item_status(items){
+  for(var key in items){
+    if(pos.hasOwnProperty(items)){
+      sb += '<option value="'+key+'">'+key+'</option>'; 
+    }
+  }
+}
 
 function get_billing_summary(project){
   $('.po-summary-table').show();
@@ -1075,9 +1102,12 @@ function set_add_po(project){
         if(keysSorted[j] == original){
       //console.log('here');
           j++;
+          if(j>=keysSorted.length) break;
           while(keysSorted[j].length > 9){
             j++;
+            if(j>=keysSorted.length) break;
           }
+          if(j>=keysSorted.length) break;
           keysSorted = keysSorted.move(i,j);
           break;
         }
@@ -1186,6 +1216,7 @@ function get_item_from_row(row){
   item['type'] = row.children[3].innerHTML;
   item['unit-price'] = row.children[4].innerHTML;
   item['subtotal'] = row.children[5].innerHTML;
+  item['deliveries'] = {};
   return item;
 }
 
@@ -1294,6 +1325,26 @@ function create_project_options2(){
   }
   $('#po-summary-input-project').html(sb);
   $('#po-summary-input-project').material_select();
+}
+
+function create_project_options3(){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var i=0;i<projects.length; i++){
+    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
+  }
+  $('#item-inventory-input-project').html(sb);
+  $('#item-inventory-input-project').material_select();
+}
+
+function create_po_options(pos){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var key in pos){
+    if(pos.hasOwnProperty(key)){
+      sb += '<option value="'+key+'">'+key+'</option>'; 
+    }
+  }
+  $('#item-inventory-input-po').html(sb);
+  $('#item-inventory-input-po').material_select();
 }
 
 
