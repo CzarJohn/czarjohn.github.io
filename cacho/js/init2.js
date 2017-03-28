@@ -1252,6 +1252,7 @@ function clear_add_po(){
   $(selector).val('').removeAttr('readonly');
 
   $(p+'to,'+p+'deliver-to').removeAttr('disabled');
+  $(p+'to,'+p+'deliver-to').material_select();
 
   $('.add-po-header').html('&nbsp;&nbsp;&nbsp;Add New Purchase Order');
   $('.add-po-modal-btn-print').hide();
