@@ -33,6 +33,8 @@ var suppliers = [];
 
     $('.tooltipped').tooltip({delay: 50});
 
+    $('.collapsible').collapsible();
+
     load_projects();
     load_suppliers();
 
@@ -321,8 +323,8 @@ var suppliers = [];
 
 function create_po_item_status(items){
   for(var key in items){
-    if(pos.hasOwnProperty(items)){
-      sb += '<option value="'+key+'">'+key+'</option>'; 
+    if(items.hasOwnProperty(key)){
+      
     }
   }
 }
