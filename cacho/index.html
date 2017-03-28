@@ -199,6 +199,10 @@
         <input type="text" id="add-supplier-input-mobile-number" name="add-supplier-input-mobile-number" class="validate" required />
       </div>
       <div class="input-field col s12">
+        <label for="add-supplier-input-telfax">Tel/Fax</label>
+        <input type="text" id="add-supplier-input-telfax" name="add-supplier-input-telfax" class="validate" required />
+      </div>
+      <div class="input-field col s12">
         <label for="add-supplier-input-contact-person">Contact Person</label>
         <input type="text" id="add-supplier-input-contact-person" name="add-supplier-input-contact-person" class="validate" required />
       </div>
@@ -232,6 +236,10 @@
           <tr>
             <td>Mobile Number</td>
             <td contenteditable class="supplier-mobile-number"></td>
+          </tr>
+          <tr>
+            <td>Tel/Fax</td>
+            <td contenteditable class="supplier-telfax"></td>
           </tr>
           <tr>
             <td>Contact Person</td>
@@ -315,9 +323,7 @@
                 <th data-field="po-number">Qty</th>
                 <th data-field="amount">Unit</th>
                 <th data-field="date">Description</th>
-                <th data-field="date">Material</th>
-                <th data-field="date">Labor</th>
-                <th data-field="date">Subcon</th>
+                <th data-field="date">Type</th>
                 <th data-field="actions">Unit Cost</th>
                 <th data-field="actions">Subtotal</th>
                 <th data-field="actions">Action</th>
@@ -343,10 +349,16 @@
                     <input type="text" id="add-item-input-description" name="add-item-input-description" class="validate" required />
                   </div>
                 </td>
-
-                <td><input type="checkbox" id="aadd" /><label for="aadd"></label></td>
-                <td><input type="checkbox" id="badd" /><label for="badd"></label></td>
-                <td><input type="checkbox" id="cadd" /><label for="cadd'"></label></td>
+                <td>
+                  <div class="input-field">
+                    <select id="add-item-input-type" name="add-item-input-type">
+                      <option value="Material" selected>Material</option>
+                      <option value="Labor">Labor</option>
+                      <option value="Subcon">Subcon</option>
+                    </select>
+                  </div>
+                </td>
+                
                 <td>
                   <div class="input-field">
                     <label for="add-item-input-unit-price">Unit Price</label>
@@ -453,8 +465,9 @@
   <!--  Scripts-->
   <script src="js/jquery.min.js"></script>
   <script src="js/materialize.js"></script>
-  <script src="js/moment.js"></script>
+<script src="js/moment.js"></script>
   <script src="js/generator.js"></script>
+  <script src="js/suppliers.js"></script>
   <script src="js/init2.js"></script>
 
 
