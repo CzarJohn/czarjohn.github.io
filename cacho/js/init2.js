@@ -275,6 +275,7 @@ var suppliers = [];
     });
 
     $('.item-inventory').click(function(){
+  	  $('.item-inventory-list').html('');
       create_project_options3();
       $('.item-inventory-modal').openModal();
     });
@@ -303,19 +304,62 @@ var suppliers = [];
       //todo clear table on right
       var code = $('#item-inventory-input-project').val();
       var project = find_project_code(code);
-      create_po_options(project.pos);
+      create_po_item_status(project.pos);
+      //create_po_options(project.pos);
     });
 
-    $('#item-inventory-input-po').change(function() {
+   /* $('#item-inventory-input-po').change(function() {
       //todo clear table on right
       var code = $('#item-inventory-input-po').val();
       var po = find_po_code(code);
       create_po_item_status(po.items);
+    });*/
+
+    $('.item-inventory-list').on('click', '.complete-delivery', function(){
+    	var temp = this.id.split('|');
+	    var item = temp[0];
+	    var code = temp[1];
+	    var po = find_po_code(code);
+		var items = po.items;
+
+	    var remaining = get_remaining(items[item]);
+
+	    if(remaining <= 0){
+	    	Materialize.toast('Item delivery status is already complete.', 5000);
+      		return;
+	    }
+
+      	res = new Date();
+
+	    var delivery = {};
+	    delivery['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+	    delivery['quantity'] = remaining;
+
+	    var i = 0;
+	      while(items[item]['deliveries'][i]){
+	        i++;
+	      }
+
+	    items[item]['deliveries'][i] = delivery;
+
+	    Materialize.toast('Successfully completed delivery.', 5000);
+
+	    var pcode = code.substring(0,6);
+      var project = find_project_code(pcode);
+      create_po_item_status(project.pos);
+
+
+      localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+
+
+
     });
 
+
     $('.item-inventory-list').on('click', '.add-delivery', function(){
-      var item = this.id;
-      var code = $('#item-inventory-input-po').val();
+      var temp = this.id.split('|');
+      var item = temp[0];
+      var code = temp[1];
       var po = find_po_code(code);
       var items = po.items;
       var i = 0;
@@ -326,12 +370,24 @@ var suppliers = [];
       res = new Date();
 
       var delivery = {};
-      delivery['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
-      delivery['quantity'] = $('#'+item+'-quantity').val();
+      delivery['date'] = $('#'+item+'-'+code+'-date').val();
+      delivery['quantity'] = $('#'+item+'-'+code+'-quantity').val();
+
+      var remaining = get_remaining(items[item]);
+      if(remaining - delivery['quantity'] < 0 || delivery['quantity'] < 1) {
+      	Materialize.toast('Invalid value.', 5000);
+      	return;
+      } 
+
+
       items[item]['deliveries'][i] = delivery;
 
       Materialize.toast('Successfully added delivery.', 5000);
-      create_po_item_status(po.items);
+      var pcode = code.substring(0,6);
+      var project = find_project_code(pcode);
+      create_po_item_status(project.pos);
+
+      //create_po_item_status(po.items);
      
       localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
 
@@ -342,60 +398,99 @@ var suppliers = [];
 })(jQuery); // end of jQuery name space
 
 
+function get_remaining(item){
+	var deliveries = item.deliveries;
+	var remaining = item.quantity;
+	for(var key in deliveries){
+	    if(deliveries.hasOwnProperty(key)){
+	      remaining -= deliveries[key].quantity;
+	    }
+	  }
+	return remaining;
+}
 
-function create_po_item_status(items){
+
+
+function create_po_item_status(pos){
   //console.log(items);
   $('.item-inventory-list').html('');
-  for(var item in items){
-    if(items.hasOwnProperty(item)){
-      var deliveries = items[item].deliveries;
-      var remaining = items[item].quantity;
-      var dtext = '';
-      for(var key in deliveries){
-        if(deliveries.hasOwnProperty(key)){
-          remaining -= deliveries[key].quantity;
-          dtext += '<li class="collection-item"><span class="dtext">'+deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+'</span></li>';
-        }
-      }
-      var status;
-      if(remaining == items[item].quantity){
-        status = 'PENDING';
-        dtext = '<li class="collection-item">You have not yet received any deliveries.</li>';
-      }
-      else if(remaining == 0){
-        status = 'COMPLETE';
-      }
-      else{
-        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
-      }
+  for(var po in pos){
+    if(pos.hasOwnProperty(po)){
+      var items = pos[po]['items'];
+	  for(var item in items){
+	    if(items.hasOwnProperty(item)){
+	      var deliveries = items[item].deliveries;
+	      var remaining = items[item].quantity;
+	      var dtext = '';
+	      for(var key in deliveries){
+	        if(deliveries.hasOwnProperty(key)){
+	          remaining -= deliveries[key].quantity;
+	          dtext += '<li class="collection-item"><span class="dtext">'+deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+'</span></li>';
+	        }
+	      }
+	      var status;
+	      if(remaining == items[item].quantity){
+	        status = 'PENDING';
+	        dtext = '<li class="collection-item">You have not yet received any deliveries.</li>';
+	      }
+	      else if(remaining == 0){
+	        status = 'COMPLETE';
+	      }
+	      else{
+	        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
+	      }
 
-      //todo check that input is within max and min//set_view_projecter side
-      //todo have an item id, huhu
-      //todo disable add on complete
+	      //todo check that input is within max and min//set_view_projecter side
+	      //todo have an item id, huhu
+	      //todo disable add on complete
 
-      $('.item-inventory-list').append(
-        '<li>'+
-          '<div class="collapsible-header"><i class="material-icons">filter_drama</i>'+
-            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
-            '<span class="right teal-text">'+status+'</span>'+
-          '</div>'+
-          '<div class="collapsible-body row">'+
-            '<div class="col s4">'+
-              '<br/>'+
-              '<div class="input-field">'+
-                '<label class="active" for="'+item+'-quantity">Quantity delivered (in '+items[item].unit+')</label>'+
-                '<input id="'+item+'-quantity" class="" type="number" value="1" min="1" max="'+remaining+'"/>'+
-              '</div>'+
-              '<a href="#" id="'+item+'" class="btn waves-effect waves-light add-delivery">Add Delivery</a>'+
-            '</div>'+
-            '<ul class="col s7 offset-s1 collection">'+
-              dtext+
-            '</ul>'+
-          '</div>'+
-        '</li>'
-      );
-    }
-  }
+	      res = new Date();
+      	  var now = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+
+	      $('.item-inventory-list').append(
+	        '<li>'+
+	          '<div class="collapsible-header"><i class="material-icons">event_note</i>'+
+	            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
+	            '<span class="right teal-text">'+
+	            	'DELIVERY STATUS: '+status+
+	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-small waves-effect waves-light tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Partial Delivery"><i class="material-icons center">menu</i></a>'+
+	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+item+'|'+po+'" class="btn btn-small waves-effect waves-light complete-delivery tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Complete Delivery"><i class="material-icons center">check</i></a>'+
+	            '</span>'+
+	          '</div>'+
+	          '<div class="collapsible-body row">'+
+	            '<div class="col s4">'+
+	              '<br/>'+
+	              '<div class="input-field">'+
+			        '<label class="active" for="'+item+'-'+po+'-date">Delivery Date</label>'+
+			        '<input type="date" id="'+item+'-'+po+'-date" name="" value="'+now+'" class="datepicker"/>'+
+			      '</div>'+
+	              '<div class="input-field">'+
+	                '<label class="active" for="'+item+'-quantity">Quantity delivered (in '+items[item].unit+')</label>'+
+	                '<input id="'+item+'-'+po+'-quantity" class="" type="number" value="1" min="1" max="'+remaining+'"/>'+
+	              '</div>'+
+	              '<a href="#" id="'+item+'|'+po+'" class="btn  waves-effect waves-light add-delivery">Add Delivery</a>'+
+	            '</div>'+
+	            '<ul class="col s7 offset-s1 collection">'+
+	              dtext+
+	            '</ul>'+
+	          '</div>'+
+	        '</li>'
+	      );
+
+
+
+	    }
+	  }
+     }
+	}
+	$('.datepicker').pickadate({
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15, // Creates a dropdown of 15 years to control year
+      format: 'yyyy-mm-dd'
+    });
+
+    $('.tooltipped').tooltip({delay: 50});
+
   $('.item-inventory-list').collapsible();
 }
 
@@ -411,10 +506,7 @@ function get_billing_summary(project){
   var cutoff = null;
   var subtotal = 0;
   var total = 0;
-  var materials = 0;
-  var labor = 0;
-  var subcon = 0;
-  var others = 0;
+  var breakdown;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
@@ -423,6 +515,8 @@ function get_billing_summary(project){
       var month = d.getMonth()+1;
       var dateX = d.getDate();
       var year = d.getFullYear();
+
+      breakdown = get_breakdown(project['pos'][key]['items']);
 
       if(cutoff == null){
         if(dateX <= 15){
@@ -467,15 +561,15 @@ function get_billing_summary(project){
         subtotal += parseFloat(amount);
       }
 
-
+ 
       $('.po-summary-list').append(
         '<tr>'+
           '<td>'+project['pos'][key]['date']+'</td>'+
           '<td>'+key+'</td>'+
-          '<td></td>'+
-          '<td></td>'+
-          '<td></td>'+
-          '<td></td>'+
+          '<td class="right-align">'+breakdown.material+'</td>'+
+          '<td class="right-align">'+breakdown.labor+'</td>'+
+          '<td class="right-align">'+breakdown.subcon+'</td>'+
+          '<td class="right-align">'+breakdown.others+'</td>'+
           '<td class="right-align">'+amount+'</td>'+
           '<td></td>'+
         '</tr>'
@@ -509,6 +603,28 @@ function get_billing_summary(project){
   );
 }
 
+function get_breakdown(items){
+	var material = 0;
+	var labor = 0;
+	var subcon = 0;
+	var others = 0;
+
+	for(var key in items){
+    	if(items.hasOwnProperty(key)){
+    		if(items[key]['type'] == 'Material') material += parseFloat(items[key]['subtotal']);
+    		else if(items[key]['type'] == 'Labor') labor += parseFloat(items[key]['subtotal']);
+    		else if(items[key]['type'] == 'Subcon') subcon += parseFloat(items[key]['subtotal']);
+    		else others += parseFloat(items[key]['subtotal']);
+    	}
+    }
+	var breakdown = {};
+	breakdown.material = material;
+	breakdown.labor = labor;
+	breakdown.subcon = subcon;
+	breakdown.others = others;
+	return breakdown;
+}
+
 function get_last_day(yearmonth){
   var parts = yearmonth.split('-');
   var year = parts[0];
@@ -525,7 +641,7 @@ function get_supplier_summary(project){
   var curr = null;
   var subtotal = 0;
   var total = 0;
-
+  var breakdown;
   var list = project['pos'];
   keysSorted = Object.keys(list).sort(function(a,b){return list[a].to-list[b].to});
 
@@ -539,6 +655,7 @@ function get_supplier_summary(project){
 
       var supplier = find_supplier_code(project['pos'][key]['to']);
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+      breakdown = get_breakdown(project['pos'][key]['items']);
 
       if(curr == null){
         curr = supplier;
@@ -571,10 +688,10 @@ function get_supplier_summary(project){
         '<tr>'+
           '<td>'+supplier.name+'</td>'+
           '<td>'+key+'</td>'+
-          '<td></td>'+
-          '<td></td>'+
-          '<td></td>'+
-          '<td></td>'+
+          '<td class="right-align">'+breakdown.material+'</td>'+
+          '<td class="right-align">'+breakdown.labor+'</td>'+
+          '<td class="right-align">'+breakdown.subcon+'</td>'+
+          '<td class="right-align">'+breakdown.others+'</td>'+
           '<td class="right-align">'+amount+'</td>'+
           '<td></td>'+
         '</tr>'
