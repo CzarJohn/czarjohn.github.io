@@ -19,18 +19,8 @@ var suppliers = [];
 
 (function($){
   $(function(){
-    $('.datepicker').pickadate({
-      selectMonths: true, // Creates a dropdown to control month
-      selectYears: 15, // Creates a dropdown of 15 years to control year
-      format: 'yyyy-mm-dd'
-    });
-
-    $('select').material_select();
-
-    $('.tooltipped').tooltip({delay: 50});
-
-    $('.collapsible').collapsible();
-
+    
+    init_components
     load_projects();
     load_suppliers();
 
@@ -329,10 +319,8 @@ var suppliers = [];
       		return;
 	    }
 
-      	res = new Date();
-
 	    var delivery = {};
-	    delivery['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+	    delivery['date'] = date_to_string(new Date());
 	    delivery['quantity'] = remaining;
 
 	    var i = 0;
@@ -413,12 +401,26 @@ function get_remaining(item){
 
 function create_po_item_status(pos){
   //console.log(items);
-  $('.item-inventory-list').html('');
+  $('.item-inventory-list').html(
+    '<li>'+
+      '<div class="collapsible-header disabled">'+
+        '<strong>ITEM LIST</strong>'+
+        '<span class="right teal-text">'+
+          'DELIVERY STATUS'+
+            '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-flat white custom-btn">Partial<br>Delivery</span>'+
+            '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-flat white custom-btn">Complete<br>Delivery</span>'+
+        '</span>'+
+      '</div>'+
+    '</li>'
+  );
   for(var po in pos){
     if(pos.hasOwnProperty(po)){
+      if(pos[po].status == 0) {
+        continue;
+      }
       var items = pos[po]['items'];
-	  for(var item in items){
-	    if(items.hasOwnProperty(item)){
+    for(var item in items){
+      if(items.hasOwnProperty(item)){
 	      var deliveries = items[item].deliveries;
 	      var remaining = items[item].quantity;
 	      var dtext = '';
@@ -444,15 +446,14 @@ function create_po_item_status(pos){
 	      //todo have an item id, huhu
 	      //todo disable add on complete
 
-	      res = new Date();
-      	  var now = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+      	var now = date_to_string(new Date());
 
 	      $('.item-inventory-list').append(
 	        '<li>'+
 	          '<div class="collapsible-header"><i class="material-icons">event_note</i>'+
 	            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
 	            '<span class="right teal-text">'+
-	            	'DELIVERY STATUS: '+status+
+	            	status+
 	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-small waves-effect waves-light tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Partial Delivery"><i class="material-icons center">menu</i></a>'+
 	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+item+'|'+po+'" class="btn btn-small waves-effect waves-light complete-delivery tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Complete Delivery"><i class="material-icons center">check</i></a>'+
 	            '</span>'+
@@ -499,10 +500,7 @@ function get_billing_summary(project){
   $('.po-summary-list').html('');
   $('.po-summary-varying-th').html('Date');
 
-  //var inputdate = $('#po-summary-input-date').val();
-
- // var curr = new Date(inputdate);
- //todo arrange by date, though it is assumed na arranged na siya by date, haha
+  //todo arrange by date, though it is assumed na arranged na siya by date, haha
   var cutoff = null;
   var subtotal = 0;
   var total = 0;
@@ -541,7 +539,7 @@ function get_billing_summary(project){
             '<td></td>'+
             '<td></td>'+
             '<td></td>'+
-            '<td></td>'+
+            '<td>As of '+date_to_string(cutoff)+'</td>'+
             '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
           '</tr>'
         );
@@ -585,7 +583,7 @@ function get_billing_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td></td>'+
-      '<td></td>'+
+      '<td>As of '+date_to_string(cutoff)+'</td>'+
       '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
     '</tr>'
   );
@@ -618,10 +616,10 @@ function get_breakdown(items){
     	}
     }
 	var breakdown = {};
-	breakdown.material = material;
-	breakdown.labor = labor;
-	breakdown.subcon = subcon;
-	breakdown.others = others;
+	breakdown.material = (material == 0)? '-' : parseFloat(material).toFixed(2);
+	breakdown.labor = (labor == 0)? '-' : parseFloat(labor).toFixed(2);
+	breakdown.subcon = (subcon == 0)? '-' : parseFloat(subcon).toFixed(2);
+	breakdown.others = (others == 0)? '-' : parseFloat(others).toFixed(2);
 	return breakdown;
 }
 
@@ -678,7 +676,8 @@ function get_supplier_summary(project){
         );
         subtotal = 0;
         curr = supplier;
-        subtotal += parseFloat(amount);
+        if(amount != '-----')
+          subtotal += parseFloat(amount);
       }
       else if(amount != '-----'){
         subtotal += parseFloat(amount);
@@ -1315,11 +1314,15 @@ function set_amend_po(po){
   $('.add-po-input-total-amount').html(po['total-amount']);  
 }
 
+function date_to_string(dateX){
+  return dateX.getFullYear()+'-'+pad(dateX.getMonth()+1,2)+'-'+pad(dateX.getDate(),2)
+}
+
 function set_add_po(project){
 
   $('#po-date-label').addClass('active');
   res = new Date();
-  $('#add-po-input-date').val(res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2));
+  $('#add-po-input-date').val(date_to_string(dateX));
 
   $('#add-po-input-deliver-to').val(project['project-code']);
   $('#add-po-input-deliver-to').material_select();
@@ -1433,8 +1436,7 @@ function get_add_po_input(){
   }
   po['items'] = items;
   po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
-  res = new Date();
-  po['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+  po['date'] = date_to_string(new Date);
   return po;
 }
 
@@ -1452,8 +1454,7 @@ function get_amend_po_input(){
   }
   po['items'] = items;
   po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
-  res = new Date();
-  po['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+  po['date'] = date_to_string(new Date());
   po['po-number'] = $('.add-po-modal-btn-amend').attr('id');
   return po;
 }
@@ -1516,8 +1517,7 @@ function clear_add_supplier(){
 
 function clear_add_po(){
   $('#po-date-label').addClass('active');
-  res = new Date();
-  $('#add-po-input-date').val(res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2));
+  $('#add-po-input-date').val(date_to_string(new Date()));
 
   $('.add-po-modal-btn-amend').hide();
   
