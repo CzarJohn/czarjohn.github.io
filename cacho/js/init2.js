@@ -1,14 +1,10 @@
 //UI RELATED
 //todo add commas on thousands prices
-//todo disable select
 //todo don't place active on select's label
 
 //FUNCTIONALITIES
 //todo login user type
 //todo choose printing format
-//todo add item checklist - materials, labor, subcon
-//todo add item inventory
-//todo add legit item and supplier list
 //todo add copy to clipboard
 
 //FOR CLARIFICATION
@@ -415,6 +411,10 @@ function get_billing_summary(project){
   var cutoff = null;
   var subtotal = 0;
   var total = 0;
+  var materials = 0;
+  var labor = 0;
+  var subcon = 0;
+  var others = 0;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
@@ -444,6 +444,10 @@ function get_billing_summary(project){
             '<td></td>'+
             '<td></td>'+
             '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
             '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
           '</tr>'
         );
@@ -463,49 +467,15 @@ function get_billing_summary(project){
         subtotal += parseFloat(amount);
       }
 
-<<<<<<< HEAD
-=======
-      console.log(cutoff);
-      console.log(d);
->>>>>>> 9d42f98e6a90ddd8e06f8c933259f0fa84a0cee4
-
-      //console.log('key: '+key+'\n curr: '+curr+'\n d:'+d);
-/*
-      if(curr == new Date(inputdate) || subtotal <= 0){
-        //curr = d;
-        if(amount != '-----'){
-          subtotal += parseFloat(amount);
-        }
-      }
-      else if(d > curr){
-        if(subtotal != '-----') total += parseFloat(subtotal);
-        $('.po-summary-list').append(
-          '<tr>'+
-            '<td></td>'+
-            '<td></td>'+
-            '<td></td>'+
-            '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
-          '</tr>'
-        );
-        subtotal = 0;
-        //curr = d;
-        if(amount != '-----'){
-          subtotal += parseFloat(amount);
-        }
-      }
-      else if(amount != '-----'){
-        subtotal += parseFloat(amount);
-      }*/
-
-<<<<<<< HEAD
-=======
-      //console.log('\n');
->>>>>>> 9d42f98e6a90ddd8e06f8c933259f0fa84a0cee4
 
       $('.po-summary-list').append(
         '<tr>'+
           '<td>'+project['pos'][key]['date']+'</td>'+
           '<td>'+key+'</td>'+
+          '<td></td>'+
+          '<td></td>'+
+          '<td></td>'+
+          '<td></td>'+
           '<td class="right-align">'+amount+'</td>'+
           '<td></td>'+
         '</tr>'
@@ -518,11 +488,19 @@ function get_billing_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
       '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
     '</tr>'
   );
   $('.po-summary-list').append(
     '<tr style="border-bottom:1px solid black;">'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
       '<td></td>'+
       '<td></td>'+
       '<td><strong>GRAND TOTAL</strong></td>'+
@@ -574,6 +552,10 @@ function get_supplier_summary(project){
             '<td></td>'+
             '<td></td>'+
             '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
             '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
           '</tr>'
         );
@@ -589,6 +571,10 @@ function get_supplier_summary(project){
         '<tr>'+
           '<td>'+supplier.name+'</td>'+
           '<td>'+key+'</td>'+
+          '<td></td>'+
+          '<td></td>'+
+          '<td></td>'+
+          '<td></td>'+
           '<td class="right-align">'+amount+'</td>'+
           '<td></td>'+
         '</tr>'
@@ -601,11 +587,19 @@ function get_supplier_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
       '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
     '</tr>'
   );
   $('.po-summary-list').append(
     '<tr style="border-bottom:1px solid black;">'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
+      '<td></td>'+
       '<td></td>'+
       '<td></td>'+
       '<td><strong>GRAND TOTAL</strong></td>'+
@@ -943,7 +937,6 @@ function check_po_input(){
   keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
     for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
-    console.log(keys[i]);
     if(input.trim() == ''){
       return false;
     }
