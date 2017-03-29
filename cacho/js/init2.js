@@ -297,8 +297,6 @@ var suppliers = [];
       var pcode = code.substring(0,6);
       var project = find_project_code(pcode);
       create_po_item_status(project.pos);
-
-      //create_po_item_status(po.items);
      
       localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
 
@@ -323,7 +321,6 @@ function get_remaining(item){
 
 
 function create_po_item_status(pos){
-  //console.log(items);
   $('.item-inventory-list').html(
     '<li>'+
       '<div class="collapsible-header disabled">'+
@@ -365,10 +362,6 @@ function create_po_item_status(pos){
 	        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
 	      }
 
-	      //todo check that input is within max and min//set_view_projecter side
-	      //todo have an item id, huhu
-	      //todo disable add on complete
-
       	var now = date_to_string(new Date());
 
 	      $('.item-inventory-list').append(
@@ -407,15 +400,8 @@ function create_po_item_status(pos){
 	  }
      }
 	}
-	$('.datepicker').pickadate({
-      selectMonths: true, // Creates a dropdown to control month
-      selectYears: 15, // Creates a dropdown of 15 years to control year
-      format: 'yyyy-mm-dd'
-    });
 
-    $('.tooltipped').tooltip({delay: 50});
-
-  $('.item-inventory-list').collapsible();
+  init_components();
 }
 
 function get_billing_summary(project){
@@ -423,7 +409,6 @@ function get_billing_summary(project){
   $('.po-summary-list').html('');
   $('.po-summary-varying-th').html('Date');
 
-  //todo arrange by date, though it is assumed na arranged na siya by date, haha
   var cutoff = null;
   var subtotal = 0;
   var total = 0;
@@ -431,7 +416,6 @@ function get_billing_summary(project){
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
-      console.log(project['pos'][key]['date']);
       var d = new Date(project['pos'][key]['date']);
       var month = d.getMonth()+1;
       var dateX = d.getDate();
@@ -560,13 +544,11 @@ function get_supplier_summary(project){
   var list = project['pos'];
   keysSorted = Object.keys(list).sort(function(a,b){return list[a].to-list[b].to});
 
-  console.log(keysSorted);
 
   for(var i=0; i<keysSorted.length; i++){
 
     key = keysSorted[i];
     if(project['pos'].hasOwnProperty(key)){
-      console.log(project['pos'][key]);
 
       var supplier = find_supplier_code(project['pos'][key]['to']);
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
@@ -575,7 +557,6 @@ function get_supplier_summary(project){
       if(curr == null){
         curr = supplier;
         if(amount != '-----') subtotal += parseFloat(amount);
-        //if(subtotal != '-----') total += parseFloat(subtotal);
       }
       else if(supplier != curr){
         if(subtotal != '-----') total += parseFloat(subtotal);
@@ -753,7 +734,7 @@ function amend_po(po){
     $('tr#'+parent+'>td')[1].innerHTML = '-----';
 
     var i = 0;
-    var alpha = ['A', 'B', 'C', 'D', 'E','F','G','H','I'];//todo improve
+    var alpha = ['A','B','C','D','E','F','G','H','I','J'];
     while(project['pos'][parent+alpha[i]] != undefined){
       $('tr#'+parent+alpha[i]+'>td')[1].innerHTML = '-----';
       $('tr#'+parent+alpha[i]+'>td')[1].innerHTML = '-----';
@@ -779,7 +760,6 @@ function amend_po(po){
       '</tr>'
     );
 
-    //needs improvement
     var $table=$('.po-list');
     var rows = $table.find('tr').get();
     rows.sort(function(a, b) {
@@ -793,9 +773,6 @@ function amend_po(po){
       $table.children('tbody').append(row);
     });
 
-
-
-    //urgent sort .po-list by po-number
     print_po(po['po-number']);
   }
   else Materialize.toast('Project code '+po['deliver-to']+' cannot be found.',5000); 
@@ -808,7 +785,6 @@ function edit_project(project){
         for(var i=0; i<keys.length; i+=1){
           projects[index][keys[i]] = project[keys[i]];
         }
-        //projects[index] = project;
         localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
         Materialize.toast('Successfully edited project',3000);
         return;
@@ -893,7 +869,6 @@ function load_suppliers(){
   	var result = $.grep(suppliers, function(e){ return e.name == supplierlist[i][0]; });
   	if (result.length != 0) continue;
 
-    console.log('here');
 
     s = {};
     sc = generate_suppliercode();
@@ -1186,9 +1161,6 @@ function set_add_po(project){
   var list = project['pos'];
   keysSorted = Object.keys(list).sort(function(a,b){return list[a]-list[b]});
 
-
-
-  //needs improvement
   Array.prototype.move = function (old_index, new_index) {
     if (new_index >= this.length) {
         var k = new_index - this.length;
