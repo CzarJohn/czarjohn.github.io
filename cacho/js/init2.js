@@ -408,19 +408,66 @@ function get_billing_summary(project){
   $('.po-summary-list').html('');
   $('.po-summary-varying-th').html('Date');
 
-  var inputdate = $('#po-summary-input-date').val();
+  //var inputdate = $('#po-summary-input-date').val();
 
-  var curr = new Date(inputdate);
+ // var curr = new Date(inputdate);
+ //todo arrange by date, though it is assumed na arranged na siya by date, haha
+  var cutoff = null;
   var subtotal = 0;
   var total = 0;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+      console.log(project['pos'][key]['date']);
       var d = new Date(project['pos'][key]['date']);
+      var month = d.getMonth()+1;
+      var dateX = d.getDate();
+      var year = d.getFullYear();
 
+      if(cutoff == null){
+        if(dateX <= 15){
+          cutoff = new Date(year+'-'+month+'-15');
+        }
+        else{
+          dateY = get_last_day(year+'-'+month);
+          cutoff = new Date(year+'-'+month+'-'+dateY);
+        }
 
-      console.log('key: '+key+'\n curr: '+curr+'\n d:'+d);
+        if(amount != '-----'){
+          subtotal += parseFloat(amount);
+        }
+      }
+      else if(d > cutoff){
+        if(subtotal != '-----') total += parseFloat(subtotal);
+        $('.po-summary-list').append(
+          '<tr>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
+          '</tr>'
+        );
+        subtotal = 0;
+        if(dateX <= 15){
+          cutoff = new Date(year+'-'+month+'-15');
+        }
+        else{
+          dateY = get_last_day(year+'-'+month);
+          cutoff = new Date(year+'-'+month+'-'+dateY);
+        }
+        if(amount != '-----'){
+          subtotal += parseFloat(amount);
+        }
+      }
+      else if(amount != '-----'){
+        subtotal += parseFloat(amount);
+      }
 
+      console.log(cutoff);
+      console.log(d);
+
+      //console.log('key: '+key+'\n curr: '+curr+'\n d:'+d);
+/*
       if(curr == new Date(inputdate) || subtotal <= 0){
         console.log('AAA');
         //curr = d;
@@ -448,9 +495,9 @@ function get_billing_summary(project){
       else if(amount != '-----'){
         console.log('CCC');
         subtotal += parseFloat(amount);
-      }
+      }*/
 
-      console.log('\n');
+      //console.log('\n');
 
       $('.po-summary-list').append(
         '<tr>'+
@@ -479,6 +526,14 @@ function get_billing_summary(project){
       '<td class="right-align">'+total.toFixed(2)+'</td>'+
     '</tr>'
   );
+}
+
+function get_last_day(yearmonth){
+  var parts = yearmonth.split('-');
+  var year = parts[0];
+  var month = parseInt(parts[1])-1;
+  var d = new Date(year, month + 1, 0);
+  return d.getDate();
 }
 
 function get_supplier_summary(project){
@@ -565,14 +620,14 @@ function check_po_summary_input(){
   if (!$("input[name='po-summary-input-type']:checked").val()) {
     return false;
   }
-  else {
+  /*else {
     if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
       var input = $('#po-summary-input-date').val();
       if(input.trim() == ''){
         return false;
       }
     }
-  }
+  }*/
   return true;
 }
 
