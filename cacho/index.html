@@ -3,56 +3,13 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>Cacho</title>
+  <title>CCI Purchase Order Generator</title>
 
   <!-- CSS  -->
   <link href="css/icons/icons.css" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <style>
 
-    div{
-      cursor: default;
-      user-select: none;
-      -moz-user-select: none;
-      -khtml-user-select: none;
-      -webkit-user-select: none;
-      -o-user-select: none;
-    }
-    td[contenteditable]{
-      cursor: pointer;
-    }
-    .main-menu-collection{
-      height:65vh;
-      overflow-y: scroll;
-    }
-    .clickable{
-      cursor: pointer;
-    }
-    .modal-content.row{
-      padding-top:0px;
-    }
-    .slim-table>tr>td{
-      padding-top: 3px;
-      padding-bottom: 3px;
-    }
-
-    .material-icons.center{
-      padding-right: 0;
-      margin-right: 0;
-    }
-
-    .custom-btn{
-      font-size: 12px !important;
-      line-height: 12px !important;
-      max-width: 90px !important;
-      width: 90px !important;
-      padding: 0px !important;
-      padding-top: 5px !important;
-      text-align: center;
-    }
-
-  </style>
 </head>
 <body class="grey lighten-2" style="height:100vh;max-height:100vh;overflow-y:hidden;">
   <div class="main row">
@@ -74,7 +31,6 @@
             <strong class="col s6">Projects</strong> 
             <span class="col s6 right-align teal-text clickable add-project">ADD NEW PROJECT</span>
             <ul class="col s12 collection main-menu-collection project-list">
-              <!--li class="collection-item">test</li-->
             </ul>
           </div>
         </div>
@@ -83,7 +39,6 @@
             <strong class="col s6">Suppliers</strong> 
             <span class="col s6 right-align teal-text clickable add-supplier">ADD NEW SUPPLIER</span>
             <ul class="col s12 collection main-menu-collection supplier-list">
-              <!--li class="collection-item">test</li-->
             </ul>
           </div>
         </div>
@@ -170,16 +125,6 @@
               </tr>
             </thead>
             <tbody class="po-list">
-              <!--tr>
-                <td>14-234001</td>
-                <td>12,000</td>
-                <td>January 12, 1212</td>
-                <td>
-                  <i id="open" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Amend">insert_link</i>&nbsp;&nbsp;&nbsp;
-                  <i id="open" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Edit">mode_edit</i>&nbsp;&nbsp;&nbsp;
-                  <i id="delete" class="material-icons clickable tooltipped" data-position="top" data-delay="20" data-tooltip="Delete">delete</i>
-                </td>
-              </tr-->
             </tbody>
           </table>
         </ul>
@@ -299,9 +244,6 @@
         <div class="input-field">
           <select id="add-po-input-to" name="add-po-input-to" class="add-po-input">
             <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
           </select>
           <label for="add-po-input-to">To</label>
         </div>
@@ -313,9 +255,6 @@
         <div class="input-field">
           <select id="add-po-input-deliver-to" name="add-po-input-deliver-to" class="add-po-input">
             <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
           </select>
           <label for="add-po-input-deliver-to">Deliver To</label>
         </div>
@@ -440,9 +379,6 @@
         <div class="input-field col s12">
           <select class="po-summary-input" id="po-summary-input-project" name="po-summary-input-project">
             <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
           </select>
           <label for="po-summary-input-project">Project</label>
         </div>
@@ -505,13 +441,6 @@
           <label for="item-inventory-input-project">Project</label>
         </div>
 
-        <!--div class="input-field col s12">
-          <select class="item-inventory-input" id="item-inventory-input-po" name="item-inventory-input-po">
-            <option value="" disabled selected>Choose your option</option>
-          </select>
-          <label for="item-inventory-input-po">Purchase Order</label>
-        </div-->
-
       </div>
       <div class="col s10">
         List of Items
@@ -533,14 +462,12 @@
 
   <!--  Scripts-->
   <script src="js/jquery.min.js"></script>
-  <script src="js/materialize.js"></script>
-<script src="js/moment.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <script src="js/moment.js"></script>
   <script src="js/generator.js"></script>
   <script src="js/util.js"></script>
   <script src="js/suppliers.js"></script>
-  <script src="js/init2.js"></script>
-
-
+  <script src="js/init.js"></script>
 
   </body>
 </html>

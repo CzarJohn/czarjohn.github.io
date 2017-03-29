@@ -17,6 +17,10 @@ function init_components(){
     $('.generate-item').click(generate_item);
 }
 
+function date_to_string(dateX){
+  return dateX.getFullYear()+'-'+pad(dateX.getMonth()+1,2)+'-'+pad(dateX.getDate(),2)
+}
+
 function openModal(selector){
 	$(selector).openModal();
     $(selector+'>.modal-content').animate({ scrollTop: 0 }, 'fast');

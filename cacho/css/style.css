@@ -29,3 +29,44 @@
 	max-width: 80vw !important;
 	top:5vh !important;
 }
+
+div{
+  cursor: default;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+td[contenteditable]{
+  cursor: pointer;
+}
+.main-menu-collection{
+  height:65vh;
+  overflow-y: scroll;
+}
+.clickable{
+  cursor: pointer;
+}
+.modal-content.row{
+  padding-top:0px;
+}
+.slim-table>tr>td{
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.material-icons.center{
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.custom-btn{
+  font-size: 12px !important;
+  line-height: 12px !important;
+  max-width: 90px !important;
+  width: 90px !important;
+  padding: 0px !important;
+  padding-top: 5px !important;
+  text-align: center;
+}
