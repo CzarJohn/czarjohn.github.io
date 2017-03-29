@@ -308,8 +308,23 @@
       </div>
 
       <div class="input-field col s12" style="border:1px solid gray">
-        <label for="add-po-input-cost-ref">Cost Ref</label>
-        <input type="text" id="add-po-input-cost-ref" name="add-po-input-cost-ref" class="validate" />
+
+        <div class="input-field col s12">
+          <select id="add-po-input-cost-ref" name="add-po-input-cost-ref">
+            <optgroup label="Site Works">
+              <option value="SW01" selected>SW01 - Excavation works</option>
+              <option value="SW02">SW02 - Gravel Bedding</option>
+            </optgroup>
+            <optgroup label="Concreting Works">
+              <option value="CW01">CW01 - Column Footings</option>
+              <option value="CW02">CW02 - Footing Tiebeams</option>
+            </optgroup>
+          </select>
+          <label for="add-po-input-cost-ref">Cost Ref</label>
+          <!--label>Optgroups</label-->
+        </div>
+
+        <!--input type="text" id="add-po-input-cost-ref" name="add-po-input-cost-ref" class="validate" /-->
       </div>
 
       <div class="col s12 row card-panel">
@@ -355,6 +370,7 @@
                       <option value="Material" selected>Material</option>
                       <option value="Labor">Labor</option>
                       <option value="Subcon">Subcon</option>
+                      <option value="Others">Others</option>
                     </select>
                   </div>
                 </td>
@@ -427,10 +443,10 @@
             <label for="po-summary-input-supplier">Supplier Monitoring</label>
           </p>
         </div>
-        <div class="input-field col s12 input-date-div" style="display:none;height:100px;padding-top:30px;">
+        <!--div class="input-field col s12 input-date-div" style="display:none;height:100px;padding-top:30px;">
           <label for="po-summary-input-date active">Cut-off Date</label>
           <input class="po-summary-input" name="po-summary-input-date" id="po-summary-input-date" type="date" class="datepicker">
-        </div>
+        </div-->
       </div>
       <div class="col s8">
         <table class="po-summary-table" style="display:none">
@@ -452,6 +468,42 @@
       </div>
 
 
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat po-summary-modal-btn-close">Close</a>
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat po-summary-modal-btn-copy">Copy To Clipboard</a>
+    </div>
+  </div>
+
+  <div class="item-inventory-modal modal modal-fixed-footer" style="overflow:hidden;width:70vw;height:80vh;">
+    <div class="modal-header">
+      <h5>&nbsp;&nbsp;&nbsp;Item Inventory</h5>
+    </div>
+    <div class="modal-content row">
+      <div class="col s4 card-panel" style="height:85%">
+        <div class="input-field col s12">
+          <select class="item-inventory-input" id="item-inventory-input-project" name="item-inventory-input-project">
+            <option value="" disabled selected>Choose your option</option>
+          </select>
+          <label for="item-inventory-input-project">Project</label>
+        </div>
+
+        <div class="input-field col s12">
+          <select class="item-inventory-input" id="item-inventory-input-po" name="item-inventory-input-po">
+            <option value="" disabled selected>Choose your option</option>
+          </select>
+          <label for="item-inventory-input-po">Purchase Order</label>
+        </div>
+
+      </div>
+      <div class="col s8">
+        List of Items
+        <ul class="collapsible popout item-inventory-list" data-collapsible="accordion">
+          
+          
+        </ul>
+      </div>
+  
     </div>
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat po-summary-modal-btn-close">Close</a>
