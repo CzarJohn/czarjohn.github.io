@@ -33,6 +33,8 @@ var suppliers = [];
 
     $('.tooltipped').tooltip({delay: 50});
 
+    $('.collapsible').collapsible();
+
     load_projects();
     load_suppliers();
 
@@ -276,6 +278,11 @@ var suppliers = [];
       $('.po-summary-modal').openModal();
     });
 
+    $('.item-inventory').click(function(){
+      create_project_options3();
+      $('.item-inventory-modal').openModal();
+    });
+
     $('input[type=radio][name=po-summary-input-type]').change(function() {
       if (this.value == 'billing') {
         $('.input-date-div').show(0);
@@ -296,33 +303,180 @@ var suppliers = [];
       }
     });
 
+    $('#item-inventory-input-project').change(function() {
+      //todo clear table on right
+      var code = $('#item-inventory-input-project').val();
+      var project = find_project_code(code);
+      create_po_options(project.pos);
+    });
+
+    $('#item-inventory-input-po').change(function() {
+      //todo clear table on right
+      var code = $('#item-inventory-input-po').val();
+      var po = find_po_code(code);
+      create_po_item_status(po.items);
+    });
+
+    $('.item-inventory-list').on('click', '.add-delivery', function(){
+      var item = this.id;
+      var code = $('#item-inventory-input-po').val();
+      var po = find_po_code(code);
+      var items = po.items;
+      var i = 0;
+      while(items[item]['deliveries'][i]){
+        i++;
+      }
+
+      res = new Date();
+
+      var delivery = {};
+      delivery['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+      delivery['quantity'] = $('#'+item+'-quantity').val();
+      items[item]['deliveries'][i] = delivery;
+
+      Materialize.toast('Successfully added delivery.', 5000);
+      create_po_item_status(po.items);
+     
+      localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+
+    });
+
+
   }); // end of document ready
 })(jQuery); // end of jQuery name space
+
+
+
+function create_po_item_status(items){
+  //console.log(items);
+  $('.item-inventory-list').html('');
+  for(var item in items){
+    if(items.hasOwnProperty(item)){
+      var deliveries = items[item].deliveries;
+      var remaining = items[item].quantity;
+      var dtext = '';
+      for(var key in deliveries){
+        if(deliveries.hasOwnProperty(key)){
+          remaining -= deliveries[key].quantity;
+          dtext += '<li class="collection-item"><span class="dtext">'+deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+'</span></li>';
+        }
+      }
+      var status;
+      if(remaining == items[item].quantity){
+        status = 'PENDING';
+        dtext = '<li class="collection-item">You have not yet received any deliveries.</li>';
+      }
+      else if(remaining == 0){
+        status = 'COMPLETE';
+      }
+      else{
+        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
+      }
+
+      //todo check that input is within max and min//set_view_projecter side
+      //todo have an item id, huhu
+      //todo disable add on complete
+
+      $('.item-inventory-list').append(
+        '<li>'+
+          '<div class="collapsible-header"><i class="material-icons">filter_drama</i>'+
+            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
+            '<span class="right teal-text">'+status+'</span>'+
+          '</div>'+
+          '<div class="collapsible-body row">'+
+            '<div class="col s4">'+
+              '<br/>'+
+              '<div class="input-field">'+
+                '<label class="active" for="'+item+'-quantity">Quantity delivered (in '+items[item].unit+')</label>'+
+                '<input id="'+item+'-quantity" class="" type="number" value="1" min="1" max="'+remaining+'"/>'+
+              '</div>'+
+              '<a href="#" id="'+item+'" class="btn waves-effect waves-light add-delivery">Add Delivery</a>'+
+            '</div>'+
+            '<ul class="col s7 offset-s1 collection">'+
+              dtext+
+            '</ul>'+
+          '</div>'+
+        '</li>'
+      );
+    }
+  }
+  $('.item-inventory-list').collapsible();
+}
 
 function get_billing_summary(project){
   $('.po-summary-table').show();
   $('.po-summary-list').html('');
   $('.po-summary-varying-th').html('Date');
 
-  var inputdate = $('#po-summary-input-date').val();
+  //var inputdate = $('#po-summary-input-date').val();
 
-  var curr = new Date(inputdate);
+ // var curr = new Date(inputdate);
+ //todo arrange by date, though it is assumed na arranged na siya by date, haha
+  var cutoff = null;
   var subtotal = 0;
   var total = 0;
   for(var key in project['pos']){
     if(project['pos'].hasOwnProperty(key)){
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+      console.log(project['pos'][key]['date']);
       var d = new Date(project['pos'][key]['date']);
+      var month = d.getMonth()+1;
+      var dateX = d.getDate();
+      var year = d.getFullYear();
 
+      if(cutoff == null){
+        if(dateX <= 15){
+          cutoff = new Date(year+'-'+month+'-15');
+        }
+        else{
+          dateY = get_last_day(year+'-'+month);
+          cutoff = new Date(year+'-'+month+'-'+dateY);
+        }
 
+        if(amount != '-----'){
+          subtotal += parseFloat(amount);
+        }
+      }
+      else if(d > cutoff){
+        if(subtotal != '-----') total += parseFloat(subtotal);
+        $('.po-summary-list').append(
+          '<tr>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td></td>'+
+            '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
+          '</tr>'
+        );
+        subtotal = 0;
+        if(dateX <= 15){
+          cutoff = new Date(year+'-'+month+'-15');
+        }
+        else{
+          dateY = get_last_day(year+'-'+month);
+          cutoff = new Date(year+'-'+month+'-'+dateY);
+        }
+        if(amount != '-----'){
+          subtotal += parseFloat(amount);
+        }
+      }
+      else if(amount != '-----'){
+        subtotal += parseFloat(amount);
+      }
 
+      console.log(cutoff);
+      console.log(d);
+
+      //console.log('key: '+key+'\n curr: '+curr+'\n d:'+d);
+/*
       if(curr == new Date(inputdate) || subtotal <= 0){
+        console.log('AAA');
         //curr = d;
         if(amount != '-----'){
           subtotal += parseFloat(amount);
         }
       }
       else if(d > curr){
+        console.log('BBB');
         if(subtotal != '-----') total += parseFloat(subtotal);
         $('.po-summary-list').append(
           '<tr>'+
@@ -339,9 +493,11 @@ function get_billing_summary(project){
         }
       }
       else if(amount != '-----'){
+        console.log('CCC');
         subtotal += parseFloat(amount);
-      }
+      }*/
 
+      //console.log('\n');
 
       $('.po-summary-list').append(
         '<tr>'+
@@ -372,6 +528,14 @@ function get_billing_summary(project){
   );
 }
 
+function get_last_day(yearmonth){
+  var parts = yearmonth.split('-');
+  var year = parts[0];
+  var month = parseInt(parts[1])-1;
+  var d = new Date(year, month + 1, 0);
+  return d.getDate();
+}
+
 function get_supplier_summary(project){
   $('.po-summary-table').show();
   $('.po-summary-list').html('');
@@ -382,20 +546,23 @@ function get_supplier_summary(project){
   var total = 0;
 
   var list = project['pos'];
-  keysSorted = Object.keys(list).sort(function(a,b){return list[a].to-list[b].to})
+  keysSorted = Object.keys(list).sort(function(a,b){return list[a].to-list[b].to});
+
+  console.log(keysSorted);
 
   for(var i=0; i<keysSorted.length; i++){
 
     key = keysSorted[i];
     if(project['pos'].hasOwnProperty(key)){
-
+      console.log(project['pos'][key]);
 
       var supplier = find_supplier_code(project['pos'][key]['to']);
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
 
       if(curr == null){
         curr = supplier;
-        if(subtotal != '-----') total += parseFloat(subtotal);
+        if(amount != '-----') subtotal += parseFloat(amount);
+        //if(subtotal != '-----') total += parseFloat(subtotal);
       }
       else if(supplier != curr){
         if(subtotal != '-----') total += parseFloat(subtotal);
@@ -453,14 +620,14 @@ function check_po_summary_input(){
   if (!$("input[name='po-summary-input-type']:checked").val()) {
     return false;
   }
-  else {
+  /*else {
     if($("input[name='po-summary-input-type']:checked").val() == 'billing'){
       var input = $('#po-summary-input-date').val();
       if(input.trim() == ''){
         return false;
       }
     }
-  }
+  }*/
   return true;
 }
 
@@ -696,6 +863,8 @@ function load_suppliers(){
   	var result = $.grep(suppliers, function(e){ return e.name == supplierlist[i][0]; });
   	if (result.length != 0) continue;
 
+    console.log('here');
+
     s = {};
     sc = generate_suppliercode();
     while(sc_is_existing(sc)){ 
@@ -711,6 +880,11 @@ function load_suppliers(){
 
     suppliers.push(s);
   }
+
+  localStorage.setItem('suppliers', JSON.stringify(arr_to_obj(suppliers)));
+
+
+
 
   $.each(suppliers, function(index, supplier){
 	  $('.supplier-list').append(
@@ -766,6 +940,7 @@ function check_po_input(){
   keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
     for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
+    console.log(keys[i]);
     if(input.trim() == ''){
       return false;
     }
@@ -1045,7 +1220,7 @@ function set_add_po(project){
   var list = project['pos'];
   keysSorted = Object.keys(list).sort(function(a,b){return list[a]-list[b]});
 
-
+  console.log(keysSorted);
 
   //needs improvement
   Array.prototype.move = function (old_index, new_index) {
@@ -1062,12 +1237,19 @@ function set_add_po(project){
   for(var i=0; i<keysSorted.length; i++){
     if(keysSorted[i].length > 9){
       original = keysSorted[i].substring(0, 9);
+      //break;
       for(var j=0; j<keysSorted.length; j++){
+      //console.log(original);
+      //console.log(keysSorted[j]);
         if(keysSorted[j] == original){
+      //console.log('here');
           j++;
+          if(j>=keysSorted.length) break;
           while(keysSorted[j].length > 9){
             j++;
+            if(j>=keysSorted.length) break;
           }
+          if(j>=keysSorted.length) break;
           keysSorted = keysSorted.move(i,j);
           break;
         }
@@ -1075,6 +1257,7 @@ function set_add_po(project){
     }
   }
 
+  //console.log(keysSorted);
 
   for(var i=0; i<keysSorted.length; i++){
     key = keysSorted[i];
@@ -1175,6 +1358,7 @@ function get_item_from_row(row){
   item['type'] = row.children[3].innerHTML;
   item['unit-price'] = row.children[4].innerHTML;
   item['subtotal'] = row.children[5].innerHTML;
+  item['deliveries'] = {};
   return item;
 }
 
@@ -1239,6 +1423,10 @@ function clear_add_po(){
     ','+p+'to-be-used-for'+
     ','+p+'conforme';
   $(selector).val('').removeAttr('readonly');
+
+  $(p+'to,'+p+'deliver-to').removeAttr('disabled');
+  $(p+'to,'+p+'deliver-to').material_select();
+
   $('.add-po-header').html('&nbsp;&nbsp;&nbsp;Add New Purchase Order');
   $('.add-po-modal-btn-print').hide();
   $('.add-item-row').show();
@@ -1279,6 +1467,26 @@ function create_project_options2(){
   }
   $('#po-summary-input-project').html(sb);
   $('#po-summary-input-project').material_select();
+}
+
+function create_project_options3(){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var i=0;i<projects.length; i++){
+    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
+  }
+  $('#item-inventory-input-project').html(sb);
+  $('#item-inventory-input-project').material_select();
+}
+
+function create_po_options(pos){
+  var sb = '<option value="" disabled selected>Choose your option</option>';
+  for(var key in pos){
+    if(pos.hasOwnProperty(key)){
+      sb += '<option value="'+key+'">'+key+'</option>'; 
+    }
+  }
+  $('#item-inventory-input-po').html(sb);
+  $('#item-inventory-input-po').material_select();
 }
 
 
