@@ -337,9 +337,7 @@ var suppliers = [];
       Materialize.toast('Successfully added delivery.', 5000);
       create_po_item_status(po.items);
      
-
       localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
-
 
     });
 
@@ -493,20 +491,23 @@ function get_supplier_summary(project){
   var total = 0;
 
   var list = project['pos'];
-  keysSorted = Object.keys(list).sort(function(a,b){return list[a].to-list[b].to})
+  keysSorted = Object.keys(list).sort(function(a,b){return list[a].to-list[b].to});
+
+  console.log(keysSorted);
 
   for(var i=0; i<keysSorted.length; i++){
 
     key = keysSorted[i];
     if(project['pos'].hasOwnProperty(key)){
-
+      console.log(project['pos'][key]);
 
       var supplier = find_supplier_code(project['pos'][key]['to']);
       var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
 
       if(curr == null){
         curr = supplier;
-        if(subtotal != '-----') total += parseFloat(subtotal);
+        if(amount != '-----') subtotal += parseFloat(amount);
+        //if(subtotal != '-----') total += parseFloat(subtotal);
       }
       else if(supplier != curr){
         if(subtotal != '-----') total += parseFloat(subtotal);
@@ -807,6 +808,8 @@ function load_suppliers(){
   	var result = $.grep(suppliers, function(e){ return e.name == supplierlist[i][0]; });
   	if (result.length != 0) continue;
 
+    console.log('here');
+
     s = {};
     sc = generate_suppliercode();
     while(sc_is_existing(sc)){ 
@@ -822,6 +825,11 @@ function load_suppliers(){
 
     suppliers.push(s);
   }
+
+  localStorage.setItem('suppliers', JSON.stringify(arr_to_obj(suppliers)));
+
+
+
 
   $.each(suppliers, function(index, supplier){
 	  $('.supplier-list').append(
@@ -877,6 +885,7 @@ function check_po_input(){
   keys = ['completion-date','requested-by', 'ordered-by', 'cost-ref', 'to-be-used-for', 'conforme', 'to', 'deliver-to'];
     for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
+    console.log(keys[i]);
     if(input.trim() == ''){
       return false;
     }
