@@ -317,16 +317,92 @@ var suppliers = [];
       create_po_item_status(po.items);
     });
 
+    $('.item-inventory-list').on('click', '.add-delivery', function(){
+      var item = this.id;
+      var code = $('#item-inventory-input-po').val();
+      var po = find_po_code(code);
+      var items = po.items;
+      var i = 0;
+      while(items[item]['deliveries'][i]){
+        i++;
+      }
+
+      res = new Date();
+
+      var delivery = {};
+      delivery['date'] = res.getFullYear()+'-'+pad(res.getMonth()+1,2)+'-'+pad(res.getDate(),2);
+      delivery['quantity'] = $('#'+item+'-quantity').val();
+      items[item]['deliveries'][i] = delivery;
+
+      Materialize.toast('Successfully added delivery.', 5000);
+      create_po_item_status(po.items);
+     
+
+      localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+
+
+    });
+
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
 
+
+
 function create_po_item_status(items){
-  for(var key in items){
-    if(items.hasOwnProperty(key)){
-      
+  //console.log(items);
+  $('.item-inventory-list').html('');
+  for(var item in items){
+    if(items.hasOwnProperty(item)){
+      var deliveries = items[item].deliveries;
+      var remaining = items[item].quantity;
+      var dtext = '';
+      for(var key in deliveries){
+        if(deliveries.hasOwnProperty(key)){
+          remaining -= deliveries[key].quantity;
+          dtext += '<li class="collection-item"><span class="dtext">'+deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+'</span></li>';
+        }
+      }
+      var status;
+      if(remaining == items[item].quantity){
+        status = 'PENDING';
+        dtext = '<li class="collection-item">You have not yet received any deliveries.</li>';
+      }
+      else if(remaining == 0){
+        status = 'COMPLETE';
+      }
+      else{
+        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
+      }
+
+      //todo check that input is within max and min//set_view_projecter side
+      //todo have an item id, huhu
+      //todo disable add on complete
+
+      $('.item-inventory-list').append(
+        '<li>'+
+          '<div class="collapsible-header"><i class="material-icons">filter_drama</i>'+
+            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
+            '<span class="right teal-text">'+status+'</span>'+
+          '</div>'+
+          '<div class="collapsible-body row">'+
+            '<div class="col s4">'+
+              '<br/>'+
+              '<div class="input-field">'+
+                '<label class="active" for="'+item+'-quantity">Quantity delivered (in '+items[item].unit+')</label>'+
+                '<input id="'+item+'-quantity" class="" type="number" value="1" min="1" max="'+remaining+'"/>'+
+              '</div>'+
+              '<a href="#" id="'+item+'" class="btn waves-effect waves-light add-delivery">Add Delivery</a>'+
+            '</div>'+
+            '<ul class="col s7 offset-s1 collection">'+
+              dtext+
+            '</ul>'+
+          '</div>'+
+        '</li>'
+      );
     }
   }
+  $('.item-inventory-list').collapsible();
 }
 
 function get_billing_summary(project){

@@ -308,8 +308,23 @@
       </div>
 
       <div class="input-field col s12" style="border:1px solid gray">
-        <label for="add-po-input-cost-ref">Cost Ref</label>
-        <input type="text" id="add-po-input-cost-ref" name="add-po-input-cost-ref" class="validate" />
+
+        <div class="input-field col s12">
+          <select multiple id="add-po-input-cost-ref" name="add-po-input-cost-ref">
+            <optgroup label="Site Works">
+              <option value="SW01">SW01 - Excavation works</option>
+              <option value="SW02">SW02 - Gravel Bedding</option>
+            </optgroup>
+            <optgroup label="Concreting Works">
+              <option value="CW01">CW01 - Column Footings</option>
+              <option value="CW02">CW02 - Footing Tiebeams</option>
+            </optgroup>
+          </select>
+          <label for="add-po-input-cost-ref">Cost Ref</label>
+          <!--label>Optgroups</label-->
+        </div>
+
+        <!--input type="text" id="add-po-input-cost-ref" name="add-po-input-cost-ref" class="validate" /-->
       </div>
 
       <div class="col s12 row card-panel">
@@ -482,19 +497,10 @@
 
       </div>
       <div class="col s8">
-        <ul class="collapsible" data-collapsible="accordion">
-          <li>
-            <div class="collapsible-header"><i class="material-icons">filter_drama</i>First</div>
-            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-icons">place</i>Second</div>
-            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-icons">whatshot</i>Third</div>
-            <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-          </li>
+        List of Items
+        <ul class="collapsible popout item-inventory-list" data-collapsible="accordion">
+          
+          
         </ul>
       </div>
   
