@@ -20,71 +20,46 @@ var suppliers = [];
 (function($){
   $(function(){
     
-    init_components
+    init_components();
     load_projects();
     load_suppliers();
 
     $('.add-project').click(function(){
-      clear_add_project();
-      $('.add-project-modal').openModal();
-      $('.add-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+      clear_input('.add-project-input');
+      openModal('.add-project-modal');
     });
 
     $('.add-supplier').click(function(){
-      clear_add_supplier();
-      $('.add-supplier-modal').openModal();
-      $('.add-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+      clear_input('.add-supplier-input');
+      openModal('.add-supplier-modal');
     });
 
     $('.add-po').click(function(){
       clear_add_po();
-      var pid = this.id.split(/-(.+)/)[1];
-      var project = find_project_code(pid);
+      var project_code = this.id.split(/-(.+)/)[1];
+      var project = find_project_code(project_code);
       set_add_po(project);
-      $('.add-po-modal').openModal();
-      $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+      openModal('.add-po-modal');
     });
 
     $('.add-project-modal-btn-add').click(function(){
-      if(!check_project_input()){
-        Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){
-          $('.add-project-modal').openModal();
-          $('.add-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
-
-        },300);
-      }
-      else{
+      if(check_project_input()){
         project = get_add_project_input(); 
         add_project(project);
-        clear_add_project();
+        clear_input('.add-project-input');
       }
     });
 
     $('.add-supplier-modal-btn-add').click(function(){
-      if(!check_supplier_input()){
-        Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){
-          $('.add-supplier-modal').openModal();
-          $('.add-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
-        },300);
-      }
-      else{
+      if(check_supplier_input()){
         supplier = get_add_supplier_input(); 
         add_supplier(supplier);
-        clear_add_supplier();
+        clear_input('.add-supplier-input');
       }
     });
 
     $('.add-po-modal-btn-add').click(function(){
-      if(!check_po_input()){
-        Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){
-          $('.add-po-modal').openModal();
-          $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
-        },300);
-      }
-      else{
+      if(check_po_input()){
         po = get_add_po_input(); 
         add_po(po);
         clear_add_po();
@@ -92,14 +67,7 @@ var suppliers = [];
     });
 
     $('.add-po-modal-btn-amend').click(function(){
-      if(!check_po_input()){
-        Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){
-          $('.add-po-modal').openModal();
-          $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
-        },300);
-      }
-      else{
+      if(check_po_input()){
         po = get_amend_po_input(); 
         amend_po(po); 
         clear_add_po();
@@ -111,13 +79,10 @@ var suppliers = [];
     });
 
     $('.add-item').click(function(){
-      if(!check_item_input()){
-        Materialize.toast('Some fields are blank.',5000);
-      }
-      else{
+      if(check_item_input()){
         item = get_add_item_input();
         add_item(item);
-        clear_add_item();
+        clear_input('.add-item-input');
       }
     });
 
@@ -127,10 +92,8 @@ var suppliers = [];
       if(project != null) {
         set_view_project(project);
         set_add_po(project);
-        $('.view-project-modal').openModal();
-        $('.view-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        openModal('.view-project-modal');
       }
-      else Materialize.toast('Project code '+pid+' cannot be found.',5000);
     });
 
     $('.supplier-list').on('click', '.open-supplier', function(){
@@ -138,10 +101,8 @@ var suppliers = [];
       var supplier = find_supplier_code(pid);
       if(supplier != null) {
         set_view_supplier(supplier);
-        $('.view-supplier-modal').openModal();
-        $('.view-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        openModal('.view-supplier-modal');
       }
-      else Materialize.toast('Supplier id '+pid+' cannot be found.',5000);
     });
 
     $('.po-list').on('click', '.open-po', function(){
@@ -151,11 +112,8 @@ var suppliers = [];
         po['po-number'] = pid;
         clear_add_po();
         set_view_po(po);
-        $('.add-po-modal').openModal();
-        $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
-
+        openModal('.add-po-modal');
       }
-      else Materialize.toast('PO code '+pid+' cannot be found.',5000);
     });
 
     $('.po-list').on('click', '.amend-po', function(){
@@ -165,10 +123,8 @@ var suppliers = [];
         po['po-number'] = pid;
         clear_add_po();
         set_amend_po(po);
-        $('.add-po-modal').openModal();
-        $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+        openModal('.add-po-modal');
       }
-      else Materialize.toast('PO code '+pid+' cannot be found.',5000);
     });
 
     $('.project-list').on('click', '.delete-project', function(){
@@ -180,7 +136,6 @@ var suppliers = [];
           delete_project(project);
         }
       }
-      else Materialize.toast('Project code '+pid+' cannot be found.',5000);
     });
 
     $('.po-list').on('click', '.delete-po', function(){
@@ -192,7 +147,6 @@ var suppliers = [];
           delete_po(pid);
         }
       }
-      else Materialize.toast('PO number '+pid+' cannot be found.',5000);
     });
 
     $('.supplier-list').on('click', '.delete-supplier', function(){
@@ -204,7 +158,6 @@ var suppliers = [];
           delete_supplier(supplier);
         }
       }
-      else Materialize.toast('Supplier id '+pid+' cannot be found.',5000);
     });
 
     $('.item-list').on('click', '.delete-item', function(){
@@ -215,59 +168,37 @@ var suppliers = [];
     });
 
     $('.view-project-modal-btn-save').click(function(){
-      if(!check_project_edit()){
-        Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){
-          $('.view-project-modal').openModal();
-          $('.view-project-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
-        },300);
-      }
-      else{
-        project = get_edited_project();
+      if(check_project_edit()){
+        project = get_edit('project');
         if(find_project_code(project['project-code']) != null){
           edit_project(project);
         }
-        else Materialize.toast('Project code '+pid+' cannot be found.',5000); 
       }
     });
 
     $('.view-supplier-modal-btn-save').click(function(){
-      if(!check_supplier_edit()){
-        Materialize.toast('Some fields are blank.',5000);
-        setTimeout(function(){
-          $('.view-supplier-modal').openModal();
-          $('.view-supplier-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
-        },300);
-      }
-      else{
-        supplier = get_edited_supplier();
+      if(check_supplier_edit()){
+        supplier = get_edit('supplier');
         if(find_supplier_code(supplier['supplier-code']) != null){
           edit_supplier(supplier);
         }
-        else Materialize.toast('Supplier id '+pid+' cannot be found.',5000); 
       }
     });
 
-    $('.generate-project').click(generate_project);
-    $('.generate-supplier').click(generate_supplier);
-    $('.generate-po').click(generate_po);
-    $('.generate-item').click(generate_item);
-
     $('.po-generator').click(function(){
       clear_add_po();
-      $('.add-po-modal').openModal();
-      $('.add-po-modal>.modal-content').animate({ scrollTop: 0 }, 'fast');
+      openModal('.add-po-modal');
     });
 
     $('.po-summary').click(function(){
-      create_project_options2();
-      $('.po-summary-modal').openModal();
+      create_options(projects, 'name', 'project-code', '#po-summary-input-project');
+      openModal('.po-summary-modal');
     });
 
     $('.item-inventory').click(function(){
-  	  $('.item-inventory-list').html('');
-      create_project_options3();
-      $('.item-inventory-modal').openModal();
+      $('.item-inventory-list').html('');
+      create_options(projects, 'name', 'project-code', '#item-inventory-input-project');
+      openModal('.item-inventory-modal');
     });
 
     $('input[type=radio][name=po-summary-input-type]').change(function() {
@@ -291,26 +222,18 @@ var suppliers = [];
     });
 
     $('#item-inventory-input-project').change(function() {
-      //todo clear table on right
       var code = $('#item-inventory-input-project').val();
       var project = find_project_code(code);
       create_po_item_status(project.pos);
-      //create_po_options(project.pos);
     });
 
-   /* $('#item-inventory-input-po').change(function() {
-      //todo clear table on right
-      var code = $('#item-inventory-input-po').val();
-      var po = find_po_code(code);
-      create_po_item_status(po.items);
-    });*/
 
     $('.item-inventory-list').on('click', '.complete-delivery', function(){
     	var temp = this.id.split('|');
 	    var item = temp[0];
 	    var code = temp[1];
 	    var po = find_po_code(code);
-		var items = po.items;
+		  var items = po.items;
 
 	    var remaining = get_remaining(items[item]);
 
@@ -623,13 +546,7 @@ function get_breakdown(items){
 	return breakdown;
 }
 
-function get_last_day(yearmonth){
-  var parts = yearmonth.split('-');
-  var year = parts[0];
-  var month = parseInt(parts[1])-1;
-  var d = new Date(year, month + 1, 0);
-  return d.getDate();
-}
+
 
 function get_supplier_summary(project){
   $('.po-summary-table').show();
@@ -1018,6 +935,8 @@ function check_project_input(){
   for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
     if(input.trim() == ''){
+      Materialize.toast('Some fields are blank.',5000);
+      setTimeout(function(){ openModal('.add-project-modal'); },300);
       return false;
     }
   } 
@@ -1030,6 +949,8 @@ function check_supplier_input(){
   for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
     if(input.trim() == ''){
+      Materialize.toast('Some fields are blank.',5000);
+      setTimeout(function(){ openModal('.add-supplier-modal'); },300);
       return false;
     }
   } 
@@ -1042,6 +963,7 @@ function check_item_input(){
   for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
     if(input.trim() == ''){
+      Materialize.toast('Some fields are blank.',5000);
       return false;
     }
   } 
@@ -1054,6 +976,8 @@ function check_po_input(){
     for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).val();
     if(input.trim() == ''){
+      Materialize.toast('Some fields are blank.',5000);
+      setTimeout(function(){ openModal('.add-po-modal'); },300);
       return false;
     }
   } 
@@ -1067,6 +991,8 @@ function check_project_edit(){
   for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).html();
     if(input.trim() == ''){
+      Materialize.toast('Some fields are blank.',5000);
+      setTimeout(function(){ openModal('.view-project-modal'); },300);
       return false;
     }
   } 
@@ -1079,6 +1005,8 @@ function check_supplier_edit(){
   for(var i=0; i<keys.length; i+=1){
     var input = $(p+keys[i]).html();
     if(input.trim() == ''){
+      Materialize.toast('Some fields are blank.',5000);
+      setTimeout(function(){ openModal('.view-supplier-modal'); },300);
       return false;
     }
   } 
@@ -1091,6 +1019,7 @@ function find_project_code(code){
       return projects[i];
     }
   }
+  Materialize.toast('Project code '+code+' cannot be found.',5000);
   return null;
 }
 
@@ -1100,6 +1029,7 @@ function find_supplier_code(code){
       return suppliers[i];
     }
   }
+  Materialize.toast('Supplier code '+code+' cannot be found.',5000);
   return null;
 }
 
@@ -1108,24 +1038,12 @@ function find_po_code(code){
   for(var i=0; i<projects.length; i++){
     if(projects[i]['project-code'] == project_code){
       if(projects[i]['pos'][code] != undefined) return projects[i]['pos'][code];
+      Materialize.toast('PO code '+code+' cannot be found.',5000);
       return null;
     }
   }
+  Materialize.toast('PO code '+code+' cannot be found.',5000);
   return null;
-}
-
-function arr_to_obj(arr){
-  var obj = {};
-  $.each(arr, function(index, value){
-    obj[index] = value;
-  })
-  return obj;
-}
-
-function obj_to_arr(obj){
-  return $.map(obj, function(value, index){
-    return [value];
-  });
 }
 
 function pc_is_existing(project_code) {
@@ -1146,76 +1064,6 @@ function sc_is_existing(supplier_code) {
   return false;
 }
 
-function generate_project(){
-  var p = '#add-project-input-';
-  $('.add-project-modal>.modal-content>.input-field>label').addClass('active');
-  $(p+'name').val(generate_projectname());
-  $(p+'work-type').val(generate_worktype());
-  $(p+'address').val(generate_address());
-  $(p+'mobile-number').val(generate_mobile());
-  $(p+'contact-person').val(generate_name());
-  //ensure that there are no duplicate project codes
-  pc = generate_projectcode();
-  while(pc_is_existing(pc)){ 
-    pc = generate_projectcode();
-  }
-  $(p+'project-code').val(pc);
-}
-
-function generate_supplier(){
-  var p = '#add-supplier-input-';
-  $('.add-supplier-modal>.modal-content>.input-field>label').addClass('active');
-  $(p+'name').val(generate_suppliername());
-  $(p+'vat-reg').val(generate_vatreg());
-  $(p+'address').val(generate_address());
-  $(p+'mobile-number').val(generate_mobile());
-  $(p+'telfax').val(generate_mobile());
-  $(p+'contact-person').val(generate_name());
-  //ensure that there are no duplicate project codes
-  sc = generate_suppliercode();
-  while(sc_is_existing(sc)){ 
-    sc = generate_suppliercode();
-  }
-  $(p+'supplier-code').val(sc);
-}
-
-function generate_po(){
-  var p = '#add-po-input-';
-
-  $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
-  $(p+'completion-date').val(generate_date());
-  $(p+'requested-by').val(generate_name());
-  $(p+'ordered-by').val(generate_name());
-  $(p+'cost-ref').val('This is not a random data string.');
-  $(p+'to-be-used-for').val('So is this. Haha.');
-  $(p+'conforme').val(generate_name());
-
-  tos = [];
-  deliver_tos = [];
-  $("#add-po-input-to option").each(function(){
-    tos.push($(this).val());
-  });
-  $("#add-po-input-deliver-to option").each(function(){
-    deliver_tos.push($(this).val());
-  });
-  if($("#add-po-input-to").val()==""){
-    $('#add-po-input-to').val(tos[Math.floor(Math.random()*tos.length)]);
-    $('#add-po-input-to').material_select();
-  }
-  if($("#adddpo-input-deliver-to").val()==""){
-    $('#add-po-input-deliver-to').val(deliver_tos[Math.floor(Math.random()*deliver_tos.length)]);
-    $('#add-po-input-deliver-to').material_select();
-  }
-}
-
-function generate_item(){
-  $('.add-item-row>td>div>label').addClass('active');
-  $('#add-item-input-quantity').val(generate_number(1,20));
-  $('#add-item-input-unit').val(generate_unit());
-  $('#add-item-input-description').val(generate_item2());
-  $('#add-item-input-unit-price').val(generate_price(100,2500));
-}
-
 function set_view_project(project){
   var p = '.project-';
   keys = ['name','work-type', 'address', 'mobile-number', 'contact-person', 'project-code'];
@@ -1234,8 +1082,9 @@ function set_view_supplier(supplier){
 }
 
 function set_view_po(po){
-  create_project_options();
-  create_supplier_options();
+  create_options(projects, 'name', 'project-code', '#add-po-input-deliver-to');
+  create_options(suppliers, 'name', 'supplier-code', '#add-po-input-to');
+
 
   $('.add-po-header').html('&nbsp;&nbsp;&nbsp;View Purchase Order ('+po['po-number']+')');
   $('.add-po-modal-btn-generate').hide();
@@ -1277,8 +1126,9 @@ function set_view_po(po){
 }
 
 function set_amend_po(po){
-  create_project_options();
-  create_supplier_options();
+  create_options(projects, 'name', 'project-code', '#add-po-input-deliver-to');
+  create_options(suppliers, 'name', 'supplier-code', '#add-po-input-to');
+
   $('.add-po-header').html('&nbsp;&nbsp;&nbsp;Amend Purchase Order ('+po['po-number']+')');
   $('.add-po-modal-btn-generate').show();
   $('.add-po-modal-btn-add').hide();
@@ -1460,59 +1310,27 @@ function get_amend_po_input(){
 }
 
 function get_item_from_row(row){
+  var arr = ['quantity', 'unit', 'description', 'type', 'unit-price', 'subtotal'];
   var item = {};
-  item['quantity'] = row.children[0].innerHTML;
-  item['unit'] = row.children[1].innerHTML;
-  item['description'] = row.children[2].innerHTML;
-  item['type'] = row.children[3].innerHTML;
-  item['unit-price'] = row.children[4].innerHTML;
-  item['subtotal'] = row.children[5].innerHTML;
+  for(var i=0; i<arr.length; i++){
+    item[arr[i]] = row.children[i].innerHTML;
+  }
   item['deliveries'] = {};
   return item;
 }
 
-function get_edited_project(){
-  var p = '.project-';
-  keys = ['name','work-type', 'address', 'mobile-number', 'contact-person', 'project-code'];
-  project = {};
-  for(var i=0; i<keys.length; i+=1){
-    project[keys[i]] = $(p+keys[i]).html();
+function get_edit(type){
+  if(type != 'supplier' && type != 'project') {
+    console.log('Invalid type:' + type);
+    return;
   }
-  return project;
-}
-
-function get_edited_supplier(){
-  var p = '.supplier-';
-  keys = ['name','vat-reg', 'address', 'mobile-number', 'telfax', 'contact-person', 'supplier-code'];
-  supplier = {};
+  var p = '.'+type+'-';
+  keys = (type == 'supplier')?['name','vat-reg', 'address', 'mobile-number', 'telfax', 'contact-person', 'supplier-code']:['name','work-type', 'address', 'mobile-number', 'contact-person', 'project-code'];
+  obj = {};
   for(var i=0; i<keys.length; i+=1){
-    supplier[keys[i]] = $(p+keys[i]).html();
+    obj[keys[i]] = $(p+keys[i]).html();
   }
-  return supplier;
-}
-
-function clear_add_project(){
-  var p = '#add-project-input-';
-  var selector = ''+
-    p+'name'+
-    ','+p+'work-type'+
-    ','+p+'address'+
-    ','+p+'mobile-number'+
-    ','+p+'contact-person'+
-    ','+p+'project-code';
-  $(selector).val('');
-}
-
-function clear_add_supplier(){
-  var p = '#add-supplier-input-';
-  var selector = ''+
-    p+'name'+
-    ','+p+'vat-reg'+
-    ','+p+'address'+
-    ','+p+'mobile-number'+
-    ','+p+'telfax'+
-    ','+p+'contact-person';
-  $(selector).val('');
+  return obj;
 }
 
 function clear_add_po(){
@@ -1522,15 +1340,7 @@ function clear_add_po(){
   $('.add-po-modal-btn-amend').hide();
   
 
-  var p = '#add-po-input-';
-  var selector = ''+
-    p+'completion-date'+
-    ','+p+'requested-by'+
-    ','+p+'ordered-by'+
-    ','+p+'cost-ref'+
-    ','+p+'to-be-used-for'+
-    ','+p+'conforme';
-  $(selector).val('').removeAttr('readonly');
+  $('.add-po-input').val('').removeAttr('readonly');
 
   $(p+'to,'+p+'deliver-to').removeAttr('disabled');
   $(p+'to,'+p+'deliver-to').material_select();
@@ -1545,70 +1355,9 @@ function clear_add_po(){
   for(var i=item_rows.length-1; i>=1; i--){
     $('.item-list>tr')[1].remove();
   }
-  create_project_options();
-  create_supplier_options();
-}
 
-function clear_add_item(){
-  var p = '#add-item-input-';
-  var selector = ''+
-    p+'quantity'+
-    ','+p+'unit'+
-    ','+p+'description'+
-    ','+p+'unit-price';
-  $(selector).val('');
-}
-
-function create_project_options(){
-  var sb = '<option value="" disabled selected>Choose your option</option>';
-  for(var i=0;i<projects.length; i++){
-    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
-  }
-  $('#add-po-input-deliver-to').html(sb);
-  $('#add-po-input-deliver-to').material_select();
-}
-
-function create_project_options2(){
-  var sb = '<option value="" disabled selected>Choose your option</option>';
-  for(var i=0;i<projects.length; i++){
-    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
-  }
-  $('#po-summary-input-project').html(sb);
-  $('#po-summary-input-project').material_select();
-}
-
-function create_project_options3(){
-  var sb = '<option value="" disabled selected>Choose your option</option>';
-  for(var i=0;i<projects.length; i++){
-    sb += '<option value="'+projects[i]['project-code']+'">'+projects[i]['name']+'</option>'; 
-  }
-  $('#item-inventory-input-project').html(sb);
-  $('#item-inventory-input-project').material_select();
-}
-
-function create_po_options(pos){
-  var sb = '<option value="" disabled selected>Choose your option</option>';
-  for(var key in pos){
-    if(pos.hasOwnProperty(key)){
-      sb += '<option value="'+key+'">'+key+'</option>'; 
-    }
-  }
-  $('#item-inventory-input-po').html(sb);
-  $('#item-inventory-input-po').material_select();
+  create_options(projects, 'name', 'project-code', '#add-po-input-deliver-to');
+  create_options(suppliers, 'name', 'supplier-code', '#add-po-input-to');
 }
 
 
-function create_supplier_options(){
-  var sb = '<option value="" disabled selected>Choose your option</option>';
-  for(var i=0;i<suppliers.length; i++){
-    sb += '<option value="'+suppliers[i]['supplier-code']+'">'+suppliers[i]['name']+'</option>'; 
-  }
-  $('#add-po-input-to').html(sb);
-  $('#add-po-input-to').material_select();
-}
-
-function three_digits(num){
-  if(num < 10) return '00'+num;
-  if(num < 100) return '0'+num;
-  return num;
-}

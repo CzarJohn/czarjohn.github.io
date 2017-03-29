@@ -112,3 +112,74 @@ function pad(n, width, z) {
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
+
+
+function generate_project(){
+  var p = '#add-project-input-';
+  $('.add-project-modal>.modal-content>.input-field>label').addClass('active');
+  $(p+'name').val(generate_projectname());
+  $(p+'work-type').val(generate_worktype());
+  $(p+'address').val(generate_address());
+  $(p+'mobile-number').val(generate_mobile());
+  $(p+'contact-person').val(generate_name());
+  //ensure that there are no duplicate project codes
+  pc = generate_projectcode();
+  while(pc_is_existing(pc)){ 
+    pc = generate_projectcode();
+  }
+  $(p+'project-code').val(pc);
+}
+
+function generate_supplier(){
+  var p = '#add-supplier-input-';
+  $('.add-supplier-modal>.modal-content>.input-field>label').addClass('active');
+  $(p+'name').val(generate_suppliername());
+  $(p+'vat-reg').val(generate_vatreg());
+  $(p+'address').val(generate_address());
+  $(p+'mobile-number').val(generate_mobile());
+  $(p+'telfax').val(generate_mobile());
+  $(p+'contact-person').val(generate_name());
+  //ensure that there are no duplicate project codes
+  sc = generate_suppliercode();
+  while(sc_is_existing(sc)){ 
+    sc = generate_suppliercode();
+  }
+  $(p+'supplier-code').val(sc);
+}
+
+function generate_po(){
+  var p = '#add-po-input-';
+
+  $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
+  $(p+'completion-date').val(generate_date());
+  $(p+'requested-by').val(generate_name());
+  $(p+'ordered-by').val(generate_name());
+  $(p+'cost-ref').val('This is not a random data string.');
+  $(p+'to-be-used-for').val('So is this. Haha.');
+  $(p+'conforme').val(generate_name());
+
+  tos = [];
+  deliver_tos = [];
+  $("#add-po-input-to option").each(function(){
+    tos.push($(this).val());
+  });
+  $("#add-po-input-deliver-to option").each(function(){
+    deliver_tos.push($(this).val());
+  });
+  if($("#add-po-input-to").val()==""){
+    $('#add-po-input-to').val(tos[Math.floor(Math.random()*tos.length)]);
+    $('#add-po-input-to').material_select();
+  }
+  if($("#adddpo-input-deliver-to").val()==""){
+    $('#add-po-input-deliver-to').val(deliver_tos[Math.floor(Math.random()*deliver_tos.length)]);
+    $('#add-po-input-deliver-to').material_select();
+  }
+}
+
+function generate_item(){
+  $('.add-item-row>td>div>label').addClass('active');
+  $('#add-item-input-quantity').val(generate_number(1,20));
+  $('#add-item-input-unit').val(generate_unit());
+  $('#add-item-input-description').val(generate_item2());
+  $('#add-item-input-unit-price').val(generate_price(100,2500));
+}
