@@ -1383,7 +1383,7 @@ function get_add_po_input(){
       items[i-1] = get_item_from_row(item_rows[i]);
   }
   po['items'] = items;
-  po['total-amount'] = monetize($('.add-po-input-total-amount').html());
+  po['total-amount'] = parseFloat(demonetize($('.add-po-input-total-amount').html()));
   po['date'] = date_to_string(new Date());
   return po;
 }
@@ -1401,7 +1401,7 @@ function get_amend_po_input(){
       items[i-1] = get_item_from_row(item_rows[i]);
   }
   po['items'] = items;
-  po['total-amount'] = monetize($('.add-po-input-total-amount').html());
+  po['total-amount'] = parseFloat($('.add-po-input-total-amount').html());
   po['date'] = date_to_string(new Date());
   po['po-number'] = $('.add-po-modal-btn-amend').attr('id');
   return po;
@@ -1411,7 +1411,11 @@ function get_item_from_row(row){
   var arr = ['quantity', 'unit', 'description', 'type', 'unit-price', 'subtotal'];
   var item = {};
   for(var i=0; i<arr.length; i++){
-    item[arr[i]] = row.children[i].innerHTML;
+    if(arr[i] == 'unit-price' || arr[i] == 'subtotal'){
+      item[arr[i]] = demonetize(row.children[i].innerHTML);
+    }else{
+      item[arr[i]] = row.children[i].innerHTML;
+    }
   }
   item['deliveries'] = {};
   return item;
