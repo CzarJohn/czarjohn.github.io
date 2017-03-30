@@ -24,6 +24,7 @@ var costrefs = [];
     init_components();
     load_projects();
     load_suppliers();
+    load_costrefs();
 
     $('.add-project').click(function(){
       clear_input('.add-project-input');
@@ -819,9 +820,13 @@ function add_po(po){
     po['status'] = '1';
     project['pos'][po['po-number']] = po;
     localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+
+    var supplier = find_supplier_code(po['to']);
+
     $('.po-list').append(
       '<tr id="'+po['po-number']+'">'+
         '<td>'+po['po-number']+'</td>'+ 
+        '<td>'+supplier.name+'</td>'+ 
         '<td>'+monetize(po['total-amount'])+'</td>'+
         '<td>'+po['date']+'</td>'+
         '<td>'+
@@ -957,6 +962,14 @@ function load_projects(){
         '</span></li>'
       );
     });
+  }
+}
+
+function load_costrefs(){
+  $('.costrefs-list').html('');
+  costrefs = [];
+  if(localStorage.getItem('costrefs') != null){
+  
   }
 }
 
