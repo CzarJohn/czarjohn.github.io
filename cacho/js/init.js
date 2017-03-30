@@ -227,6 +227,38 @@ var suppliers = [];
       var code = $('#item-inventory-input-project').val();
       var project = find_project_code(code);
       create_po_item_status(project.pos);
+
+
+      var arr = [];
+      var pos = project.pos;
+      for(var po in pos){
+        if(pos.hasOwnProperty(po)){
+          if(pos[po].status == 0) continue;
+          var items = pos[po]['items'];
+          for(var item in items){
+            if(items.hasOwnProperty(item)){
+              arr[items[item].description] = items[item];
+            }
+          }
+        }
+      }
+
+      var numeric_array = [];
+      for (var items in arr){
+          numeric_array.push( arr[items] );
+      }
+
+      create_options(numeric_array, 'description', 'description', '#item-inventory-input-item');
+      $('#item-inventory-input-item').material_select();
+
+    });
+
+    $('#item-inventory-input-item').change(function() {
+      var val = $(this).val();
+      if(val.trim() == '') return;
+      var code = $('#item-inventory-input-project').val();
+      var project = find_project_code(code);
+      create_po_item_status(project.pos, val);
     });
 
 
@@ -369,7 +401,7 @@ function get_remaining(item){
 
 
 
-function create_po_item_status(pos){
+function create_po_item_status(pos, filter){
   $('.item-inventory-list').html(
     '<li>'+
       '<div class="collapsible-header disabled">'+
@@ -387,72 +419,89 @@ function create_po_item_status(pos){
       if(pos[po].status == 0) {
         continue;
       }
+      var first = true; 
+      var entry = false; 
+
       var items = pos[po]['items'];
-    for(var item in items){
-      if(items.hasOwnProperty(item)){
-	      var deliveries = items[item].deliveries;
-	      var remaining = items[item].quantity;
-	      var dtext = '';
-	      for(var key in deliveries){
-	        if(deliveries.hasOwnProperty(key)){
-	          remaining -= deliveries[key].quantity;
-	          dtext += '<li class="collection-item"><span class="dtext">'+
-              deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+
-              '</span>'+
-              '<span class="right clickable remove-delivery tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Delivery" target="'+po+'-'+item+'-'+key+'"><i class="material-icons">clear</i></span>'+
-              '</li>';
-	        }
-	      }
-	      var status;
-	      if(remaining == items[item].quantity){
-	        status = 'PENDING';
-	        dtext = '<li class="collection-item">You have not yet received any deliveries.</li>';
-	      }
-	      else if(remaining == 0){
-	        status = 'COMPLETE';
-	      }
-	      else{               
-	        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
-	      }
+      for(var item in items){
+        if(items.hasOwnProperty(item)){
 
-      	var now = date_to_string(new Date());
+          if(filter != undefined){
+            if(filter != items[item].description) 
+              continue;
+          }
 
-	      $('.item-inventory-list').append(
-	        '<li>'+
-	          '<div class="collapsible-header"><i class="material-icons">event_note</i>'+
-	            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
-	            '<span class="right teal-text">'+
-	            	status+
-	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-small waves-effect waves-light tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Partial Delivery"><i class="material-icons center">menu</i></a>'+
-	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+item+'|'+po+'" class="btn btn-small waves-effect waves-light complete-delivery tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Complete Delivery"><i class="material-icons center">check</i></a>'+
-	            '</span>'+
-	          '</div>'+
-	          '<div class="collapsible-body row">'+
-	            '<div class="col s4 offset-s1">'+
-	              '<br/>'+
-	              '<div class="input-field">'+
-			        '<label class="active" for="'+item+'-'+po+'-date">Delivery Date</label>'+
-			        '<input type="date" id="'+item+'-'+po+'-date" name="" value="'+now+'" class="datepicker"/>'+
-			      '</div>'+
-	              '<div class="input-field">'+
-	                '<label class="active" for="'+item+'-quantity">Quantity delivered (in '+items[item].unit+')</label>'+
-	                '<input id="'+item+'-'+po+'-quantity" class="" type="number" value="1" min="1" max="'+remaining+'"/>'+
-	              '</div>'+
-	              '<a href="#" id="'+item+'|'+po+'" class="btn  waves-effect waves-light add-delivery">Add Delivery</a>'+
-	            '</div>'+
-	            '<ul class="col s6 collection">'+
-	              dtext+
-              '</ul>'+
-	            '<div class="col s12">&nbsp;</div>'+
-	          '</div>'+
-	        '</li>'
-	      );
+          if(first){
+            $('.item-inventory-list').append('<h6>PO '+po+'</h6>');
+            first = false;
+            entry = true;
+          }
 
+  	      var deliveries = items[item].deliveries;
+  	      var remaining = items[item].quantity;
+  	      var dtext = '';
+  	      for(var key in deliveries){
+  	        if(deliveries.hasOwnProperty(key)){
+  	          remaining -= deliveries[key].quantity;
+  	          dtext += '<li class="collection-item"><span class="dtext">'+
+                deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+
+                '</span>'+
+                '<span class="right clickable remove-delivery tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Delivery" target="'+po+'-'+item+'-'+key+'"><i class="material-icons">clear</i></span>'+
+                '</li>';
+  	        }
+  	      }
+  	      var status;
+  	      if(remaining == items[item].quantity){
+  	        status = 'PENDING';
+  	        dtext = '<li class="collection-item">You have not yet received any deliveries.</li>';
+  	      }
+  	      else if(remaining == 0){
+  	        status = 'COMPLETE';
+  	      }
+  	      else{               
+  	        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
+  	      }
 
+        	var now = date_to_string(new Date());
 
-	    }
-	  }
-     }
+  	      $('.item-inventory-list').append(
+  	        '<li>'+
+  	          '<div class="collapsible-header"><i class="material-icons">event_note</i>'+
+  	            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
+  	            '<span class="right teal-text">'+
+  	            	status+
+  	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-small waves-effect waves-light tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Partial Delivery"><i class="material-icons center">menu</i></a>'+
+  	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+item+'|'+po+'" class="btn btn-small waves-effect waves-light complete-delivery tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Complete Delivery"><i class="material-icons center">check</i></a>'+
+  	            '</span>'+
+  	          '</div>'+
+  	          '<div class="collapsible-body row">'+
+  	            '<div class="col s4 offset-s1">'+
+  	              '<br/>'+
+  	              '<div class="input-field">'+
+  			        '<label class="active" for="'+item+'-'+po+'-date">Delivery Date</label>'+
+  			        '<input type="date" id="'+item+'-'+po+'-date" name="" value="'+now+'" class="datepicker"/>'+
+  			      '</div>'+
+  	              '<div class="input-field">'+
+  	                '<label class="active" for="'+item+'-quantity">Quantity delivered (in '+items[item].unit+')</label>'+
+  	                '<input id="'+item+'-'+po+'-quantity" class="" type="number" value="1" min="1" max="'+remaining+'"/>'+
+  	              '</div>'+
+  	              '<a href="#" id="'+item+'|'+po+'" class="btn  waves-effect waves-light add-delivery">Add Delivery</a>'+
+  	            '</div>'+
+  	            '<ul class="col s6 collection">'+
+  	              dtext+
+                '</ul>'+
+  	            '<div class="col s12">&nbsp;</div>'+
+  	          '</div>'+
+  	        '</li>'
+  	      );
+
+  	    }
+  	  }
+
+      if(entry)
+        $('.item-inventory-list').append('<br>');
+
+    }
 	}
 
   init_components();
