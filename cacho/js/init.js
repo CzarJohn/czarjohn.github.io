@@ -408,8 +408,8 @@ function create_po_item_status(pos, filter){
         '<strong>ITEM LIST</strong>'+
         '<span class="right teal-text">'+
           'DELIVERY STATUS'+
-            '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-flat white custom-btn">Partial<br>Delivery</span>'+
-            '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="btn btn-flat white custom-btn">Complete<br>Delivery</span>'+
+            '<span class="btn btn-flat white custom-btn">Partial<br>Delivery</span>'+
+            '<span class="btn btn-flat white custom-btn">Complete<br>Delivery</span>'+
         '</span>'+
       '</div>'+
     '</li>'
@@ -470,8 +470,8 @@ function create_po_item_status(pos, filter){
   	            items[item].description +' - '+ items[item].quantity + ' ' + items[item].unit +
   	            '<span class="right teal-text">'+
   	            	status+
-  	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-small waves-effect waves-light tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Partial Delivery"><i class="material-icons center">menu</i></a>'+
-  	              	'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+item+'|'+po+'" class="btn btn-small waves-effect waves-light complete-delivery tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Complete Delivery"><i class="material-icons center">check</i></a>'+
+  	              	'<span href="#" class="btn cust2 waves-effect waves-light tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Partial Delivery"><i class="material-icons center">menu</i></span>'+
+  	              	'<span href="#" id="'+item+'|'+po+'" class="btn cust2 waves-effect waves-light complete-delivery tooltipped center-align" data-position="top" data-delay="50" data-tooltip="Complete Delivery"><i class="material-icons center">check</i></span>'+
   	            '</span>'+
   	          '</div>'+
   	          '<div class="collapsible-body row">'+
