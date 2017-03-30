@@ -16,6 +16,7 @@
 var item_count = 0;
 var projects = [];
 var suppliers = [];
+var costrefs = [];
 
 (function($){
   $(function(){
@@ -382,6 +383,10 @@ var suppliers = [];
       }
     });
 
+    $('.cost-ref').click(function(){
+      openModal('.cost-ref-modal');
+    });
+
 
 
   }); // end of document ready
@@ -576,10 +581,10 @@ function get_billing_summary(project){
         '<tr>'+
           '<td>'+project['pos'][key]['date']+'</td>'+
           '<td>'+key+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.material)+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.labor)+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.subcon)+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.others)+'</td>'+
+          '<td class="right-align">'+(breakdown.material)+'</td>'+
+          '<td class="right-align">'+(breakdown.labor)+'</td>'+
+          '<td class="right-align">'+(breakdown.subcon)+'</td>'+
+          '<td class="right-align">'+(breakdown.others)+'</td>'+
           '<td class="right-align">'+monetize(amount)+'</td>'+
           '<td></td>'+
         '</tr>'
@@ -628,10 +633,10 @@ function get_breakdown(items){
     	}
     }
 	var breakdown = {};
-	breakdown.material = (material == 0)? '-' : parseFloat(material).toFixed(2);
-	breakdown.labor = (labor == 0)? '-' : parseFloat(labor).toFixed(2);
-	breakdown.subcon = (subcon == 0)? '-' : parseFloat(subcon).toFixed(2);
-	breakdown.others = (others == 0)? '-' : parseFloat(others).toFixed(2);
+	breakdown.material = (material == 0)? '-' : monetize(material);
+	breakdown.labor = (labor == 0)? '-' : monetize(labor);
+	breakdown.subcon = (subcon == 0)? '-' : monetize(subcon);
+	breakdown.others = (others == 0)? '-' : monetize(others);
 	return breakdown;
 }
 
@@ -656,7 +661,7 @@ function get_supplier_summary(project){
     if(project['pos'].hasOwnProperty(key)){
 
       var supplier = find_supplier_code(project['pos'][key]['to']);
-      var amount = (project['pos'][key]['status'] == 0)? '-----': monetize(project['pos'][key]['total-amount']);
+      var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']);
       breakdown = get_breakdown(project['pos'][key]['items']);
 
       if(curr == null){
@@ -690,10 +695,10 @@ function get_supplier_summary(project){
         '<tr>'+
           '<td>'+supplier.name+'</td>'+
           '<td>'+key+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.material)+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.labor)+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.subcon)+'</td>'+
-          '<td class="right-align">'+monetize(breakdown.others)+'</td>'+
+          '<td class="right-align">'+(breakdown.material)+'</td>'+
+          '<td class="right-align">'+(breakdown.labor)+'</td>'+
+          '<td class="right-align">'+(breakdown.subcon)+'</td>'+
+          '<td class="right-align">'+(breakdown.others)+'</td>'+
           '<td class="right-align">'+monetize(amount)+'</td>'+
           '<td></td>'+
         '</tr>'
