@@ -83,6 +83,8 @@ var suppliers = [];
         item = get_add_item_input();
         add_item(item);
         clear_input('.add-item-input');
+        $('#add-item-input-quantity').focus();
+
       }
     });
 
@@ -342,6 +344,12 @@ var suppliers = [];
 
     });
 
+    $('.add-item-input').keypress(function(e){
+      if(e.keyCode == 13){
+        $('.add-item').click();
+      }
+    });
+
 
 
   }); // end of document ready
@@ -495,7 +503,7 @@ function get_billing_summary(project){
             '<td></td>'+
             '<td></td>'+
             '<td>As of '+date_to_string(cutoff)+'</td>'+
-            '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
+            '<td class="right-align">'+monetize(subtotal)+'</td>'+
           '</tr>'
         );
         subtotal = 0;
@@ -519,11 +527,11 @@ function get_billing_summary(project){
         '<tr>'+
           '<td>'+project['pos'][key]['date']+'</td>'+
           '<td>'+key+'</td>'+
-          '<td class="right-align">'+breakdown.material+'</td>'+
-          '<td class="right-align">'+breakdown.labor+'</td>'+
-          '<td class="right-align">'+breakdown.subcon+'</td>'+
-          '<td class="right-align">'+breakdown.others+'</td>'+
-          '<td class="right-align">'+amount+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.material)+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.labor)+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.subcon)+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.others)+'</td>'+
+          '<td class="right-align">'+monetize(amount)+'</td>'+
           '<td></td>'+
         '</tr>'
       );
@@ -539,7 +547,7 @@ function get_billing_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td>As of '+date_to_string(cutoff)+'</td>'+
-      '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
+      '<td class="right-align">'+monetize(subtotal)+'</td>'+
     '</tr>'
   );
   $('.po-summary-list').append(
@@ -551,7 +559,7 @@ function get_billing_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td><strong>GRAND TOTAL</strong></td>'+
-      '<td class="right-align">'+total.toFixed(2)+'</td>'+
+      '<td class="right-align">'+monetize(total)+'</td>'+
     '</tr>'
   );
 }
@@ -599,7 +607,7 @@ function get_supplier_summary(project){
     if(project['pos'].hasOwnProperty(key)){
 
       var supplier = find_supplier_code(project['pos'][key]['to']);
-      var amount = (project['pos'][key]['status'] == 0)? '-----': parseFloat(project['pos'][key]['total-amount']).toFixed(2);
+      var amount = (project['pos'][key]['status'] == 0)? '-----': monetize(project['pos'][key]['total-amount']);
       breakdown = get_breakdown(project['pos'][key]['items']);
 
       if(curr == null){
@@ -617,7 +625,7 @@ function get_supplier_summary(project){
             '<td></td>'+
             '<td></td>'+
             '<td></td>'+
-            '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
+            '<td class="right-align">'+monetize(subtotal)+'</td>'+
           '</tr>'
         );
         subtotal = 0;
@@ -633,11 +641,11 @@ function get_supplier_summary(project){
         '<tr>'+
           '<td>'+supplier.name+'</td>'+
           '<td>'+key+'</td>'+
-          '<td class="right-align">'+breakdown.material+'</td>'+
-          '<td class="right-align">'+breakdown.labor+'</td>'+
-          '<td class="right-align">'+breakdown.subcon+'</td>'+
-          '<td class="right-align">'+breakdown.others+'</td>'+
-          '<td class="right-align">'+amount+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.material)+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.labor)+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.subcon)+'</td>'+
+          '<td class="right-align">'+monetize(breakdown.others)+'</td>'+
+          '<td class="right-align">'+monetize(amount)+'</td>'+
           '<td></td>'+
         '</tr>'
       );
@@ -653,7 +661,7 @@ function get_supplier_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td></td>'+
-      '<td class="right-align">'+subtotal.toFixed(2)+'</td>'+
+      '<td class="right-align">'+monetize(subtotal)+'</td>'+
     '</tr>'
   );
   $('.po-summary-list').append(
@@ -665,7 +673,7 @@ function get_supplier_summary(project){
       '<td></td>'+
       '<td></td>'+
       '<td><strong>GRAND TOTAL</strong></td>'+
-      '<td class="right-align">'+total.toFixed(2)+'</td>'+
+      '<td class="right-align">'+monetize(total)+'</td>'+
     '</tr>'
   );
 }
@@ -733,15 +741,15 @@ function add_item(item){
       '<td>'+item['unit']+'</td>'+
       '<td>'+item['description']+'</td>'+
       '<td>'+item['type']+'</td>'+
-      '<td>'+item['unit-price']+'</td>'+
-      '<td>'+subtotal+'</td>'+
+      '<td>'+monetize(item['unit-price'])+'</td>'+
+      '<td>'+monetize(subtotal)+'</td>'+
       '<td><i id="'+subtotal+'" class="material-icons clickable delete-item">close</i></td>'+
     '</tr>'
   );
 
-  var total = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
-  total = parseFloat(parseFloat(total) + parseFloat(subtotal)).toFixed(2);
-  $('.add-po-input-total-amount').html(total);
+  var total = demonetize($('.add-po-input-total-amount').html());
+  total = parseFloat(parseFloat(total) + parseFloat(subtotal));
+  $('.add-po-input-total-amount').html(monetize(total));
 
   Materialize.toast('Successfully added item',3000);
 }
@@ -760,7 +768,7 @@ function add_po(po){
     $('.po-list').append(
       '<tr id="'+po['po-number']+'">'+
         '<td>'+po['po-number']+'</td>'+ 
-        '<td>'+po['total-amount']+'</td>'+
+        '<td>'+monetize(po['total-amount'])+'</td>'+
         '<td>'+po['date']+'</td>'+
         '<td>'+
           '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
@@ -798,7 +806,7 @@ function amend_po(po){
     $('.po-list').append(
       '<tr id="'+po['po-number']+'">'+
         '<td>'+po['po-number']+'</td>'+ 
-        '<td>'+po['total-amount']+'</td>'+
+        '<td>'+monetize(po['total-amount'])+'</td>'+
         '<td>'+po['date']+'</td>'+
         '<td>'+
           '<i id="open-'+po['po-number']+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
@@ -1138,14 +1146,14 @@ function set_view_po(po){
           '<td>'+items[key]['unit']+'</td>'+
           '<td>'+items[key]['description']+'</td>'+
           '<td>'+items[key]['type']+'</td>'+
-          '<td>'+parseFloat(items[key]['unit-price']).toFixed(2)+'</td>'+
-          '<td>'+parseFloat(items[key]['subtotal']).toFixed(2)+'</td>'+
+          '<td>'+monetize(items[key]['unit-price'])+'</td>'+
+          '<td>'+monetize(items[key]['subtotal'])+'</td>'+
           '<td></td>'+
         '</tr>'
       );
     }
   }
-  $('.add-po-input-total-amount').html(po['total-amount']);
+  $('.add-po-input-total-amount').html(monetize(po['total-amount']));
 }
 
 function set_amend_po(po){
@@ -1160,6 +1168,8 @@ function set_amend_po(po){
   $('.add-po-modal-btn-print').hide();
 
   $('#hidden-po-number').val(po['po-number']);
+
+  $('#add-po-input-date').val(date_to_string(new Date()));
 
   $('.add-po-modal>.modal-content>.input-field>label').addClass('active');
   var p = '#add-po-input-';
@@ -1177,14 +1187,14 @@ function set_amend_po(po){
           '<td>'+items[key]['unit']+'</td>'+
           '<td>'+items[key]['description']+'</td>'+
           '<td>'+items[key]['type']+'</td>'+
-          '<td>'+items[key]['unit-price']+'</td>'+
-          '<td>'+items[key]['subtotal']+'</td>'+
+          '<td>'+monetize(items[key]['unit-price'])+'</td>'+
+          '<td>'+monetize(items[key]['subtotal'])+'</td>'+
           '<td><i id="'+items[key]['subtotal']+'" class="material-icons clickable delete-item">close</i></td>'+
         '</tr>'
       );
     }
   }
-  $('.add-po-input-total-amount').html(po['total-amount']);  
+  $('.add-po-input-total-amount').html(monetize(po['total-amount']));  
 }
 
 
@@ -1240,10 +1250,14 @@ function set_add_po(project){
   for(var i=0; i<keysSorted.length; i++){
     key = keysSorted[i];
     if(pos.hasOwnProperty(key)){
+
+      var supplier = find_supplier_code(pos[key]['to']);
+
       $('.po-list').append(
         '<tr id="'+key+'">'+
           '<td>'+key+'</td>'+
-          '<td>'+((pos[key]['status'] == 1)?parseFloat(pos[key]['total-amount']).toFixed(2):'-----')+'</td>'+
+          '<td>'+supplier.name+'</td>'+
+          '<td>'+((pos[key]['status'] == 1)?monetize(pos[key]['total-amount']):'-----')+'</td>'+
           '<td>'+pos[key]['date']+'</td>'+
           '<td><i id="open-'+key+'" class="material-icons clickable tooltipped open-po" data-position="top" data-delay="20" data-tooltip="Open">open_in_browser</i>&nbsp;&nbsp;&nbsp;'+
           '<i id="amend-'+key+'" class="material-icons clickable tooltipped amend-po" data-position="top" data-delay="20" data-tooltip="Amend">build</i>&nbsp;&nbsp;&nbsp;'+
@@ -1302,7 +1316,7 @@ function get_add_po_input(){
       items[i-1] = get_item_from_row(item_rows[i]);
   }
   po['items'] = items;
-  po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
+  po['total-amount'] = monetize($('.add-po-input-total-amount').html());
   po['date'] = date_to_string(new Date());
   return po;
 }
@@ -1320,7 +1334,7 @@ function get_amend_po_input(){
       items[i-1] = get_item_from_row(item_rows[i]);
   }
   po['items'] = items;
-  po['total-amount'] = parseFloat($('.add-po-input-total-amount').html()).toFixed(2);
+  po['total-amount'] = monetize($('.add-po-input-total-amount').html());
   po['date'] = date_to_string(new Date());
   po['po-number'] = $('.add-po-modal-btn-amend').attr('id');
   return po;
