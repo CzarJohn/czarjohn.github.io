@@ -302,6 +302,47 @@ var suppliers = [];
 
     });
 
+    $('.item-inventory-list').on('click', '.remove-delivery', function(){
+      var con = confirm('Are you sure you want to remove this delivery?');
+      if(!con) return; 
+
+      var temp = $(this).attr('target').split('-');
+      var po_code = temp[0] + '-' + temp[1];
+      var item = temp[2];
+      var key = temp[3];
+      
+      var po = find_po_code(po_code);
+      var deliveries = po['items'][item]['deliveries'];
+      var delivery = po['items'][item]['deliveries'][key];
+
+      console.log(deliveries);
+
+      var deleted = false;
+      for(var d in deliveries){
+        if(deliveries.hasOwnProperty(d)){
+          if(d == key){
+            delete deliveries[d];
+            deleted = true;
+          }
+          else if(deleted){
+            deliveries[d-1] = deliveries[d];
+            delete deliveries[d];
+          }
+        }
+      }
+
+
+      Materialize.toast('Successfully removed delivery.', 5000);
+      var pcode = po_code.substring(0,6);
+      var project = find_project_code(pcode);
+      create_po_item_status(project.pos);
+
+      localStorage.setItem('projects', JSON.stringify(arr_to_obj(projects)));
+
+
+    });
+
+
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
@@ -347,7 +388,11 @@ function create_po_item_status(pos){
 	      for(var key in deliveries){
 	        if(deliveries.hasOwnProperty(key)){
 	          remaining -= deliveries[key].quantity;
-	          dtext += '<li class="collection-item"><span class="dtext">'+deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+'</span></li>';
+	          dtext += '<li class="collection-item"><span class="dtext">'+
+              deliveries[key].quantity + ' ' + items[item].unit + ' on ' + deliveries[key].date+
+              '</span>'+
+              '<span class="right clickable remove-delivery tooltipped" data-position="top" data-delay="50" data-tooltip="Remove Delivery" target="'+po+'-'+item+'-'+key+'"><i class="material-icons">clear</i></span>'+
+              '</li>';
 	        }
 	      }
 	      var status;
@@ -358,7 +403,7 @@ function create_po_item_status(pos){
 	      else if(remaining == 0){
 	        status = 'COMPLETE';
 	      }
-	      else{
+	      else{               
 	        status = 'PARTIAL ('+remaining+items[item].unit+' left undelivered)';
 	      }
 
@@ -375,7 +420,7 @@ function create_po_item_status(pos){
 	            '</span>'+
 	          '</div>'+
 	          '<div class="collapsible-body row">'+
-	            '<div class="col s4">'+
+	            '<div class="col s4 offset-s1">'+
 	              '<br/>'+
 	              '<div class="input-field">'+
 			        '<label class="active" for="'+item+'-'+po+'-date">Delivery Date</label>'+
@@ -387,9 +432,10 @@ function create_po_item_status(pos){
 	              '</div>'+
 	              '<a href="#" id="'+item+'|'+po+'" class="btn  waves-effect waves-light add-delivery">Add Delivery</a>'+
 	            '</div>'+
-	            '<ul class="col s7 offset-s1 collection">'+
+	            '<ul class="col s6 collection">'+
 	              dtext+
-	            '</ul>'+
+              '</ul>'+
+	            '<div class="col s12">&nbsp;</div>'+
 	          '</div>'+
 	        '</li>'
 	      );
@@ -403,6 +449,8 @@ function create_po_item_status(pos){
 
   init_components();
 }
+
+
 
 function get_billing_summary(project){
   $('.po-summary-table').show();
