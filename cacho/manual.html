@@ -16,8 +16,12 @@
   <div class="row">
     <div class="col s2">
       <ul id="slide-out" class="side-nav fixed table-of-contents collapsible" data-collapsible="accordion">
+        
+
           <li><a href="#manual" class="subheader"><strong>Manual</strong></a></li>
           <li><a href="#updates">Pulling Updates</a></li>
+
+
           <li class="no-padding">
             <ul class="collapsible collapsible-accordion">
               <li>
@@ -32,6 +36,8 @@
               </li>
             </ul>
           </li>
+
+
           <li class="no-padding">
             <ul class="collapsible collapsible-accordion">
               <li>
@@ -46,9 +52,55 @@
               </li>
             </ul>
           </li>
-          <li><a href="#pos">Purchase Orders</a></li>
-          <li><a href="#costrefs">Cost References</a></li>
-          <li><a href="#summaries">Summaries</a></li>
+
+          <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+              <li>
+                <a href="#pos" class="collapsible-header">Purchase Orders</a>
+                <div class="collapsible-body">
+                  <ul>
+                    <li><a href="#addpo">Adding a PO</a></li>
+                    <li><a href="#ampo">Ammending a PO</a></li>
+                    <li><a href="#delpo">Deleting a PO</a></li>
+                    <li><a href="#rppo">Reprinting a PO</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </li>
+
+          <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+              <li>
+                <a href="#crs" class="collapsible-header">Cost References</a>
+                <div class="collapsible-body">
+                  <ul>
+                    <li><a href="#addcr">Adding a cost ref</a></li>
+                    <li><a href="#addcrc">Adding a cluster</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </li>
+
+          <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+              <li>
+                <a href="#summaries" class="collapsible-header">Summaries</a>
+                <div class="collapsible-body">
+                  <ul>
+                    <li><a href="#gensum">Generating a summary</a></li>
+                    <li><a href="#exsum">Exporting a summary</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </li>
+
+          <li><a href="#summaries">Inventories</a></li>
+
+
+
       </ul>
     </div>
     <div class="col s10 offset-s2">
@@ -56,7 +108,6 @@
         <h3>CCI PO Monitoring Manual</h3>
         This document will contain yada yada.
       </div>
-
       <hr/>
 
       <ul id="updates" class="section scrollspy">
@@ -76,7 +127,6 @@
           <p><img src="img/pullok.png"></p>
         </li>
       </ul>
-
       <hr/>
 
       <ul id="projects" class="section scrollspy">
@@ -119,9 +169,7 @@
           <p>2. Click <strong>OK</strong> to confirm</p>
           <p><img src="img/delproj2.png"></p>
         </li>
-
       </ul>
-
       <hr/>
 
       <ul id="suppliers" class="section scrollspy">
@@ -164,31 +212,94 @@
           <p>2. Click <strong>OK</strong> to confirm</p>
           <p><img src="img/deletesupplier2.png"></p>
         </li>
-
       </ul>
-
       <hr/>
 
-
       <ul id="pos" class="section scrollspy">
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
+        <li class="collection-item">
+          <h4>Purchase Orders</h4>
+        </li>
+
+        <li id="addpo" class="collection-item section scrollspy">
+          <h5>Creating a purchase order</h5>
+        </li>
+        <li class="collection-item">
+          <p>To be completed soon...</p>
+        </li>
+
+        <li id="ampo" class="collection-item section scrollspy">
+          <h5>Amending a purchase order</h5>
+        </li>
+        <li class="collection-item">
+          <p>To be completed soon...</p>
+        </li>
+
+        <li id="delpo" class="collection-item section scrollspy">
+          <h5>Deleting a purchase order</h5>
+        </li>
+        <li class="collection-item">
+          <p>To be completed soon...</p>
+        </li>
+
+        <li id="rppo" class="collection-item section scrollspy">
+          <h5>Reprinting a purchase order</h5>
+        </li>
+        <li class="collection-item">
+          <p>To be completed soon...</p>
+        </li>
       </ul>
+      <hr/>
 
       <ul id="costrefs" class="section scrollspy">
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
+        <li class="collection-item">
+          <h4>Cost References</h4>
+        </li>
+
+        <li id="newsupp" class="collection-item section scrollspy">
+          <h5>Adding a cost reference</h5>
+        </li>
+        <li class="collection-item">
+          <p>1. Click <strong>ADD NEW SUPPLIER</strong></p>
+          <p><img src="img/newsupplier.png"></p>
+        </li>
+        <li class="collection-item">
+          <p>2. Fill up the required fields and click <strong>ADD</strong></p>
+          <p><img src="img/inputsupplier.png"></p>
+        </li>
+
+        <li id="editsupp" class="collection-item section scrollspy">
+          <h5>Editing a supplier</h5>
+        </li>
+        <li class="collection-item">
+          <p>1. Find a supplier and click the edit icon beside it</p>
+          <p><img src="img/editsupplier.png"></p>
+        </li>
+        <li class="collection-item">
+          <p>2. Edit your desired fields and click <strong>SAVE</strong></p>
+          <p><img src="img/editsupplier2.png"></p>
+        </li>
+
+        <li id="delsupp" class="collection-item section scrollspy">
+          <h5>Deleting a supplier</h5>
+        </li>
+        <li class="collection-item">
+          <p>1. Find a supplier and click the delete icon beside it</p>
+          <p><img src="img/deletesupplier.png"></p>
+        </li>
+        <li class="collection-item">
+          <p>2. Click <strong>OK</strong> to confirm</p>
+          <p><img src="img/deletesupplier2.png"></p>
+        </li>
       </ul>
 
       <ul id="summaries" class="section scrollspy">
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
-        <li class="collection-item">Alvin</li>
+        <li class="collection-item">
+          <h4>Summaries</h4>
+        </li>
+
+        <li id="newsupp" class="collection-item section scrollspy">
+          <h5>To be completed soon...</h5>
+        </li>
       </ul>
 
     </div>
