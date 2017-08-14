@@ -1,72 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>CJDemafeliz</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-  <!-- CSS  -->
-  <link href="css/icons/icons.css" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <title>Home</title>
+
+  <link rel="stylesheet" href="css/materialize.css">
+
+  <link rel="stylesheet" media="screen" href="css/style.css">
+
+  <style>
+    .dcanvas {
+      text-align: center;
+      position: absolute;
+      margin-top: 50vh;
+      width: 100vw;
+      font-size:20px;
+      font-style:Helvetica;
+    }
+
+    #coinAnimation{
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+
 </head>
-<body class="grey lighten-3">
 
-
-  <nav class="teal" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">czarjohn</a>
-      <!--ul class="right hide-on-med-and-down">
-        <li><a href="#">Navbar Link</a></li>
-      </ul>
-
-      <ul id="nav-mobile" class="side-nav">
-        <li><a href="#">Navbar Link</a></li>
-      </ul-->
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
-
-
-
-
-  <div class="section no-pad-bot container" id="main">
-    <div class="container">
-      <br><br>
-      <h1 class="header center teal-text">What's Up</h1>
-      <div class="row center">
-        <h5 class="header col s12 light">Click the button below to achieve absolutely nothing.</h5>
-      </div>
-      <div class="row center">
-        <a id="download-button" class="btn-large waves-effect waves-light blue">Click me</a>
-      </div>
-      <br><br>
-
-    </div>
+<body style="overflow-y: hidden;width:100vw;">
+  <div class="dcanvas">
+    hello.
+    <canvas id="coinAnimation" style="margin:0 auto;"></canvas>
   </div>
-
-
-  </div>
-
-  <footer class="page-footer grey">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <p class="grey-text text-lighten-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non lorem laoreet, vehicula enim eget, euismod augue. Maecenas pulvinar efficitur feugiat. Nunc eros nulla, mattis sed odio non, scelerisque sodales metus. Pellentesque at malesuada orci, lacinia lacinia libero. Phasellus suscipit purus nec massa bibendum rhoncus.</p>
-        </div>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <div class="container">
-      Made by <a class="teal-text text-lighten-4" href="http://materializecss.com">Materialize</a>
-      </div>
-    </div>
-  </footer>
-
-
-  <!--  Scripts-->
+  <div id="particles-js"></div>
   <script src="js/jquery.min.js"></script>
-  <script src="js/materialize.js"></script>
-  <script src="js/init.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/lib/stats.js"></script>
+  <script>
+    var numAnimation;
+    var coinImage, canvas, coin;
+    var xpos = 0, ypos = 0;
 
-  </body>
+    $(document).ready(function(){
+        coinImage = new Image();
+        coinImage.src = "ss.png";
+        
+        canvas = document.getElementById("coinAnimation");
+        canvas.width = 70;
+        canvas.height = 70;
+
+        coin = sprite({
+            context: canvas.getContext("2d"),
+            width: 448,
+            height: 168,
+            image: coinImage,
+            numberOfFrames: 8,
+            numberOfRows: 3,
+            ticksPerFrame: 10
+        });
+
+        coinImage.addEventListener("load", gameLoop);
+
+    });
+
+
+    function sprite (options) {
+
+        var that = {},
+            frameIndex = 0,
+            frameRow = 0,
+            tickCount = 0,
+            ticksPerFrame = options.ticksPerFrame || 0,
+            numberOfRows = options.numberOfRows || 1,
+            numberOfFrames = options.numberOfFrames || 1;
+        
+        that.context = options.context;
+        that.width = options.width;
+        that.height = options.height;
+        that.image = options.image;
+        //that.loop = options.loop;
+        
+        that.update = function () {
+
+            tickCount += 1;
+
+            if (tickCount > ticksPerFrame) {
+
+                tickCount = 0;
+                
+                // If the current frame index is in range
+                if (frameIndex < numberOfFrames - 1) {  
+                    // Go to the next frame
+                    if(frameIndex == numberOfFrames - 3 && frameRow == numberOfRows - 1){
+                        frameRow = 0;
+                        frameIndex = 0;
+                    }
+                    frameIndex += 1;
+                } else {
+                    frameIndex = 0;
+                    if (frameRow < numberOfRows - 1) {  
+                        // Go to the next frame
+                        frameRow += 1;
+                    } else {
+                        frameRow = 0;
+                    }
+                }
+            }
+        };
+        
+        that.render = function () {
+        
+          // Clear the canvas
+          that.context.clearRect(0, 0, canvas.width, canvas.height);
+          
+
+          //that.context.save();
+          //that.context.scale(-1,1);
+          // Draw the animation
+          that.context.drawImage(
+            that.image,
+            frameIndex * that.width / numberOfFrames,
+            //frameRow * that.height / numberOfRows+10,
+            frameRow * that.height / numberOfRows,
+            that.width / numberOfFrames,
+            that.height / numberOfRows,
+            xpos,
+            ypos,
+            that.width / numberOfFrames*1.2,
+            that.height / numberOfRows*1.2);
+
+          //that.context.restore();
+        };
+        
+        return that;
+    }
+
+    function gameLoop () {
+        window.requestAnimationFrame(gameLoop);
+        coin.update();
+        coin.render();
+    }
+
+  </script>
+      
+
+</body>
+
+
 </html>
