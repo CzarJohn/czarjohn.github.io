@@ -4,6 +4,7 @@
 		function Mapster(element, opts) {
 			this.gMap = new google.maps.Map(element, opts);
 			this.markers = [];
+			this.polygons = [];
 		}
 		Mapster.prototype = {
 			zoom : function(level){
@@ -25,7 +26,8 @@
 				var polygon;
 				var infoWindow;
 				polygon = this._createPolygon(opts);
-				this._on({
+				this._addPolygon(polygon);
+				/*this._on({
 					obj : polygon,
 					event :  'mouseover',
 					callback : function(e){
@@ -38,15 +40,49 @@
 						});
 						infoWindow.open(map.gMap);
 					}
-				});
+				});*/
 
 				this._on({
+					obj : polygon,
+					event :  'click',
+					callback : function(e){
+						if(deleteLot){
+							deleteLot = false;
+							if(confirm('Do you really want to remove this lot?')){
+								this._removePolygon(polygon);
+							}
+						}
+						else if(toggleLot){
+							toggleLot = false;
+							var action = (polygon.get('fillColor') == '#00ff00')? 'reserve': 'unreserve';
+							if(confirm('Do you really want to '+action+' this lot?')){
+								polygon.setOptions({fillColor: (polygon.get('fillColor') != '#00ff00')? '#00ff00': '#FF0000'});
+								polygon.setOptions({strokeColor: (polygon.get('strokeColor') != '#00ff00')? '#00ff00': '#FF0000'});
+							}
+						}
+						else{
+
+							var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+							var status = (polygon.get('fillColor') == '#00ff00')? 'Available': 'Reserved';
+
+							$('.lot-info').html(
+								'<table class="striped">'+
+									'<tr><td>Area</td><td>'+Math.round(area, 4)+' sqm</td></tr>'+
+									'<tr><td>Status</td><td>'+status+'</td></tr>'+
+									'<tr><td>Details</td><td>No lot details has been entered yet</td></tr>'+
+								'</table>'
+							);
+						}
+					}
+				});
+
+				/*this._on({
 					obj : polygon,
 					event :  'mouseout',
 					callback : function(e){
 						infoWindow.close(map.gMap);
 					}
-				});
+				});*/
 				return polygon;			},
 
 			addMarker : function(opts){
@@ -95,11 +131,23 @@
 				this.markers.push(marker);
 			},
 
+			_addPolygon : function(polygon){
+				this.polygons.push(polygon);
+			},
+
 			_removeMarker : function(marker){
 				var indexOf = this.markers.indexOf(marker);
 				if(indexOf != -1){
 					this.markers.splice(indexOf, 1);
 					marker.setMap(null);
+				}
+			},
+
+			_removePolygon : function(polygon){
+				var indexOf = this.polygons.indexOf(polygon);
+				if(indexOf != -1){
+					this.polygons.splice(indexOf, 1);
+					polygon.setMap(null);
 				}
 			},
 

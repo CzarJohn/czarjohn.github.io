@@ -1,5 +1,8 @@
 pendingClicks = 0;
+deleteLot = false;
+toggleLot = false;
 latLngArr = [];
+
 
 (function(window, google, mapster){
 
@@ -11,11 +14,27 @@ latLngArr = [];
 	map = new Mapster.create(element, options);
 
 	$('.add').click(function(){
-		Materialize.toast('Please plot four points by clicking on the map.', 3000);
 		pendingClicks = 4;
+		deleteLot = false;
+		toggleLot = false;
+		Materialize.toast('Please plot four points by clicking on the map.', 3000);
 	});
 
-	map.addPolygon({
+	$('.toggle').click(function(){
+		pendingClicks = 0;
+		deleteLot = false;
+		toggleLot = true;
+		Materialize.toast('Please click the lot you want to toggle.', 3000);
+	});
+
+	$('.delete').click(function(){
+		pendingClicks = 0;
+		deleteLot = true;
+		toggleLot = false;
+		Materialize.toast('Please click the lot you want to delete.', 3000);
+	});
+
+	/*map.addPolygon({
 		paths: [
 		    new google.maps.LatLng(14.161195, 121.246666),
 		    new google.maps.LatLng(14.161250, 121.246770),
@@ -35,12 +54,62 @@ latLngArr = [];
 		    new google.maps.LatLng(14.161038, 121.247073)
 		],
 		available: false,
+	});*/
+
+	map.addPolygon({
+		paths: [
+		    new google.maps.LatLng(14.166950488552535, 121.25000953674316),
+		    new google.maps.LatLng(14.167153337925892, 121.25029385089874),
+		    new google.maps.LatLng(14.165967446713655, 121.2512218952179),
+		    new google.maps.LatLng(14.165764596280523, 121.25093758106232),
+		    new google.maps.LatLng(14.166950488552535, 121.25000953674316)
+		],
+		available: true,
 	});
+
+	map.addPolygon({
+		paths: [
+		    new google.maps.LatLng(14.165681375537549, 121.25095727853477),
+		    new google.maps.LatLng(14.165894628630317, 121.25127377919853),
+		    new google.maps.LatLng(14.165275673978739, 121.25175121240318),
+		    new google.maps.LatLng(14.165020809808153, 121.25142398290336),
+		    new google.maps.LatLng(14.165681375537549, 121.25095727853477),
+		],
+		available: true,
+	});
+
+	map.addPolygon({
+		paths: [
+		    new google.maps.LatLng(14.167127331606117, 121.25041547231376),
+		    new google.maps.LatLng(14.166315932931997, 121.25100555829704),
+		    new google.maps.LatLng(14.166602003308396, 121.25134351663291),
+		    new google.maps.LatLng(14.167345784599718, 121.25074806623161),
+		    new google.maps.LatLng(14.167127331606117, 121.25041547231376),
+		],
+		available: false,
+	});
+
+	map.addPolygon({
+		paths: [
+		    new google.maps.LatLng(14.166196303394948, 121.25110211782157),
+		    new google.maps.LatLng(14.165275673978739, 121.25183167867362),
+		    new google.maps.LatLng(14.165551343065607, 121.25215890817344),
+		    new google.maps.LatLng(14.166430361125817, 121.2514668982476),
+		    new google.maps.LatLng(14.166196303394948, 121.25110211782157),
+		],
+		available: true,
+	});
+
+
+
+
+
 	map._on({
 		obj : map.gMap,
 		event :  'click',
 		callback : function(e){
-			console.log(pendingClicks);
+			console.log(e.latLng.lat());
+			console.log(e.latLng.lng());
 			if(pendingClicks > 0){
 				//console.log(e.latLng.lng());
 				latLngArr.push(e.latLng);
@@ -62,89 +131,6 @@ latLngArr = [];
 		}
 	});
 
-	 /* // Construct the polygon.
-	  bermudaTriangle = new google.maps.Polygon({
-	    paths: triangleCoords,
-	  });*/
-	 
-	  //bermudaTriangle.setMap(map);
-
-
-	/*
-
-	function geocode(opts){
-		geocoder.geocode({
-			address: opts.address
-		}, function(results, status){
-			if(status === google.maps.GeocoderStatus.OK){
-				opts.success.call(this, results, status);
-			}else{
-				opts.error.call(this, status);
-			}
-		});
-	}
-
-	setTimeout(function(){
-		geocode({
-			address : 'Metro Manila, Philippines',
-			success : function(results){
-				var result = results[0];
-				var marker = map.addMarker({
-					lat : result.geometry.location.lat(),
-					lng : result.geometry.location.lng(), 
-					draggable : true,
-					content: 'I like pizza'
-				});
-				map.gMap.panTo({
-					lat : result.geometry.location.lat(),
-					lng : result.geometry.location.lng()
-				});		
-				console.log({
-					lat : result.geometry.location.lat(),
-					lng : result.geometry.location.lng()
-				});
-			},
-			error : function(status){
-				console.error(status);
-			}
-		});
-	}, 3000);
-
-	*/
-
-	/*var marker2 = map.addMarker({
-		lat : 37.791350,
-		lng : -122.495883, 
-		draggable : true,
-		content: 'I like you'
-	
-	});
-
-	map._removeMarker(marker2);*/
-
-	/*
-
-		event : {
-			name : 'click',
-			callback : function(e){
-				console.log(e);
-				var infoWindow = new google.maps.InfoWindow({
-					content: 'I like pizza.'
-				});
-				infoWindow.open(map.gMap, marker);
-			}
-		}
-	*/
-
-
-
-
-	/*var marker = new google.maps.Marker({
-		position: {
-			lat: 37.791350,
-			lng: -122.435883
-		},
-		map: map.gMap
-	});*/
-
 }(window, google, window.Mapster || (window.Mapster = {})))
+
+

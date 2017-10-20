@@ -6,15 +6,39 @@
   <link href="css/style.css" type="text/css" rel="stylesheet"/>
 </head>
 
-<body style="height:100vh;overflow:hidden;">
-  <div id="controls" class="grey lighten-2 row">
-  	<br><br><br>
-  	<a class="waves-effect waves-light btn add">add polygon</a>
-  </div>
-
+<body class="row" style="height:100vh;overflow: hidden;">
+  
+ <div class="card-panel grey lighten-2 col m10 offset-m1" style="height:80vh;padding:20px;">
   <div id="map-container">
-  	<div id="map-canvas"></div>
+    <div id="map-canvas"></div>
   </div>
+  <div id="controls" class="grey lighten-2 row" style="padding:10px;">
+
+    <div class="input-field col m12 row" style="margin-top:0px;margin-bottom:0px;">
+      <h5>Lot Controls</h5>
+    </div>
+    <div class="input-field col m4 row">
+      <a class="waves-effect waves-light btn add col m12 grey darken-1">add</a>
+    </div>
+    <div class="input-field col m4 row">
+      <a class="waves-effect waves-light btn toggle col m12 grey darken-1">toggle</a>
+    </div>
+    <div class="input-field col m4 row">
+      <a class="waves-effect waves-light btn delete col m12 grey darken-1">delete</a>
+    </div>
+    <div class="input-field col m12 row " style="margin-top:50px;">
+      <h5 style="margin-top:10px;">Lot Information</h5>
+      <div class="lot-info">No lot has been selected yet. <br>Please click a lot to view lot information</div>
+    </div>
+  </div>
+ </div>
+
+ <div class="lighten-2 col m10 offset-m1" style="padding:20px;">
+  <h5>Note: This is only a demo. All changes will be discarded once the page has been reloaded.</h5>
+ 
+ </div>
+
+
 
 
   <!--script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjcVoiwU44Pj1fdY8JyxjORa8RElQQlGY&callback&callback=initMap"></script-->

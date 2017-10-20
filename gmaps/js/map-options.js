@@ -2,9 +2,9 @@
 
 	mapster.MAP_OPTIONS = {
 		center: {
-			lat:14.161139, lng: 121.246864
+			lat:14.166544789261966, lng: 121.25171542167664
 		},
-		zoom: 19,
+		zoom: 18,
 		disableDefaultUI: true,
 		//scrollwheel:false,
 		//draggable: false,
@@ -17,3 +17,4 @@
 	}
 
 }(window, google, window.Mapster || (window.Mapster = {})))
+

@@ -9,8 +9,8 @@ body{
 }
 
 #map-container{
-	height: 100vh;
-	width: 80vw;
+	height: 100%;
+	width: 65%;
 	float: left;
 }
 
@@ -20,7 +20,8 @@ body{
 }
 
 #controls{
-	height: 100vh;
-	width: 18vw;
+	height: 100%;
+	width: 34%;
+	margin-left:5px;
 	float:left;
 }
